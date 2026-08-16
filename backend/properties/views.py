@@ -126,9 +126,9 @@ class PropertyViewSet(viewsets.ModelViewSet):
         Form data: image (file), alt_text (str, optional), is_primary (bool, optional)
         """
         property_obj = self.get_object()
-        if property_obj.agent != request.user:
+        if property_obj.agent != request.user and not (request.user.is_staff or request.user.is_superuser):
             return Response(
-                {'message': 'Only the listing agent can upload images.'},
+                {'message': 'Only the listing agent or administrator can upload images.'},
                 status=status.HTTP_403_FORBIDDEN
             )
         serializer = PropertyImageSerializer(
@@ -143,16 +143,16 @@ class PropertyViewSet(viewsets.ModelViewSet):
 class PropertyImageDeleteView(generics.DestroyAPIView):
     """
     DELETE /api/properties/images/<image_id>/
-    Removes an image — only the property owner can delete.
+    Removes an image — only the property owner or admin can delete.
     """
     queryset = PropertyImage.objects.all()
     permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if instance.property.agent != request.user:
+        if instance.property.agent != request.user and not (request.user.is_staff or request.user.is_superuser):
             return Response(
-                {'message': 'Only the listing agent can delete images.'},
+                {'message': 'Only the listing agent or administrator can delete images.'},
                 status=status.HTTP_403_FORBIDDEN
             )
         instance.image.delete(save=False)  # Delete file from disk
