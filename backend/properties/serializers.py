@@ -21,8 +21,11 @@ class PropertyImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PropertyImage
-        fields = ['id', 'image', 'image_url', 'alt_text', 'is_primary']
-        extra_kwargs = {'image': {'write_only': True}}
+        fields = ['id', 'image', 'external_url', 'image_url', 'alt_text', 'is_primary']
+        extra_kwargs = {
+            'image': {'write_only': True, 'required': False},
+            'external_url': {'required': False, 'allow_null': True, 'allow_blank': True},
+        }
 
     def get_image_url(self, obj):
         request = self.context.get('request')

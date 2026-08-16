@@ -5,7 +5,7 @@ from .models import Property, PropertyImage
 class PropertyImageInline(admin.TabularInline):
     model = PropertyImage
     extra = 1
-    fields = ['image', 'alt_text', 'is_primary']
+    fields = ['image', 'external_url', 'alt_text', 'is_primary']
 
 
 @admin.register(Property)
@@ -32,5 +32,6 @@ class PropertyAdmin(admin.ModelAdmin):
 
 @admin.register(PropertyImage)
 class PropertyImageAdmin(admin.ModelAdmin):
-    list_display = ['property', 'is_primary', 'alt_text', 'uploaded_at']
+    list_display = ['property', 'is_primary', 'external_url', 'alt_text', 'uploaded_at']
     list_filter = ['is_primary']
+    fields = ['property', 'image', 'external_url', 'alt_text', 'is_primary']
