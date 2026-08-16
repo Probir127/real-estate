@@ -76,6 +76,7 @@ export function AuthProvider({ children }) {
     user,
     isAuthenticated: !!user,
     isAgent: user?.is_agent ?? false,
+    isAdmin: !!(user?.is_staff || user?.is_superuser),
     loading,
     login,
     register,

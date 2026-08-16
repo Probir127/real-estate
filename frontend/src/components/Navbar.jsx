@@ -8,12 +8,15 @@ import {
 import './Navbar.css';
 
 export default function Navbar() {
-  const { isAuthenticated, isAgent, user, logout } = useAuth();
+  const { isAuthenticated, isAgent, isAdmin, user, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dropRef = useRef(null);
+
+  const rawApiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+  const adminUrl = rawApiUrl.replace(/\/api\/?$/, '') + '/admin/';
 
   // Scroll detection
   useEffect(() => {
@@ -102,15 +105,17 @@ export default function Navbar() {
                         <FaTachometerAlt /> Dashboard
                       </Link>
                     )}
-                    <a
-                      href="http://localhost:8000/admin/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="navbar__dropdown-item text-gold"
-                      onClick={() => setDropOpen(false)}
-                    >
-                      <FaTachometerAlt /> Django Admin Panel
-                    </a>
+                    {isAdmin && (
+                      <a
+                        href={adminUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="navbar__dropdown-item text-gold"
+                        onClick={() => setDropOpen(false)}
+                      >
+                        <FaTachometerAlt /> Django Admin Panel
+                      </a>
+                    )}
                     <div className="navbar__dropdown-divider" />
                     <button onClick={handleLogout} className="navbar__dropdown-item navbar__dropdown-item--danger">
                       <FaSignOutAlt /> Sign Out
@@ -155,9 +160,11 @@ export default function Navbar() {
           {isAuthenticated ? (
             <>
               <NavLink to="/profile" onClick={() => setMenuOpen(false)}>Profile</NavLink>
-              <a href="http://localhost:8000/admin/" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
-                Django Admin Panel ↗
-              </a>
+              {isAdmin && (
+                <a href={adminUrl} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
+                  Django Admin Panel ↗
+                </a>
+              )}
               <button onClick={handleLogout} className="navbar__mobile-logout">Sign Out</button>
             </>
           ) : (
