@@ -1,0 +1,37 @@
+"""
+Root URL configuration — Real Estate API
+
+All API routes are prefixed with /api/
+Django admin is at /admin/
+Media files are served in development only.
+"""
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+admin.site.site_header = "PrestigeRealty Control Center"
+admin.site.site_title = "PrestigeRealty Admin"
+admin.site.index_title = "Real Estate Platform Administration"
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+
+    # Auth endpoints: /api/auth/register/, /api/auth/login/, etc.
+    path('api/auth/', include('accounts.urls')),
+
+    # Properties: /api/properties/, /api/properties/<id>/, /api/properties/featured/
+    path('api/properties/', include('properties.urls')),
+
+    # Favorites: /api/favorites/, /api/favorites/<id>/
+    path('api/favorites/', include('favorites.urls')),
+
+    # Inquiries: /api/inquiries/, /api/inquiries/received/, /api/inquiries/<id>/read/
+    path('api/inquiries/', include('inquiries.urls')),
+]
+
+# Serve media files in development (DEBUG=True)
+# In production, configure Nginx/Apache to serve /media/ directly
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

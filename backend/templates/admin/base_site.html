@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom_admin.css' %}">
+{% endblock %}
+
+{% block title %}{{ title }} | {{ site_title|default:'PrestigeRealty Admin' }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}" class="brand-link">
+        <span className="brand-icon">🏰</span>
+        <span class="gold-text">Prestige</span><span class="white-text">Realty</span>
+        <span class="admin-badge">ADMIN</span>
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}
+<div class="header-nav-global">
+    <a href="http://localhost:5173/" target="_blank" rel="noopener noreferrer" class="view-site-btn">
+        <span>🌐 View Live Website</span>
+    </a>
+</div>
+{% endblock %}

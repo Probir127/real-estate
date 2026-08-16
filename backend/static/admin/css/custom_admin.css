@@ -1,0 +1,392 @@
+/* ═══════════════════════════════════════════════════════════════
+   PRESTIGEREALTY — DJANGO ADMIN LUXURY DARK THEME
+   Navy (#030b18) & Gold (#d4a853) Aesthetic
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --navy-950: #030b18;
+  --navy-900: #071830;
+  --navy-850: #0a1e38;
+  --navy-800: #0d213f;
+  --navy-700: #142d54;
+  --navy-600: #1b3866;
+  
+  --gold-300: #fde68a;
+  --gold-400: #f5d77f;
+  --gold-500: #d4a853;
+  --gold-600: #b3883b;
+  --gold-700: #8c6527;
+
+  --slate-100: #f8fafc;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+
+  --glass-bg: rgba(7, 24, 48, 0.75);
+  --glass-border: rgba(212, 168, 83, 0.2);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+}
+
+/* ── Global Styles ─────────────────────────────────── */
+html, body {
+  background: var(--navy-950) !important;
+  color: var(--slate-300) !important;
+  font-family: var(--font-main) !important;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+a:link, a:visited {
+  color: var(--gold-400) !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+a:hover, a:active {
+  color: var(--gold-300) !important;
+  text-decoration: underline !important;
+}
+
+/* ── Header ────────────────────────────────────────── */
+#header {
+  background: linear-gradient(180deg, rgba(5, 14, 28, 0.98) 0%, rgba(7, 24, 48, 0.95) 100%) !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  padding: 14px 24px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.gold-text {
+  color: var(--gold-500) !important;
+}
+
+.white-text {
+  color: #ffffff !important;
+}
+
+.admin-badge {
+  font-family: var(--font-main);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  background: rgba(212, 168, 83, 0.15);
+  color: var(--gold-400);
+  border: 1px solid var(--glass-border);
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 8px;
+}
+
+#user-tools {
+  font-size: 0.85rem !important;
+  color: var(--slate-400) !important;
+}
+
+#user-tools a {
+  color: var(--gold-400) !important;
+  font-weight: 600 !important;
+}
+
+.view-site-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(212, 168, 83, 0.12);
+  border: 1px solid var(--glass-border);
+  color: var(--gold-400) !important;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 15px;
+  transition: all 0.2s ease;
+}
+
+.view-site-btn:hover {
+  background: rgba(212, 168, 83, 0.25) !important;
+  transform: translateY(-1px);
+  text-decoration: none !important;
+}
+
+/* ── Container Layout ──────────────────────────────── */
+#container {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+#main {
+  padding: 24px 32px !important;
+}
+
+.breadcrumbs {
+  background: rgba(13, 33, 63, 0.5) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 8px !important;
+  padding: 10px 18px !important;
+  color: var(--slate-400) !important;
+  font-size: 0.85rem !important;
+  margin-bottom: 24px !important;
+}
+
+.breadcrumbs a {
+  color: var(--gold-400) !important;
+}
+
+/* ── Headings ──────────────────────────────────────── */
+h1 {
+  color: #ffffff !important;
+  font-family: var(--font-display) !important;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 20px !important;
+}
+
+h2, h3 {
+  color: var(--gold-400) !important;
+  font-family: var(--font-display) !important;
+}
+
+/* ── Modules & Cards ───────────────────────────────── */
+.module {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--glass-shadow) !important;
+  margin-bottom: 24px !important;
+  overflow: hidden !important;
+}
+
+.module caption, .module h2 {
+  background: linear-gradient(90deg, var(--navy-850) 0%, var(--navy-800) 100%) !important;
+  color: var(--gold-400) !important;
+  font-family: var(--font-main) !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  padding: 12px 18px !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+}
+
+/* ── Tables ────────────────────────────────────────── */
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: transparent !important;
+}
+
+thead th {
+  background: rgba(10, 30, 56, 0.9) !important;
+  color: var(--gold-400) !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+}
+
+thead th a {
+  color: var(--gold-400) !important;
+}
+
+tbody tr {
+  background: rgba(7, 24, 48, 0.4) !important;
+  transition: background 0.2s ease !important;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(13, 33, 63, 0.3) !important;
+}
+
+tbody tr:hover {
+  background: rgba(212, 168, 83, 0.08) !important;
+}
+
+td, th {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid rgba(212, 168, 83, 0.08) !important;
+  color: var(--slate-300) !important;
+}
+
+td a {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+td a:hover {
+  color: var(--gold-400) !important;
+}
+
+/* ── Form Inputs ────────────────────────────────────── */
+input[type=text], input[type=password], input[type=email],
+input[type=url], input[type=number], input[type=tel],
+select, textarea {
+  background: rgba(3, 11, 24, 0.8) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  padding: 8px 12px !important;
+  font-family: var(--font-main) !important;
+  font-size: 0.9rem !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold-500) !important;
+  box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.2) !important;
+  outline: none !important;
+}
+
+/* ── Buttons ────────────────────────────────────────── */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+  background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-600) 100%) !important;
+  color: #030b18 !important;
+  font-weight: 700 !important;
+  font-family: var(--font-main) !important;
+  padding: 9px 20px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(212, 168, 83, 0.25) !important;
+  transition: all 0.2s ease !important;
+  text-transform: uppercase !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.05em !important;
+}
+
+.button:hover, input[type=submit]:hover, .submit-row input:hover {
+  background: linear-gradient(135deg, var(--gold-400) 0%, var(--gold-500) 100%) !important;
+  box-shadow: 0 6px 18px rgba(212, 168, 83, 0.4) !important;
+  transform: translateY(-1px) !important;
+  text-decoration: none !important;
+}
+
+.button.default, input[type=submit].default {
+  background: linear-gradient(135deg, var(--gold-400) 0%, var(--gold-500) 100%) !important;
+}
+
+.deletelink, .deletelink-box a {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  padding: 6px 14px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+}
+
+.deletelink:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+/* ── Login Screen ──────────────────────────────────── */
+body.login {
+  background: radial-gradient(circle at center, var(--navy-850) 0%, var(--navy-950) 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+}
+
+body.login #container {
+  width: 100% !important;
+  max-width: 440px !important;
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7) !important;
+  padding: 32px !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+body.login #header {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  justify-content: center !important;
+  padding: 0 0 24px 0 !important;
+}
+
+body.login .form-row {
+  margin-bottom: 16px !important;
+  border-bottom: none !important;
+}
+
+body.login .form-row label {
+  color: var(--slate-300) !important;
+  font-weight: 600 !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+body.login .submit-row {
+  background: transparent !important;
+  border: none !important;
+  padding: 16px 0 0 0 !important;
+}
+
+body.login .submit-row input {
+  width: 100% !important;
+  padding: 12px !important;
+}
+
+/* ── Messages / Alerts ─────────────────────────────── */
+ul.messagelist {
+  margin-bottom: 20px !important;
+  padding: 0 !important;
+}
+
+ul.messagelist li {
+  padding: 12px 18px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  margin-bottom: 10px !important;
+  list-style: none !important;
+}
+
+ul.messagelist li.success {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #86efac !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+}
+
+ul.messagelist li.error, ul.messagelist li.warning {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+/* ── Sidebar Navigation ────────────────────────────── */
+#nav-sidebar {
+  background: var(--navy-900) !important;
+  border-right: 1px solid var(--glass-border) !important;
+}
+
+.main.shifted #nav-sidebar {
+  border-right: 1px solid var(--glass-border) !important;
+}
+
+#nav-sidebar .module th {
+  background: var(--navy-850) !important;
+}
