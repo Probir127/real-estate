@@ -1,6 +1,15 @@
-# 🏡 Prestige Realty — Full-Stack Real Estate Platform
+# 🏡 Prestige Realty — Luxury Real Estate Platform
 
-A production-ready, decoupled real estate platform built with **Django REST Framework** (backend) and **React + Vite** (frontend). Features JWT authentication, property CRUD, favorites, agent inquiries, rate limiting, and a premium dark luxury UI.
+A production-ready, full-stack real estate platform built with **Django REST Framework** (backend) and **React + Vite** (frontend). Features a luxury navy & gold dark UI, Bangladesh BDT currency (Lakh & Crore notation), JWT authentication, property CRUD, sticky sidebar filters, favorites, agent inquiries, rate limiting, and a custom unified Django Admin Panel.
+
+---
+
+## 🚀 Live Production Deployment (Render)
+
+- 🌐 **Live Website**: [https://real-estate-1-czqc.onrender.com](https://real-estate-1-czqc.onrender.com)
+- ⚙️ **Backend API**: [https://real-estate-rcdq.onrender.com](https://real-estate-rcdq.onrender.com)
+- 🏰 **Django Luxury Admin Panel**: [https://real-estate-rcdq.onrender.com/admin/](https://real-estate-rcdq.onrender.com/admin/)
+- ⚡ **Instant Production Admin Setup Endpoint**: [https://real-estate-rcdq.onrender.com/api/auth/setup-admin/](https://real-estate-rcdq.onrender.com/api/auth/setup-admin/)
 
 ---
 
@@ -8,22 +17,25 @@ A production-ready, decoupled real estate platform built with **Django REST Fram
 
 ```
 realestate/
-├── backend/          # Django REST API (Python)
+├── backend/          # Django REST API (Python 3.11)
 │   ├── config/       # Settings, URLs, exceptions, wsgi
-│   ├── accounts/     # Custom user model, JWT auth
-│   ├── properties/   # Property listings + images
+│   ├── accounts/     # Custom user model, JWT auth, setup-admin endpoint
+│   ├── properties/   # Property listings + images + BDT seed script
 │   ├── favorites/    # Saved properties per user
 │   ├── inquiries/    # Contact agent form
+│   ├── static/       # Custom Django Admin CSS (custom_admin.css)
+│   ├── templates/    # Admin base_site.html luxury overrides
+│   ├── build.sh      # Render build & migration script
 │   ├── manage.py
 │   └── requirements.txt
 │
 └── frontend/         # React + Vite SPA
     ├── src/
-    │   ├── api/      # Axios client with JWT interceptors
+    │   ├── api/      # Axios client with JWT interceptors & env parsing
     │   ├── components/   # Navbar, PropertyCard, Pagination, ...
-    │   ├── context/      # AuthContext (JWT state)
-    │   ├── pages/        # All page components
-    │   └── utils/        # helpers.js
+    │   ├── context/      # AuthContext (JWT & isAdmin state)
+    │   ├── pages/        # HomePage, PropertiesPage, PropertyDetailPage, ...
+    │   └── utils/        # helpers.js (BDT Lakh/Crore price formatter)
     ├── index.html
     ├── vite.config.js
     └── package.json
@@ -105,6 +117,7 @@ Frontend runs at: **http://localhost:5173**
 | POST | `/auth/logout/` | Blacklist refresh token | Yes | — |
 | GET/PATCH | `/auth/profile/` | View/update profile | Yes | — |
 | POST | `/auth/change-password/` | Change password | Yes | — |
+| GET | `/auth/setup-admin/` | Initialize admin user & seed DB | No | — |
 
 ### Properties — `/api/properties/`
 
