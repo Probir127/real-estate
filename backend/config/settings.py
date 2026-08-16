@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',       # Serve static files efficiently on Render
     'corsheaders.middleware.CorsMiddleware',            # Must be before CommonMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,20 +68,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database — PostgreSQL
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='realestate_db'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default='password'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
-        'OPTIONS': {
-            'connect_timeout': 10,
-        },
+# Database — PostgreSQL (supports local dev and Render DATABASE_URL)
+import dj_database_url
+
+db_url = config('DATABASE_URL', default=None)
+if db_url:
+    DATABASES = {
+        'default': dj_database_url.config(default=db_url, conn_max_age=600, conn_health_checks=True)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME', default='realestate_db'),
+            'USER': config('DB_USER', default='postgres'),
+            'PASSWORD': config('DB_PASSWORD', default='password'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
+            'OPTIONS': {
+                'connect_timeout': 10,
+            },
+        }
+    }
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
