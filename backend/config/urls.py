@@ -14,7 +14,24 @@ admin.site.site_header = "PrestigeRealty Control Center"
 admin.site.site_title = "PrestigeRealty Admin"
 admin.site.index_title = "Real Estate Platform Administration"
 
+from django.http import JsonResponse
+
+def root_api_status(request):
+    return JsonResponse({
+        "status": "online",
+        "name": "PrestigeRealty API",
+        "version": "1.0.0",
+        "admin": "/admin/",
+        "endpoints": {
+            "properties": "/api/properties/",
+            "auth": "/api/auth/",
+            "favorites": "/api/favorites/",
+            "inquiries": "/api/inquiries/"
+        }
+    })
+
 urlpatterns = [
+    path('', root_api_status, name='root_status'),
     path('admin/', admin.site.urls),
 
     # Auth endpoints: /api/auth/register/, /api/auth/login/, etc.
