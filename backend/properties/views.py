@@ -68,14 +68,13 @@ class PropertyViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated(), IsOwnerOrReadOnly()]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        # Agents can see their own unpublished listings
-        if self.request.user.is_authenticated and self.request.user.is_agent:
-            if self.action in ['my_listings', 'update', 'partial_update', 'destroy']:
-                queryset = Property.objects.filter(
-                    agent=self.request.user
-                ).select_related('agent').prefetch_related('images')
-        return queryset
+        if self.action == 'my_listings':
+            if self.request.user.is_authenticated and self.request.user.is_agent:
+                return Property.objects.filter(agent=self.request.user).select_related('agent').prefetch_related('images').order_by('-created_at')
+            return Property.objects.none()
+        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy', 'upload_image']:
+            return Property.objects.all().select_related('agent').prefetch_related('images')
+        return Property.objects.filter(is_published=True).select_related('agent').prefetch_related('images').order_by('-created_at')
 
     def perform_create(self, serializer):
         serializer.save(agent=self.request.user)

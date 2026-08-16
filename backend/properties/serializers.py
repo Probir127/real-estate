@@ -143,6 +143,10 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at',
         ]
         read_only_fields = ['agent', 'created_at', 'updated_at']
+        extra_kwargs = {
+            'state': {'required': False, 'allow_blank': True},
+            'zip_code': {'required': False, 'allow_blank': True},
+        }
 
     def get_primary_image_url(self, obj):
         request = self.context.get('request')
