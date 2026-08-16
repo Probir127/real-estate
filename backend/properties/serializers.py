@@ -117,6 +117,7 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     Images are nested read-only; upload images via the /images/ sub-endpoint.
     """
     images = PropertyImageSerializer(many=True, read_only=True)
+    primary_image_url = serializers.SerializerMethodField()
     agent = AgentSerializer(read_only=True)
     listing_type_display = serializers.CharField(source='get_listing_type_display', read_only=True)
     property_type_display = serializers.CharField(source='get_property_type_display', read_only=True)
@@ -137,11 +138,21 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             'bedrooms', 'bathrooms', 'area_sqft', 'garage', 'year_built',
             'features', 'features_list',
             'is_featured', 'is_published',
-            'agent', 'images',
+            'primary_image_url', 'agent', 'images',
             'is_favorited', 'favorite_id',
             'created_at', 'updated_at',
         ]
         read_only_fields = ['agent', 'created_at', 'updated_at']
+
+    def get_primary_image_url(self, obj):
+        request = self.context.get('request')
+        img = obj.primary_image
+        if img:
+            if img.external_url:
+                return img.external_url
+            if img.image:
+                return request.build_absolute_uri(img.image.url) if request else img.image.url
+        return None
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
@@ -156,6 +167,17 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             fav = obj.favorited_by.filter(user=request.user).first()
             return fav.id if fav else None
         return None
+
+    def to_internal_value(self, data):
+        """Convert empty strings to None/0 for numeric fields to prevent DRF validation errors."""
+        data_copy = data.copy() if hasattr(data, 'copy') else dict(data)
+        for field in ['year_built', 'latitude', 'longitude']:
+            if field in data_copy and (data_copy[field] == '' or data_copy[field] is None):
+                data_copy[field] = None
+        for field in ['garage', 'bedrooms', 'bathrooms', 'area_sqft']:
+            if field in data_copy and (data_copy[field] == '' or data_copy[field] is None):
+                data_copy[field] = 0
+        return super().to_internal_value(data_copy)
 
     def validate_title(self, value):
         return bleach.clean(value.strip())

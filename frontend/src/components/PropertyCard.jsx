@@ -35,15 +35,22 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
     setFavLoading(true);
     try {
       if (isFav) {
-        if (property.favorite_id) {
-          await favoritesApi.remove(property.favorite_id);
+        let deleteId = property.favorite_id;
+        if (!deleteId) {
+          const res = await favoritesApi.list();
+          const favList = res.data.results || res.data || [];
+          const match = favList.find(f => (f.property_detail?.id || f.property_id) === property.id);
+          if (match) deleteId = match.id;
+        }
+        if (deleteId) {
+          await favoritesApi.remove(deleteId);
+          property.favorite_id = null;
         }
         setIsFav(false);
         toast.success('Removed from favorites.');
       } else {
         const res = await favoritesApi.add(property.id);
         setIsFav(true);
-        // Update favorite_id in-place for future removal
         property.favorite_id = res?.data?.id;
         toast.success('Added to favorites!');
       }

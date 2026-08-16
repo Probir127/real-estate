@@ -113,12 +113,24 @@ export default function PropertyFormPage() {
     }
     setLoading(true)
     try {
+      const payload = {
+        ...form,
+        price: Number(form.price),
+        bedrooms: form.bedrooms ? Number(form.bedrooms) : 1,
+        bathrooms: form.bathrooms ? Number(form.bathrooms) : 1,
+        area_sqft: form.area_sqft ? Number(form.area_sqft) : 0,
+        garage: form.garage ? Number(form.garage) : 0,
+        year_built: form.year_built ? Number(form.year_built) : null,
+        latitude: form.latitude ? Number(form.latitude) : null,
+        longitude: form.longitude ? Number(form.longitude) : null,
+      }
+
       let propertyId = id
       if (isEdit) {
-        await propertiesApi.update(id, form)
+        await propertiesApi.update(id, payload)
         toast.success('Listing updated!')
       } else {
-        const res = await propertiesApi.create(form)
+        const res = await propertiesApi.create(payload)
         propertyId = res.data.id
         toast.success('Listing created!')
       }
