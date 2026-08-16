@@ -134,3 +134,50 @@ class ChangePasswordView(APIView):
             {'success': True, 'message': 'Password updated successfully.'},
             status=status.HTTP_200_OK
         )
+
+
+class SetupAdminView(APIView):
+    """
+    GET /api/auth/setup-admin/
+    Ensures superuser admin@realestate.com and seeds properties on demand.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        from .models import User
+        from django.core.management import call_command
+
+        user, created = User.objects.get_or_create(
+            email='admin@realestate.com',
+            defaults={
+                'full_name': 'Prestige Admin',
+                'is_agent': True,
+                'is_staff': True,
+                'is_superuser': True,
+                'is_active': True,
+            }
+        )
+        user.full_name = 'Prestige Admin'
+        user.is_agent = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.is_active = True
+        user.set_password('Admin1234!')
+        user.save()
+
+        try:
+            call_command('seed_bangladesh_properties')
+            seeded = True
+        except Exception as e:
+            seeded = str(e)
+
+        return Response({
+            'success': True,
+            'message': 'Superuser admin@realestate.com set up successfully!',
+            'credentials': {
+                'email': 'admin@realestate.com',
+                'password': 'Admin1234!'
+            },
+            'seeded_properties': seeded
+        }, status=status.HTTP_200_OK)
+
