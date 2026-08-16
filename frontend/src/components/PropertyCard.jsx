@@ -77,13 +77,21 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
             alt={property.title}
             className="property-card__image"
             loading="lazy"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              if (e.target.nextElementSibling) {
+                e.target.nextElementSibling.style.display = 'flex';
+              }
+            }}
           />
-        ) : (
-          <div className={`property-card__placeholder placeholder--${pType}`}>
-            <PlaceholderIcon className="placeholder__icon" />
-            <span className="placeholder__type">{typeLabel}</span>
-          </div>
-        )}
+        ) : null}
+        <div
+          className={`property-card__placeholder placeholder--${pType}`}
+          style={{ display: (property.primary_image_url || property.images?.[0]?.image_url) ? 'none' : 'flex' }}
+        >
+          <PlaceholderIcon className="placeholder__icon" />
+          <span className="placeholder__type">{typeLabel}</span>
+        </div>
 
         {/* Badges */}
         <div className="property-card__badges">

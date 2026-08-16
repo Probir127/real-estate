@@ -116,7 +116,7 @@ export default function PropertyDetailPage() {
         {/* Image Gallery */}
         <div className="gallery">
           <div className="gallery__main">
-            {(images.length > 0 || property.primary_image_url) ? (
+            {(images.length > 0 && (images[activeImg]?.image_url || property.primary_image_url)) ? (
               <motion.img
                 key={activeImg}
                 src={images[activeImg]?.image_url || property.primary_image_url}
@@ -125,10 +125,21 @@ export default function PropertyDetailPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  const ph = document.getElementById('gallery-fallback-placeholder');
+                  if (ph) ph.style.display = 'flex';
+                }}
               />
-            ) : (
-              <div className="gallery__placeholder"><FaMapMarkerAlt /><span>No Images Available</span></div>
-            )}
+            ) : null}
+            <div
+              id="gallery-fallback-placeholder"
+              className="gallery__placeholder"
+              style={{ display: (images.length > 0 && (images[activeImg]?.image_url || property.primary_image_url)) ? 'none' : 'flex' }}
+            >
+              <FaBuilding />
+              <span>No Images Available</span>
+            </div>
             <div className="gallery__badges">
               <span className={`badge ${property.listing_type === 'rent' ? 'badge-blue' : 'badge-gold'}`}>
                 {property.listing_type_display}
