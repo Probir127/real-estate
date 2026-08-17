@@ -198,6 +198,64 @@
   cursor: not-allowed;
 }
 
+/* 1-Click Quick Demo Sign-Ins */
+.z-quick-logins {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.z-quick-logins__divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--z-gray-500);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.z-quick-logins__divider::before,
+.z-quick-logins__divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--z-gray-200);
+}
+
+.z-quick-logins__divider span {
+  padding: 0 0.75rem;
+}
+
+.z-quick-logins__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.z-quick-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  background-color: var(--z-gray-50);
+  border: 1px solid var(--z-gray-300);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--z-darker);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.z-quick-btn:hover {
+  background-color: var(--z-blue-light);
+  border-color: var(--z-blue);
+  color: var(--z-blue);
+}
+
 /* Legal Notice */
 .z-legal-notice {
   font-size: 0.75rem;
