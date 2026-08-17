@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   FaSearch, FaHome, FaBuilding, FaMapMarkerAlt, FaStar,
-  FaArrowRight, FaKey, FaHandshake, FaShieldAlt, FaCheckCircle,
-  FaChevronRight, FaRegHeart
+  FaArrowRight, FaChevronRight, FaRegHeart
 } from 'react-icons/fa';
 import { propertiesApi } from '../api/client';
 import PropertyCard from '../components/PropertyCard';
@@ -63,7 +62,6 @@ export default function HomePage() {
   // Zillow Search State
   const [activeTab, setActiveTab] = useState('sale');
   const [searchQuery, setSearchQuery] = useState('');
-  const [propertyType, setPropertyType] = useState('');
   const [activeDirectoryTab, setActiveDirectoryTab] = useState('real_estate');
 
   useEffect(() => {
@@ -94,7 +92,6 @@ export default function HomePage() {
     const params = new URLSearchParams();
     if (activeTab) params.set('type', activeTab);
     if (searchQuery.trim()) params.set('search', searchQuery.trim());
-    if (propertyType) params.set('property_type', propertyType);
     navigate(`/properties?${params.toString()}`);
   };
 
@@ -108,7 +105,7 @@ export default function HomePage() {
   return (
     <div className="z-home">
 
-      {/* ── 1. Zillow Hero Section ──────────────────── */}
+      {/* ── 1. Exact Zillow Hero Section ────────────── */}
       <section className="z-hero">
         <div className="z-hero__bg" />
         <div className="container z-hero__container">
@@ -116,88 +113,66 @@ export default function HomePage() {
           <h1 className="z-hero__title">
             Find your place.
           </h1>
-          <p className="z-hero__subtitle">
-            Explore homes for sale, luxury apartments for rent, and verified properties across Bangladesh.
-          </p>
 
-          {/* Search Card Container */}
-          <div className="z-search-box">
+          {/* Zillow Sleek Floating Search Bar */}
+          <div className="z-search-wrapper">
             
-            {/* Tabs: Buy | Rent | All Homes */}
-            <div className="z-search-box__tabs">
+            {/* Tabs: Buy | Rent | Sold */}
+            <div className="z-search-tabs">
               <button
                 type="button"
-                className={`z-search-box__tab ${activeTab === 'sale' ? 'active' : ''}`}
+                className={`z-search-tab ${activeTab === 'sale' ? 'active' : ''}`}
                 onClick={() => setActiveTab('sale')}
               >
                 Buy
               </button>
               <button
                 type="button"
-                className={`z-search-box__tab ${activeTab === 'rent' ? 'active' : ''}`}
+                className={`z-search-tab ${activeTab === 'rent' ? 'active' : ''}`}
                 onClick={() => setActiveTab('rent')}
               >
                 Rent
               </button>
               <button
                 type="button"
-                className={`z-search-box__tab ${activeTab === '' ? 'active' : ''}`}
+                className={`z-search-tab ${activeTab === '' ? 'active' : ''}`}
                 onClick={() => setActiveTab('')}
               >
                 All Homes
               </button>
             </div>
 
-            {/* Input Form */}
-            <form onSubmit={handleSearch} className="z-search-box__form">
-              <div className="z-search-box__input-wrapper">
-                <FaSearch className="z-search-box__input-icon" />
-                <input
-                  type="text"
-                  className="z-search-box__input"
-                  placeholder={
-                    activeTab === 'rent'
-                      ? "Enter an address, neighborhood, city, or ZIP code to rent..."
-                      : "Enter an address, neighborhood, city, or ZIP code to buy..."
-                  }
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-
-              <select
-                className="z-search-box__select"
-                value={propertyType}
-                onChange={(e) => setPropertyType(e.target.value)}
-              >
-                <option value="">Home Type</option>
-                <option value="apartment">Apartment</option>
-                <option value="house">House</option>
-                <option value="villa">Villa</option>
-                <option value="commercial">Commercial</option>
-                <option value="land">Land</option>
-              </select>
-
-              <button type="submit" className="z-search-box__submit-btn">
-                <FaSearch /> Search
+            {/* Pure Zillow Single-Pill Search Form */}
+            <form onSubmit={handleSearch} className="z-search-pill-form">
+              <input
+                type="text"
+                className="z-search-pill-input"
+                placeholder={
+                  activeTab === 'rent'
+                    ? "Enter an address, neighborhood, city, or ZIP code"
+                    : "Enter an address, neighborhood, city, or ZIP code"
+                }
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button type="submit" className="z-search-pill-btn" aria-label="Search">
+                <FaSearch />
               </button>
             </form>
 
-            {/* Popular Locations */}
-            <div className="z-search-box__locations">
-              <span className="z-search-box__locations-title">Popular Cities:</span>
-              <div className="z-search-box__pills">
-                {CITIES.map(c => (
-                  <button
-                    key={c.name}
-                    type="button"
-                    className="z-search-box__pill"
-                    onClick={() => handleCityClick(c.name)}
-                  >
-                    <FaMapMarkerAlt size={10} /> {c.name}
-                  </button>
-                ))}
-              </div>
+            {/* Popular City Chips */}
+            <div className="z-hero-chips">
+              <span className="z-hero-chips__title">Explore:</span>
+              {CITIES.map(c => (
+                <button
+                  key={c.name}
+                  type="button"
+                  className="z-hero-chip"
+                  onClick={() => handleCityClick(c.name)}
+                >
+                  {c.name}
+                </button>
+              ))}
             </div>
 
           </div>
@@ -224,7 +199,7 @@ export default function HomePage() {
           </div>
         ) : featured.length > 0 ? (
           <div className="z-grid">
-            {featured.slice(0, 6).map(prop => (
+            {featured.slice(0, 8).map(prop => (
               <PropertyCard key={prop.id} property={prop} />
             ))}
           </div>
@@ -276,7 +251,7 @@ export default function HomePage() {
             <p className="z-action-card__desc">
               Find your place with an immersive photo experience and the most listings, including things you won't find anywhere else.
             </p>
-            <Link to="/properties?type=sale" className="btn btn-secondary z-action-card__btn">
+            <Link to="/properties?type=sale" className="z-action-card__outline-btn">
               Browse homes
             </Link>
           </div>
@@ -297,7 +272,7 @@ export default function HomePage() {
             <p className="z-action-card__desc">
               We're creating a seamless online experience – from shopping on the largest rental network, to applying, to connecting with top agents.
             </p>
-            <Link to="/properties?type=rent" className="btn btn-secondary z-action-card__btn">
+            <Link to="/properties?type=rent" className="z-action-card__outline-btn">
               Find rentals
             </Link>
           </div>
@@ -318,7 +293,7 @@ export default function HomePage() {
             <p className="z-action-card__desc">
               No matter what path you take to sell or rent your property, Prestige Realty connects you with qualified buyers and trusted licensed brokers.
             </p>
-            <Link to="/properties/new" className="btn btn-secondary z-action-card__btn">
+            <Link to="/properties/new" className="z-action-card__outline-btn">
               See your options
             </Link>
           </div>

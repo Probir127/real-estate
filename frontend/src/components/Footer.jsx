@@ -1,82 +1,88 @@
 import { Link } from 'react-router-dom';
-import { FaHome, FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import {
+  FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube
+} from 'react-icons/fa';
 import './Footer.css';
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="footer">
-      <div className="container footer__inner">
+    <footer className="z-footer">
+      <div className="container z-footer__container">
 
-        {/* Brand & Mission */}
-        <div className="footer__brand-block">
-          <Link to="/" className="footer__logo">
-            <div className="footer__logo-icon">
-              <FaHome />
-            </div>
-            <span className="footer__logo-text">
-              Prestige<span className="text-blue">Realty</span>
-            </span>
-          </Link>
-          <p className="footer__tagline">
-            Prestige Realty is Bangladesh's trusted real estate platform. We empower home buyers, sellers, and renters with transparent pricing, verified legal titles, and licensed agent connections across all divisions.
+        {/* ── Top Navigation Links (Zillow Style) ─── */}
+        <nav className="z-footer__nav">
+          <ul className="z-footer__links-row">
+            <li><Link to="/properties?type=sale">Buy</Link></li>
+            <li><Link to="/properties?type=rent">Rent</Link></li>
+            <li><Link to="/properties">All Homes</Link></li>
+            <li><Link to="/properties/new">List Property</Link></li>
+            <li><Link to="/favorites">Saved Homes</Link></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Research</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Help & Support</a></li>
+            <li><a href="#">Advertise</a></li>
+            <li><a href="#">Fair Housing Guide</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Privacy Notice</a></li>
+            <li><a href="#">Cookie Preference</a></li>
+          </ul>
+        </nav>
+
+        {/* ── Real Estate Brands Row ─────────────── */}
+        <div className="z-footer__brands">
+          <span className="z-footer__brands-title">Prestige Real Estate Network:</span>
+          <div className="z-footer__brands-list">
+            <span>Dhaka Prime</span>
+            <span>Chittagong Bay Living</span>
+            <span>Sylhet Green Estates</span>
+            <span>Cox's Bazar Coastal</span>
+          </div>
+        </div>
+
+        {/* ── Mission & Accessibility Statement ──── */}
+        <div className="z-footer__disclaimer">
+          <p>
+            Prestige Realty Bangladesh is committed to ensuring digital accessibility for individuals with disabilities. We are continuously working to improve the accessibility of our web experience for everyone, and we welcome feedback and accommodation requests.
+          </p>
+          <p>
+            Prestige Realty, Inc. holds licensed real estate brokerage credentials across all divisions in Bangladesh. Equal Housing Opportunity. All data is deemed reliable but is not guaranteed accurate by Prestige Realty.
           </p>
         </div>
 
-        {/* Footer Navigation Columns */}
-        <div className="footer__nav-grid">
-          
-          <div className="footer__col">
-            <h4 className="footer__heading">Real Estate</h4>
-            <ul className="footer__links">
-              <li><Link to="/properties?type=sale">Homes for Sale</Link></li>
-              <li><Link to="/properties?type=rent">Homes for Rent</Link></li>
-              <li><Link to="/properties">All Property Listings</Link></li>
-              <li><Link to="/properties/new">Post a Listing</Link></li>
-            </ul>
-          </div>
-
-          <div className="footer__col">
-            <h4 className="footer__heading">Popular Cities</h4>
-            <ul className="footer__links">
-              <li><Link to="/properties?city=Dhaka">Homes in Dhaka</Link></li>
-              <li><Link to="/properties?city=Chittagong">Homes in Chittagong</Link></li>
-              <li><Link to="/properties?city=Sylhet">Homes in Sylhet</Link></li>
-              <li><Link to="/properties?city=Cox%27s+Bazar">Homes in Cox's Bazar</Link></li>
-            </ul>
-          </div>
-
-          <div className="footer__col">
-            <h4 className="footer__heading">Account</h4>
-            <ul className="footer__links">
-              <li><Link to="/login">Sign In</Link></li>
-              <li><Link to="/register">Create an Account</Link></li>
-              <li><Link to="/favorites">Saved Homes</Link></li>
-              <li><Link to="/dashboard">Agent Dashboard</Link></li>
-            </ul>
-          </div>
-
-          <div className="footer__col">
-            <h4 className="footer__heading">Contact & Legal</h4>
-            <ul className="footer__links">
-              <li><span>Gulshan-2, Dhaka 1212</span></li>
-              <li><a href="tel:+8801700000000">+880 1700-000000</a></li>
-              <li><a href="mailto:info@prestigerealty.bd">info@prestigerealty.bd</a></li>
-              <li><a href="#">Equal Housing Opportunity</a></li>
-            </ul>
-          </div>
-
+        {/* ── App Store Badges ───────────────────── */}
+        <div className="z-footer__app-badges">
+          <img
+            src="https://www.zillowstatic.com/s3/pfs/static/app-store-badge.svg"
+            alt="Download on the App Store"
+            height="32"
+          />
+          <img
+            src="https://www.zillowstatic.com/s3/pfs/static/google-play-badge.svg"
+            alt="Get it on Google Play"
+            height="32"
+          />
         </div>
 
-        {/* Bottom copyright */}
-        <div className="footer__bottom">
-          <p>&copy; {year} Prestige Realty Bangladesh Inc. All rights reserved.</p>
-          <div className="footer__socials">
-            <a href="#" aria-label="Facebook" className="footer__social-btn"><FaFacebook /></a>
-            <a href="#" aria-label="Twitter" className="footer__social-btn"><FaTwitter /></a>
-            <a href="#" aria-label="Instagram" className="footer__social-btn"><FaInstagram /></a>
-            <a href="#" aria-label="LinkedIn" className="footer__social-btn"><FaLinkedin /></a>
+        {/* ── Bottom Bar: Copyright & Equal Housing ─ */}
+        <div className="z-footer__bottom">
+          <div className="z-footer__brand-copy">
+            <span className="z-footer__brand-text">
+              Prestige<strong style={{ color: '#006AFF' }}>Realty</strong>
+            </span>
+            <span className="z-footer__copyright">
+              © 2006–{year} Prestige Realty Inc. All rights reserved.
+            </span>
+          </div>
+
+          <div className="z-footer__socials">
+            <a href="#" aria-label="Facebook"><FaFacebook /></a>
+            <a href="#" aria-label="Instagram"><FaInstagram /></a>
+            <a href="#" aria-label="Twitter"><FaTwitter /></a>
+            <a href="#" aria-label="LinkedIn"><FaLinkedin /></a>
+            <a href="#" aria-label="YouTube"><FaYoutube /></a>
           </div>
         </div>
 
