@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import {
   FaBed, FaBath, FaRulerCombined, FaCar, FaCalendar,
   FaMapMarkerAlt, FaHeart, FaUser, FaPhone, FaEnvelope,
-  FaArrowLeft, FaEdit, FaTrash, FaStar, FaCheckCircle
+  FaArrowLeft, FaEdit, FaTrash, FaStar, FaCheckCircle, FaBuilding
 } from 'react-icons/fa'
 import { propertiesApi, inquiriesApi, favoritesApi } from '../api/client'
 import { useAuth } from '../context/AuthContext'
