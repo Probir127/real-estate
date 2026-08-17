@@ -206,6 +206,57 @@ p {
   to { transform: rotate(360deg); }
 }
 
+/* ─── Forms & Inputs (Zillow Standard) ────────────────────────── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--z-darker);
+}
+
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="url"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: var(--z-darker);
+  background-color: var(--z-white);
+  border: 1px solid var(--z-gray-300);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--z-blue);
+  box-shadow: 0 0 0 3px rgba(0, 106, 255, 0.15);
+  background-color: var(--z-white);
+}
+
+.form-control::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: var(--z-gray-500);
+  font-size: 0.9rem;
+}
+
 .page-wrapper {
   padding-top: var(--navbar-height);
   min-height: 100vh;
