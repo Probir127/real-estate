@@ -2,12 +2,13 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
   FaTimes, FaSearch, FaSlidersH, FaHome, FaBuilding,
-  FaStore, FaTree, FaCity, FaBed, FaBath, FaFilter
+  FaStore, FaTree, FaCity, FaBed, FaBath, FaFilter,
+  FaMapMarkedAlt, FaThLarge, FaMapMarkerAlt
 } from 'react-icons/fa';
 import { propertiesApi } from '../api/client';
 import PropertyCard from '../components/PropertyCard';
 import Pagination from '../components/Pagination';
-import { getErrorMessage } from '../utils/helpers';
+import { getErrorMessage, formatPrice } from '../utils/helpers';
 import './PropertiesPage.css';
 
 const PROPERTY_TYPES = [
@@ -24,6 +25,15 @@ const DEFAULT_FILTERS = {
   min_price: '', max_price: '', min_bedrooms: '', ordering: '-created_at',
 };
 
+const CITY_COORDS = {
+  Dhaka: { lat: 23.8103, lng: 90.4125 },
+  Chittagong: { lat: 22.3569, lng: 91.7832 },
+  Sylhet: { lat: 24.8949, lng: 91.8687 },
+  "Cox's Bazar": { lat: 21.4272, lng: 92.0058 },
+  Rajshahi: { lat: 24.3745, lng: 88.6042 },
+  Khulna: { lat: 22.8456, lng: 89.5403 },
+};
+
 const PAGE_SIZE = 12;
 
 export default function PropertiesPage() {
@@ -33,6 +43,8 @@ export default function PropertiesPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [viewMode, setViewMode] = useState('split'); // 'grid' or 'split'
+  const [activePropertyId, setActivePropertyId] = useState(null);
   const filtersRef = useRef(null);
 
   const [filters, setFilters] = useState({
@@ -101,49 +113,52 @@ export default function PropertiesPage() {
     applyFilters(updated);
   };
 
-  const handleSearchKeyDown = (e) => {
-    if (e.key === 'Enter') applyFilters();
-  };
-
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-  const hasActiveFilters = Object.entries(filters).some(([k, v]) => v && k !== 'ordering');
+  const hasActiveFilters = Boolean(
+    filters.city || filters.property_type || filters.listing_type ||
+    filters.min_price || filters.max_price || filters.min_bedrooms
+  );
+
+  // Map coordinates based on filtered city
+  const city = filters.city || 'Dhaka';
+  const coords = CITY_COORDS[city] || CITY_COORDS['Dhaka'];
+  const mapEmbedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${coords.lng - 0.08}%2C${coords.lat - 0.05}%2C${coords.lng + 0.08}%2C${coords.lat + 0.05}&layer=mapnik`;
 
   return (
     <main className="properties-page page-wrapper">
-      
-      {/* ── Top Zillow Filter Bar ───────────────────── */}
+
+      {/* ── 1. Top Horizontal Filter Bar (Zillow Style) ── */}
       <div className="pp-filter-bar">
         <div className="container pp-filter-bar__inner">
-          
-          {/* Search Box */}
-          <div className="pp-filter-search">
+
+          {/* Search Input */}
+          <form
+            onSubmit={(e) => { e.preventDefault(); applyFilters(); }}
+            className="pp-filter-search"
+          >
             <FaSearch className="pp-filter-search__icon" />
             <input
               type="text"
-              placeholder="City, neighborhood, address..."
+              placeholder="City, neighborhood, or address"
               value={filters.search}
               onChange={e => updateFilter('search', e.target.value)}
-              onKeyDown={handleSearchKeyDown}
               className="pp-filter-search__input"
             />
             {filters.search && (
               <button
+                type="button"
                 className="pp-filter-search__clear"
-                onClick={() => {
-                  const updated = { ...filters, search: '' };
-                  setFilters(updated);
-                  applyFilters(updated);
-                }}
+                onClick={() => { updateFilter('search', ''); applyFilters({ ...filters, search: '' }); }}
               >
                 <FaTimes />
               </button>
             )}
-          </div>
+          </form>
 
-          {/* Quick Filter Pills (Zillow Style) */}
+          {/* Quick Filter Selects */}
           <div className="pp-filter-pills">
             
-            {/* For Sale / Rent Selector */}
+            {/* For Sale / Rent */}
             <select
               value={filters.listing_type}
               onChange={(e) => {
@@ -208,8 +223,30 @@ export default function PropertiesPage() {
             )}
           </div>
 
-          {/* Sort Dropdown */}
-          <div className="pp-sort-wrap">
+          {/* View Mode Toggle & Sort Dropdown */}
+          <div className="pp-filter-right-controls">
+            
+            {/* Split View Toggle */}
+            <div className="pp-view-switcher">
+              <button
+                type="button"
+                className={`pp-view-btn ${viewMode === 'split' ? 'active' : ''}`}
+                onClick={() => setViewMode('split')}
+                title="Split Map View"
+              >
+                <FaMapMarkedAlt /> Map
+              </button>
+              <button
+                type="button"
+                className={`pp-view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode('grid')}
+                title="Grid View"
+              >
+                <FaThLarge /> Grid
+              </button>
+            </div>
+
+            {/* Sort */}
             <select
               value={filters.ordering}
               onChange={e => handleSortChange(e.target.value)}
@@ -225,10 +262,10 @@ export default function PropertiesPage() {
         </div>
       </div>
 
-      {/* ── Main Results View ───────────────────────── */}
-      <div className="container pp-main-content">
+      {/* ── 2. Main Results Layout ───────────────────── */}
+      <div className={`pp-main-content ${viewMode === 'split' ? 'pp-main-content--split' : 'container'}`}>
         
-        {/* Results Header */}
+        {/* Results Count Header */}
         <div className="pp-results-header">
           <h1 className="pp-results-title">
             {filters.city ? `Real Estate & Homes in ${filters.city}` : 'Real Estate & Homes For Sale & Rent'}
@@ -238,64 +275,80 @@ export default function PropertiesPage() {
           </span>
         </div>
 
-        <div className="pp-layout">
+        {/* Expanded Sidebar Drawer */}
+        {sidebarOpen && (
+          <aside className="pp-sidebar" ref={filtersRef}>
+            <div className="pp-sidebar__header">
+              <h3><FaFilter /> Detailed Filters</h3>
+              <button className="pp-sidebar__close" onClick={() => setSidebarOpen(false)}>
+                <FaTimes />
+              </button>
+            </div>
 
-          {/* Expanded Sidebar Drawer (for mobile / detailed filters) */}
-          {sidebarOpen && (
-            <aside className="pp-sidebar" ref={filtersRef}>
-              <div className="pp-sidebar__header">
-                <h3><FaFilter /> Detailed Filters</h3>
-                <button className="pp-sidebar__close" onClick={() => setSidebarOpen(false)}>
-                  <FaTimes />
-                </button>
-              </div>
+            {/* City */}
+            <div className="form-group">
+              <label className="form-label">City / Location</label>
+              <input
+                type="text"
+                placeholder="e.g. Dhaka, Chittagong, Sylhet"
+                value={filters.city}
+                onChange={e => updateFilter('city', e.target.value)}
+                className="form-control"
+              />
+            </div>
 
-              {/* City */}
-              <div className="form-group">
-                <label className="form-label">City / Location</label>
+            {/* Price Range */}
+            <div className="form-group">
+              <label className="form-label">Price Range (BDT)</label>
+              <div className="pp-price-inputs">
                 <input
-                  type="text"
-                  placeholder="e.g. Dhaka, Chittagong, Sylhet"
-                  value={filters.city}
-                  onChange={e => updateFilter('city', e.target.value)}
+                  type="number"
+                  placeholder="Min Price"
+                  value={filters.min_price}
+                  onChange={e => updateFilter('min_price', e.target.value)}
+                  className="form-control"
+                />
+                <span>-</span>
+                <input
+                  type="number"
+                  placeholder="Max Price"
+                  value={filters.max_price}
+                  onChange={e => updateFilter('max_price', e.target.value)}
                   className="form-control"
                 />
               </div>
+            </div>
 
-              {/* Price Range */}
-              <div className="form-group">
-                <label className="form-label">Price Range (BDT)</label>
-                <div className="pp-price-inputs">
-                  <input
-                    type="number"
-                    placeholder="Min Price"
-                    value={filters.min_price}
-                    onChange={e => updateFilter('min_price', e.target.value)}
-                    className="form-control"
-                  />
-                  <span>-</span>
-                  <input
-                    type="number"
-                    placeholder="Max Price"
-                    value={filters.max_price}
-                    onChange={e => updateFilter('max_price', e.target.value)}
-                    className="form-control"
-                  />
-                </div>
-              </div>
+            <div className="pp-sidebar__actions">
+              <button className="btn btn-primary" onClick={() => applyFilters()}>
+                Apply Filters
+              </button>
+              <button className="btn btn-outline" onClick={resetFilters}>
+                Reset All
+              </button>
+            </div>
+          </aside>
+        )}
 
-              <div className="pp-sidebar__actions">
-                <button className="btn btn-primary" onClick={() => applyFilters()}>
-                  Apply Filters
-                </button>
-                <button className="btn btn-outline" onClick={resetFilters}>
-                  Reset All
-                </button>
+        {/* View Mode Layout: Split vs Grid */}
+        <div className={`pp-layout ${viewMode === 'split' ? 'pp-layout--split' : ''}`}>
+
+          {/* Left Column: Interactive Map (When in Split Mode) */}
+          {viewMode === 'split' && (
+            <div className="pp-split-map-wrap">
+              <iframe
+                title="Search Map"
+                className="pp-split-map"
+                src={mapEmbedUrl}
+                loading="lazy"
+              />
+              <div className="pp-map-overlay-count">
+                <FaMapMarkerAlt /> {properties.length} homes on map
               </div>
-            </aside>
+            </div>
           )}
 
-          {/* Properties Grid */}
+          {/* Right Column: Properties Grid */}
           <div className="pp-results-grid-wrap">
             {loading ? (
               <div className="pp-loading">
@@ -304,9 +357,15 @@ export default function PropertiesPage() {
               </div>
             ) : properties.length > 0 ? (
               <>
-                <div className="pp-grid">
+                <div className={`pp-grid ${viewMode === 'split' ? 'pp-grid--split' : ''}`}>
                   {properties.map(p => (
-                    <PropertyCard key={p.id} property={p} />
+                    <div
+                      key={p.id}
+                      onMouseEnter={() => setActivePropertyId(p.id)}
+                      className={`pp-grid-item ${activePropertyId === p.id ? 'active' : ''}`}
+                    >
+                      <PropertyCard property={p} />
+                    </div>
                   ))}
                 </div>
 

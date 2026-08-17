@@ -1,0 +1,190 @@
+/* ══════════════════════════════════════════
+   SCHEDULE TOUR WIDGET — Exact Zillow
+   ══════════════════════════════════════════ */
+
+.z-tour-widget {
+  background-color: var(--z-white);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.5rem;
+}
+
+.z-tour-widget__header {
+  margin-bottom: 1.25rem;
+}
+
+.z-tour-widget__title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--z-darker);
+  letter-spacing: -0.02em;
+}
+
+.z-tour-widget__subtitle {
+  font-size: 0.85rem;
+  color: var(--z-gray-500);
+  margin-top: 0.2rem;
+}
+
+/* Tour Type Switcher */
+.z-tour-type-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  background-color: var(--z-gray-100);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  margin-bottom: 1.25rem;
+}
+
+.z-tour-type-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--z-gray-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.z-tour-type-btn.active {
+  background-color: var(--z-white);
+  color: var(--z-blue);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Days Carousel */
+.z-tour-days {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.z-tour-day-card {
+  flex: 1;
+  min-width: 62px;
+  padding: 0.6rem 0.35rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--z-gray-200);
+  background-color: var(--z-gray-50);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.z-tour-day-weekday {
+  font-size: 0.75rem;
+  color: var(--z-gray-500);
+  font-weight: 500;
+}
+
+.z-tour-day-date {
+  font-size: 0.85rem;
+  color: var(--z-darker);
+  font-weight: 800;
+}
+
+.z-tour-day-card:hover {
+  border-color: var(--z-blue);
+  background-color: var(--z-blue-light);
+}
+
+.z-tour-day-card.active {
+  border-color: var(--z-blue);
+  background-color: var(--z-blue-light);
+  box-shadow: 0 0 0 2px rgba(0, 106, 255, 0.25);
+}
+
+.z-tour-day-card.active .z-tour-day-weekday,
+.z-tour-day-card.active .z-tour-day-date {
+  color: var(--z-blue);
+}
+
+/* Time Slots */
+.z-tour-times {
+  margin-bottom: 1.25rem;
+}
+
+.z-tour-times-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.z-tour-time-pill {
+  padding: 0.45rem 0.4rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--z-gray-300);
+  background-color: var(--z-white);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--z-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  transition: all var(--transition-fast);
+}
+
+.z-tour-time-pill:hover {
+  border-color: var(--z-blue);
+}
+
+.z-tour-time-pill.active {
+  background-color: var(--z-blue);
+  border-color: var(--z-blue);
+  color: var(--z-white);
+}
+
+.z-tour-submit-btn {
+  font-size: 0.95rem;
+  padding: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.z-tour-disclaimer {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--z-gray-500);
+}
+
+/* Booked state */
+.z-tour-booked {
+  text-align: center;
+  padding: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.z-tour-booked__icon {
+  font-size: 2.75rem;
+  color: var(--z-green);
+  margin-bottom: 0.5rem;
+}
+
+.z-tour-booked h4 {
+  font-size: 1.2rem;
+  color: var(--z-darker);
+}
+
+.z-tour-booked p {
+  font-size: 0.875rem;
+  color: var(--z-gray-700);
+  max-width: 280px;
+}

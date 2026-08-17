@@ -1,0 +1,83 @@
+/* ══════════════════════════════════════════
+   PRICE HISTORY — Zillow Standard
+   ══════════════════════════════════════════ */
+
+.z-history-card {
+  background-color: var(--z-white);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.z-history__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.z-history__title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--z-darker);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.z-history__badge {
+  background-color: var(--z-gray-100);
+  color: var(--z-gray-700);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.z-history-table-wrap {
+  overflow-x: auto;
+}
+
+.z-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.z-history-table th {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--z-gray-500);
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--z-gray-200);
+}
+
+.z-history-table td {
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--z-gray-100);
+  color: var(--z-darker);
+}
+
+.z-history-table tr:hover td {
+  background-color: var(--z-gray-50);
+}
+
+.z-history-event-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--z-blue-light);
+  color: var(--z-blue-hover);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.z-history-price {
+  font-size: 0.95rem;
+  color: var(--z-darker);
+}

@@ -1,0 +1,166 @@
+/* ══════════════════════════════════════════
+   MORTGAGE CALCULATOR — Zillow Standard
+   ══════════════════════════════════════════ */
+
+.z-mortgage-calc {
+  background-color: var(--z-white);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.z-mortgage-calc__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.z-mortgage-calc__title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--z-darker);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.z-mortgage-calc__subtitle {
+  font-size: 0.95rem;
+  color: var(--z-gray-500);
+  margin-top: 0.35rem;
+  max-width: 500px;
+}
+
+.z-mortgage-calc__total-box {
+  background-color: var(--z-blue-light);
+  border: 1px solid rgba(0, 106, 255, 0.2);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.z-mortgage-calc__total-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--z-blue-hover);
+}
+
+.z-mortgage-calc__total-amount {
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: var(--z-blue-hover);
+  letter-spacing: -0.03em;
+}
+
+.z-mortgage-calc__total-amount small {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--z-gray-500);
+}
+
+/* Breakdown Color Bar */
+.z-mortgage-bar {
+  display: flex;
+  height: 14px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  background-color: var(--z-gray-200);
+}
+
+.z-mortgage-bar__segment {
+  height: 100%;
+  transition: width 0.3s ease-out;
+}
+
+.z-mortgage-bar__segment--pi { background-color: #006aff; }
+.z-mortgage-bar__segment--tax { background-color: #00a86b; }
+.z-mortgage-bar__segment--ins { background-color: #ff9800; }
+.z-mortgage-bar__segment--hoa { background-color: #9c27b0; }
+
+/* Legend */
+.z-mortgage-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--z-gray-200);
+}
+
+.z-mortgage-legend__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.z-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.z-legend-dot--pi { background-color: #006aff; }
+.z-legend-dot--tax { background-color: #00a86b; }
+.z-legend-dot--ins { background-color: #ff9800; }
+.z-legend-dot--hoa { background-color: #9c27b0; }
+
+.z-legend-label {
+  font-size: 0.85rem;
+  color: var(--z-gray-500);
+}
+
+.z-legend-val {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--z-darker);
+}
+
+/* Controls */
+.z-mortgage-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.z-calc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.input-with-symbol {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-symbol {
+  position: absolute;
+  left: 12px;
+  font-weight: 700;
+  color: var(--z-gray-500);
+  pointer-events: none;
+}
+
+.input-with-symbol input {
+  padding-left: 2rem !important;
+}
+
+.z-calc-slider {
+  margin-top: 0.35rem;
+  width: 100%;
+  accent-color: var(--z-blue);
+  cursor: pointer;
+}

@@ -2,56 +2,77 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  FaBed, FaBath, FaRulerCombined, FaCar, FaCalendar,
-  FaMapMarkerAlt, FaHeart, FaUser, FaPhone, FaEnvelope,
-  FaArrowLeft, FaEdit, FaTrash, FaStar, FaCheckCircle, FaBuilding, FaShareAlt
+  FaHeart, FaShareAlt, FaMapMarkerAlt, FaBed, FaBath,
+  FaRulerCombined, FaCalendarAlt, FaCar, FaBuilding,
+  FaPhone, FaEnvelope, FaUser, FaStar, FaEdit, FaTrash,
+  FaCheckCircle, FaArrowLeft, FaShieldAlt, FaChartLine
 } from 'react-icons/fa';
 import { propertiesApi, inquiriesApi, favoritesApi } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { formatPrice, timeAgo, getErrorMessage } from '../utils/helpers';
 import toast from 'react-hot-toast';
+
+// New Rich Zillow Components
+import ScheduleTourWidget from '../components/ScheduleTourWidget';
+import MortgageCalculator from '../components/MortgageCalculator';
+import NeighborhoodMap from '../components/NeighborhoodMap';
+import PriceHistorySection from '../components/PriceHistorySection';
+
 import './PropertyDetailPage.css';
 
 export default function PropertyDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, isAgent, isAdmin, user } = useAuth();
+  const { isAuthenticated, user, isAdmin } = useAuth();
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
+
+  // Favorite state
   const [isFav, setIsFav] = useState(false);
   const [favId, setFavId] = useState(null);
   const [favLoading, setFavLoading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
-  // Inquiry form
-  const [inquiry, setInquiry] = useState({ name: '', email: '', phone: '', message: '' });
+  // Inquiry form state
+  const [inquiry, setInquiry] = useState({
+    name: user?.full_name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    message: '',
+  });
   const [inquiryLoading, setInquiryLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchProperty = async () => {
+      setLoading(true);
       try {
         const res = await propertiesApi.getById(id);
         setProperty(res.data);
         setIsFav(res.data.is_favorited || false);
         setFavId(res.data.favorite_id || null);
-        if (user) {
-          setInquiry(prev => ({ ...prev, name: user.full_name, email: user.email }));
-        }
-      } catch {
-        toast.error('Property not found.');
+        setInquiry(prev => ({
+          ...prev,
+          name: user?.full_name || prev.name,
+          email: user?.email || prev.email,
+          phone: user?.phone || prev.phone,
+          message: `I am interested in ${res.data.title} (${res.data.city}). Please contact me with more information.`,
+        }));
+      } catch (err) {
+        toast.error('Could not load property details.');
         navigate('/properties');
       } finally {
         setLoading(false);
       }
     };
     fetchProperty();
-  }, [id, user, navigate]);
+  }, [id, navigate, user]);
 
   const handleFavorite = async () => {
     if (!isAuthenticated) {
-      toast.error('Please sign in to save properties.');
+      toast.error('Please log in to save properties.');
+      navigate('/login');
       return;
     }
     setFavLoading(true);
@@ -64,8 +85,8 @@ export default function PropertyDetailPage() {
       } else {
         const res = await favoritesApi.add(property.id);
         setIsFav(true);
-        setFavId(res.data?.id || null);
-        toast.success('Saved to your favorites!');
+        setFavId(res.data.id);
+        toast.success('Saved to your homes!');
       }
     } catch (err) {
       toast.error(getErrorMessage(err));
@@ -77,14 +98,23 @@ export default function PropertyDetailPage() {
   const handleInquiry = async (e) => {
     e.preventDefault();
     if (!inquiry.name || !inquiry.email || !inquiry.message) {
-      toast.error('Please fill in all required fields.');
+      toast.error('Please complete all required fields.');
       return;
     }
     setInquiryLoading(true);
     try {
-      await inquiriesApi.send({ ...inquiry, property_id: property.id });
-      toast.success('Your message has been sent to the agent!');
-      setInquiry(prev => ({ ...prev, message: '' }));
+      await inquiriesApi.send({
+        property: property.id,
+        name: inquiry.name,
+        email: inquiry.email,
+        phone: inquiry.phone,
+        message: inquiry.message,
+      });
+      toast.success('Message sent directly to the listing agent!');
+      setInquiry(prev => ({
+        ...prev,
+        message: `I am interested in ${property.title}. Please contact me.`,
+      }));
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -93,7 +123,7 @@ export default function PropertyDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete this listing permanently?')) return;
+    if (!window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) return;
     setDeleting(true);
     try {
       await propertiesApi.delete(id);
@@ -106,18 +136,18 @@ export default function PropertyDetailPage() {
   };
 
   const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success('Listing link copied to clipboard!');
-    }
+    navigator.clipboard.writeText(window.location.href);
+    toast.success('Property link copied to clipboard!');
   };
 
   if (loading) {
     return (
-      <div className="pd-loading page-wrapper">
-        <div className="spinner" />
-        <p>Loading property details...</p>
-      </div>
+      <main className="pd-page page-wrapper">
+        <div className="pd-loading container">
+          <div className="spinner" />
+          <p>Loading home details...</p>
+        </div>
+      </main>
     );
   }
 
@@ -127,11 +157,14 @@ export default function PropertyDetailPage() {
   const isOwnerOrAdmin = user?.id === property.agent?.id || isAdmin;
   const isRent = property.listing_type === 'rent';
 
+  // Price per sqft estimate
+  const pricePerSqft = property.area_sqft > 0 ? Math.round(property.price / property.area_sqft) : null;
+
   return (
     <main className="pd-page page-wrapper">
       <div className="container pd-container">
 
-        {/* ── Top Action Header ───────────────────────── */}
+        {/* ── 1. Top Action Header ───────────────────────── */}
         <div className="pd-top-bar">
           <Link to="/properties" className="pd-back-link">
             <FaArrowLeft /> Back to all homes
@@ -161,7 +194,7 @@ export default function PropertyDetailPage() {
           </div>
         </div>
 
-        {/* ── Zillow-Style Hero Gallery ───────────────── */}
+        {/* ── 2. Zillow-Style Hero Gallery ───────────────── */}
         <div className="pd-gallery">
           <div className="pd-gallery__main">
             {(images.length > 0 && (images[activeImg]?.image_url || property.primary_image_url)) ? (
@@ -218,10 +251,10 @@ export default function PropertyDetailPage() {
           )}
         </div>
 
-        {/* ── Main Two-Column Layout ──────────────────── */}
+        {/* ── 3. Main Two-Column Layout ──────────────────── */}
         <div className="pd-layout">
 
-          {/* Left Column: Property Facts, Overview, Amenities */}
+          {/* Left Column: Facts, Overview, Calculator, Neighborhood, Price History */}
           <div className="pd-main-col">
 
             {/* Price & Title Card */}
@@ -285,7 +318,7 @@ export default function PropertyDetailPage() {
                 </div>
                 <div className="pd-fact-item">
                   <span className="pd-fact-label">Year Built:</span>
-                  <span className="pd-fact-value">{property.year_built || 'Modern'}</span>
+                  <span className="pd-fact-value">{property.year_built || '2022'}</span>
                 </div>
                 <div className="pd-fact-item">
                   <span className="pd-fact-label">Garage / Parking:</span>
@@ -317,10 +350,24 @@ export default function PropertyDetailPage() {
               )}
             </div>
 
+            {/* 4. Mortgage Calculator (Zillow Standard) */}
+            {!isRent && <MortgageCalculator propertyPrice={property.price} />}
+
+            {/* 5. Neighborhood Map & Scores */}
+            <NeighborhoodMap property={property} />
+
+            {/* 6. Price History & Public Records Table */}
+            <PriceHistorySection property={property} />
+
           </div>
 
-          {/* Right Column: Sticky Contact Agent Card (Zillow Style) */}
+          {/* Right Column: Schedule Tour & Sticky Contact Agent */}
           <div className="pd-sidebar-col">
+            
+            {/* Schedule a Tour Widget */}
+            <ScheduleTourWidget propertyTitle={property.title} />
+
+            {/* Contact Agent Card */}
             <div className="pd-agent-card">
               <h2 className="pd-agent-card__title">Contact Agent</h2>
               
@@ -390,6 +437,7 @@ export default function PropertyDetailPage() {
                 </button>
               </form>
             </div>
+
           </div>
 
         </div>
