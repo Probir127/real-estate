@@ -53,6 +53,17 @@ class PropertyViewSet(viewsets.ModelViewSet):
             return PropertyListSerializer
         return PropertyDetailSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if self.request.user.is_authenticated:
+            try:
+                context['user_favorites_map'] = dict(
+                    self.request.user.favorites.values_list('property_id', 'id')
+                )
+            except Exception:
+                pass
+        return context
+
     def get_permissions(self):
         """
         Granular permission per action:

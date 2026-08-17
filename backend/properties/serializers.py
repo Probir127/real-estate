@@ -106,6 +106,9 @@ class PropertyListSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         """Returns True if the requesting user has favorited this property."""
+        fav_map = self.context.get('user_favorites_map')
+        if fav_map is not None:
+            return obj.id in fav_map
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return obj.favorited_by.filter(user=request.user).exists()
@@ -113,6 +116,9 @@ class PropertyListSerializer(serializers.ModelSerializer):
 
     def get_favorite_id(self, obj):
         """Returns the Favorite record ID so the frontend can call DELETE /api/favorites/{id}/."""
+        fav_map = self.context.get('user_favorites_map')
+        if fav_map is not None:
+            return fav_map.get(obj.id)
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             fav = obj.favorited_by.filter(user=request.user).first()
@@ -171,6 +177,9 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
         return None
 
     def get_is_favorited(self, obj):
+        fav_map = self.context.get('user_favorites_map')
+        if fav_map is not None:
+            return obj.id in fav_map
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return obj.favorited_by.filter(user=request.user).exists()
@@ -178,6 +187,9 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
 
     def get_favorite_id(self, obj):
         """Returns the Favorite record ID for the authenticated user, enabling correct DELETE."""
+        fav_map = self.context.get('user_favorites_map')
+        if fav_map is not None:
+            return fav_map.get(obj.id)
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             fav = obj.favorited_by.filter(user=request.user).first()

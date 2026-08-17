@@ -96,6 +96,11 @@ class Property(models.Model):
 
     @property
     def primary_image(self):
+        # Use prefetched in-memory images cache if available to avoid N+1 query overhead
+        if hasattr(self, '_prefetched_objects_cache') and 'images' in self._prefetched_objects_cache:
+            images = self._prefetched_objects_cache['images']
+            primary = next((img for img in images if img.is_primary), None)
+            return primary or (images[0] if images else None)
         img = self.images.filter(is_primary=True).first()
         if not img:
             img = self.images.first()
