@@ -1,124 +1,213 @@
-/* ══════════════════════════════════════════════
-   AUTH PAGES — Clean Zillow Style
-   ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   AUTHENTICATION — Exact Zillow Style Modal Card
+   ══════════════════════════════════════════ */
 
-.auth-page {
+.z-auth-page {
+  min-height: 100vh;
+  padding: calc(var(--navbar-height) + 2.5rem) 1.25rem 3.5rem;
+  background-color: var(--z-gray-50);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: calc(var(--navbar-height) + 2rem) 1.5rem 3rem;
-  background-color: var(--z-gray-50);
 }
 
-/* ── Auth Card ──────────────────────────── */
-.auth-card {
+.z-auth-card {
   width: 100%;
-  max-width: 480px;
-  padding: 2.5rem;
-  background: var(--z-white);
-  border: 1px solid var(--z-gray-200);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  max-width: 440px;
+  background-color: var(--z-white);
+  border: 1px solid var(--z-gray-300);
+  border-radius: var(--radius-sm);
+  padding: 2.25rem 2.25rem 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-.auth-card--wide {
-  max-width: 680px;
-}
-
-/* ── Header ─────────────────────────────── */
-.auth-card__header {
+/* Header */
+.z-auth-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-.auth-card__logo {
+.z-auth-brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.35rem;
+  gap: 0.4rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--z-navy);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.auth-card__logo-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
+.z-auth-brand__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-xs);
   background-color: var(--z-blue);
   color: var(--z-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 0.85rem;
 }
 
-.auth-card__header h1 {
-  font-size: 1.75rem;
+.z-auth-title {
+  font-size: 1.35rem;
   font-weight: 800;
   color: var(--z-darker);
-  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
 }
 
-.auth-card__header p {
+/* Tabs: Sign in | New account */
+.z-auth-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--z-gray-200);
+  margin-bottom: 1.75rem;
+}
+
+.z-auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.65rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--z-gray-500);
-  font-size: 0.95rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  transition: all var(--transition-fast);
 }
 
-/* ── Form Inputs ────────────────────────── */
-.auth-form {
+.z-auth-tab:hover {
+  color: var(--z-blue);
+}
+
+.z-auth-tab.active {
+  color: var(--z-darker);
+}
+
+.z-auth-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--z-blue);
+}
+
+/* Form */
+.z-auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.15rem;
 }
 
-.auth-form .input-group {
+.z-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.z-form-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--z-darker);
+}
+
+.z-form-input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--z-gray-300);
+  border-radius: var(--radius-xs);
+  outline: none;
+  background-color: var(--z-white);
+  color: var(--z-dark);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.z-form-input:focus {
+  border-color: var(--z-blue);
+  box-shadow: 0 0 0 3px rgba(0, 106, 255, 0.12);
+}
+
+.z-input-toggle-wrap {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.auth-form .input-icon {
+.z-toggle-btn {
   position: absolute;
-  left: 1rem;
-  color: var(--z-gray-400);
-  font-size: 0.9rem;
-  z-index: 1;
-}
-
-.auth-form .form-control {
-  padding-left: 2.75rem;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 1rem;
-  background: none;
+  right: 0.75rem;
+  background: transparent;
   border: none;
-  color: var(--z-gray-400);
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.password-toggle:hover {
-  color: var(--z-dark);
-}
-
-.auth-card__footer {
-  text-align: center;
-  margin-top: 1.75rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--z-gray-100);
-  font-size: 0.9rem;
   color: var(--z-gray-500);
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.auth-card__footer a {
-  font-weight: 600;
+.z-toggle-btn:hover {
+  color: var(--z-darker);
+}
+
+/* Checkbox */
+.z-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.825rem;
+  color: var(--z-gray-700);
+  cursor: pointer;
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+
+.z-checkbox-label input {
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: var(--z-blue);
+}
+
+/* Submit Button */
+.z-submit-btn {
+  width: 100%;
+  background-color: var(--z-blue);
+  color: var(--z-white);
+  border: none;
+  border-radius: var(--radius-xs);
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+  margin-top: 0.5rem;
+}
+
+.z-submit-btn:hover {
+  background-color: var(--z-blue-hover);
+  box-shadow: 0 4px 12px rgba(0, 106, 255, 0.25);
+}
+
+.z-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Legal Notice */
+.z-legal-notice {
+  font-size: 0.75rem;
+  color: var(--z-gray-500);
+  text-align: center;
+  line-height: 1.5;
+  margin-top: 1.5rem;
+}
+
+.z-legal-notice a {
   color: var(--z-blue);
-}
-
-.auth-card__footer a:hover {
   text-decoration: underline;
 }

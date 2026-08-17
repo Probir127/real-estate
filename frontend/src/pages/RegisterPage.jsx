@@ -1,141 +1,176 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaEye, FaEyeSlash, FaBuilding } from 'react-icons/fa'
-import { useAuth } from '../context/AuthContext'
-import { getErrorMessage } from '../utils/helpers'
-import toast from 'react-hot-toast'
-import './AuthPages.css'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FaEnvelope, FaLock, FaUser, FaPhone, FaEye, FaEyeSlash, FaBuilding, FaHome } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import { getErrorMessage } from '../utils/helpers';
+import toast from 'react-hot-toast';
+import './AuthPages.css';
 
 export default function RegisterPage() {
-  const { register } = useAuth()
-  const navigate = useNavigate()
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    full_name: '', email: '', phone: '',
-    password: '', password2: '', is_agent: false,
-  })
-  const [showPass, setShowPass] = useState(false)
-  const [loading, setLoading] = useState(false)
+    full_name: '',
+    email: '',
+    phone: '',
+    password: '',
+    password2: '',
+    is_agent: false,
+  });
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!form.full_name || !form.email || !form.password) {
-      toast.error('Please fill in all required fields.'); return
+      toast.error('Please fill in all required fields.');
+      return;
     }
     if (form.password !== form.password2) {
-      toast.error('Passwords do not match.'); return
+      toast.error('Passwords do not match.');
+      return;
     }
-    setLoading(true)
+    setLoading(true);
     try {
-      await register(form)
-      toast.success('Account created! Please sign in.')
-      navigate('/login')
+      await register(form);
+      toast.success('Account created! Please sign in.');
+      navigate('/login');
     } catch (err) {
-      const msg = getErrorMessage(err)
-      toast.error(msg)
-    } finally { setLoading(false) }
-  }
+      toast.error(getErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const f = (key) => ({
     value: form[key],
-    onChange: e => setForm({...form, [key]: e.target.value})
-  })
+    onChange: (e) => setForm({ ...form, [key]: e.target.value })
+  });
 
   return (
-    <div className="auth-page page-wrapper">
+    <div className="z-auth-page">
       <motion.div
-        className="auth-card auth-card--wide glass-card"
-        initial={{ opacity: 0, y: 30 }}
+        className="z-auth-card"
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.3 }}
       >
-        <div className="auth-card__header">
-          <h1>Create Account</h1>
-          <p>Join Prestige Realty — free forever</p>
+        {/* Header with Zillow styling */}
+        <div className="z-auth-header">
+          <div className="z-auth-brand">
+            <div className="z-auth-brand__icon">
+              <FaHome />
+            </div>
+            <span>Prestige<strong>Realty</strong></span>
+          </div>
+          <h1 className="z-auth-title">Welcome to Prestige Realty</h1>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="form-row-2">
-            <div className="form-group">
-              <label htmlFor="full_name" className="form-label">Full Name *</label>
-              <div className="input-icon-wrap">
-                <FaUser className="input-icon" />
-                <input id="full_name" type="text" className="form-input input-icon-pad"
-                  placeholder="John Smith" {...f('full_name')} autoComplete="name" required />
-              </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="phone" className="form-label">Phone</label>
-              <div className="input-icon-wrap">
-                <FaPhone className="input-icon" />
-                <input id="phone" type="tel" className="form-input input-icon-pad"
-                  placeholder="+1 555 000 0000" {...f('phone')} autoComplete="tel" />
-              </div>
+        {/* Tab Switcher: Sign In | New Account */}
+        <div className="z-auth-tabs">
+          <Link to="/login" className="z-auth-tab">
+            Sign in
+          </Link>
+          <button type="button" className="z-auth-tab active">
+            New account
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="z-auth-form" noValidate>
+          
+          <div className="z-form-group">
+            <label className="z-form-label">Full Name *</label>
+            <input
+              type="text"
+              className="z-form-input"
+              placeholder="e.g. Shakib Al Hasan"
+              {...f('full_name')}
+              autoComplete="name"
+              required
+            />
+          </div>
+
+          <div className="z-form-group">
+            <label className="z-form-label">Email Address *</label>
+            <input
+              type="email"
+              className="z-form-input"
+              placeholder="Enter email"
+              {...f('email')}
+              autoComplete="email"
+              required
+            />
+          </div>
+
+          <div className="z-form-group">
+            <label className="z-form-label">Phone Number</label>
+            <input
+              type="tel"
+              className="z-form-input"
+              placeholder="+880 1700-000000"
+              {...f('phone')}
+              autoComplete="tel"
+            />
+          </div>
+
+          <div className="z-form-group">
+            <label className="z-form-label">Password *</label>
+            <div className="z-input-toggle-wrap">
+              <input
+                type={showPass ? 'text' : 'password'}
+                className="z-form-input"
+                placeholder="At least 8 characters"
+                {...f('password')}
+                autoComplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                className="z-toggle-btn"
+                onClick={() => setShowPass(!showPass)}
+                tabIndex={-1}
+              >
+                {showPass ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="reg-email" className="form-label">Email Address *</label>
-            <div className="input-icon-wrap">
-              <FaEnvelope className="input-icon" />
-              <input id="reg-email" type="email" className="form-input input-icon-pad"
-                placeholder="you@example.com" {...f('email')} autoComplete="email" required />
-            </div>
+          <div className="z-form-group">
+            <label className="z-form-label">Confirm Password *</label>
+            <input
+              type={showPass ? 'text' : 'password'}
+              className="z-form-input"
+              placeholder="Re-enter password"
+              {...f('password2')}
+              autoComplete="new-password"
+              required
+            />
           </div>
 
-          <div className="form-row-2">
-            <div className="form-group">
-              <label htmlFor="reg-pass" className="form-label">Password *</label>
-              <div className="input-icon-wrap">
-                <FaLock className="input-icon" />
-                <input id="reg-pass"
-                  type={showPass ? 'text' : 'password'}
-                  className="form-input input-icon-pad input-icon-pad-right"
-                  placeholder="••••••••" {...f('password')} autoComplete="new-password" required />
-                <button type="button" className="input-toggle" onClick={() => setShowPass(!showPass)}>
-                  {showPass ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="reg-pass2" className="form-label">Confirm Password *</label>
-              <div className="input-icon-wrap">
-                <FaLock className="input-icon" />
-                <input id="reg-pass2"
-                  type={showPass ? 'text' : 'password'}
-                  className="form-input input-icon-pad"
-                  placeholder="••••••••" {...f('password2')} autoComplete="new-password" required />
-              </div>
-            </div>
-          </div>
-
-          {/* Register as agent toggle */}
-          <label className="agent-toggle">
+          {/* Agent Checkbox */}
+          <label className="z-checkbox-label">
             <input
               type="checkbox"
               checked={form.is_agent}
-              onChange={e => setForm({...form, is_agent: e.target.checked})}
+              onChange={(e) => setForm({ ...form, is_agent: e.target.checked })}
             />
-            <div className="agent-toggle__box">
-              <FaBuilding />
-              <div>
-                <strong>Register as Agent</strong>
-                <span>List and manage properties</span>
-              </div>
-            </div>
+            <span>I am a licensed real estate agent or property manager</span>
           </label>
 
-          <button type="submit" className="btn btn-primary w-full" disabled={loading}>
-            {loading ? <span className="spinner-sm" /> : 'Create Account'}
+          <button type="submit" className="z-submit-btn" disabled={loading}>
+            {loading ? <span className="spinner-sm" /> : 'Submit'}
           </button>
         </form>
 
-        <div className="auth-card__footer">
-          Already have an account?{' '}
-          <Link to="/login" className="link-gold">Sign in</Link>
-        </div>
+        {/* Legal notice */}
+        <p className="z-legal-notice">
+          By submitting, I accept Prestige Realty's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+        </p>
+
       </motion.div>
     </div>
-  )
+  );
 }

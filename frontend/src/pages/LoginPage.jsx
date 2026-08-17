@@ -1,101 +1,121 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaHome } from 'react-icons/fa'
-import { useAuth } from '../context/AuthContext'
-import { getErrorMessage } from '../utils/helpers'
-import toast from 'react-hot-toast'
-import './AuthPages.css'
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FaHome, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import { getErrorMessage } from '../utils/helpers';
+import toast from 'react-hot-toast';
+import './AuthPages.css';
 
 export default function LoginPage() {
-  const { login, isAuthenticated } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const from = location.state?.from?.pathname || '/'
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [showPass, setShowPass] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Redirect if already logged in
   useEffect(() => {
-    if (isAuthenticated) navigate('/', { replace: true })
-  }, [isAuthenticated, navigate])
+    if (isAuthenticated) navigate('/', { replace: true });
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!form.email || !form.password) { toast.error('Please fill in all fields.'); return }
-    setLoading(true)
+    e.preventDefault();
+    if (!form.email || !form.password) {
+      toast.error('Please fill in all fields.');
+      return;
+    }
+    setLoading(true);
     try {
-      await login(form)
-      toast.success('Welcome back!')
-      navigate(from, { replace: true })
+      await login(form);
+      toast.success('Welcome back!');
+      navigate(from, { replace: true });
     } catch (err) {
-      toast.error(getErrorMessage(err) || 'Invalid email or password.')
-    } finally { setLoading(false) }
-  }
+      toast.error(getErrorMessage(err) || 'Invalid email or password.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="auth-page page-wrapper">
+    <div className="z-auth-page">
       <motion.div
-        className="auth-card"
-        initial={{ opacity: 0, y: 30 }}
+        className="z-auth-card"
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.3 }}
       >
-        <div className="auth-card__header">
-          <Link to="/" className="auth-card__logo">
-            <FaHome className="auth-card__logo-icon" />
-            Prestige<span className="text-gold">Realty</span>
-          </Link>
-          <h1>Welcome Back</h1>
-          <p>Sign in to your account</p>
+        {/* Header */}
+        <div className="z-auth-header">
+          <div className="z-auth-brand">
+            <div className="z-auth-brand__icon">
+              <FaHome />
+            </div>
+            <span>Prestige<strong>Realty</strong></span>
+          </div>
+          <h1 className="z-auth-title">Welcome to Prestige Realty</h1>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="email" className="form-label">Email Address</label>
-            <div className="input-icon-wrap">
-              <FaEnvelope className="input-icon" />
-              <input
-                id="email" type="email" className="form-input input-icon-pad"
-                placeholder="you@example.com"
-                value={form.email}
-                onChange={e => setForm({...form, email: e.target.value})}
-                autoComplete="email" required
-              />
-            </div>
+        {/* Tab Switcher: Sign In | New Account */}
+        <div className="z-auth-tabs">
+          <button type="button" className="z-auth-tab active">
+            Sign in
+          </button>
+          <Link to="/register" className="z-auth-tab">
+            New account
+          </Link>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="z-auth-form" noValidate>
+          <div className="z-form-group">
+            <label className="z-form-label">Email Address *</label>
+            <input
+              type="email"
+              className="z-form-input"
+              placeholder="Enter email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              autoComplete="email"
+              required
+            />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
-            <div className="input-icon-wrap">
-              <FaLock className="input-icon" />
+          <div className="z-form-group">
+            <label className="z-form-label">Password *</label>
+            <div className="z-input-toggle-wrap">
               <input
-                id="password"
                 type={showPass ? 'text' : 'password'}
-                className="form-input input-icon-pad input-icon-pad-right"
-                placeholder="••••••••"
+                className="z-form-input"
+                placeholder="Enter password"
                 value={form.password}
-                onChange={e => setForm({...form, password: e.target.value})}
-                autoComplete="current-password" required
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                autoComplete="current-password"
+                required
               />
-              <button type="button" className="input-toggle" onClick={() => setShowPass(!showPass)}>
+              <button
+                type="button"
+                className="z-toggle-btn"
+                onClick={() => setShowPass(!showPass)}
+                tabIndex={-1}
+              >
                 {showPass ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+          <button type="submit" className="z-submit-btn" disabled={loading}>
             {loading ? <span className="spinner-sm" /> : 'Sign In'}
           </button>
         </form>
 
-        <div className="auth-card__footer">
-          Don't have an account?{' '}
-          <Link to="/register" className="link-gold">Create one free</Link>
-        </div>
+        <p className="z-legal-notice">
+          By signing in, I accept Prestige Realty's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+        </p>
+
       </motion.div>
     </div>
-  )
+  );
 }

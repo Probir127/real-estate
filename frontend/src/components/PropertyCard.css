@@ -1,29 +1,28 @@
 /* ══════════════════════════════════════════
-   PROPERTY CARD — Zillow Style
+   PROPERTY CARD — Exact Zillow Style
    ══════════════════════════════════════════ */
 
-.property-card {
+.z-card {
   display: flex;
   flex-direction: column;
   background-color: var(--z-white);
-  border: 1px solid var(--z-gray-200);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--z-gray-300);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   text-decoration: none;
-  color: inherit;
-  box-shadow: var(--shadow-card);
-  transition: all var(--transition-normal);
+  color: var(--z-dark);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
   position: relative;
 }
 
-.property-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card-hover);
-  border-color: var(--z-gray-300);
+.z-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: var(--z-gray-400);
 }
 
-/* ── Image & Header ─────────────────────── */
-.property-card__image-wrap {
+/* ── 1. Photo Container ─────────────────── */
+.z-card__photo-box {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
@@ -31,18 +30,18 @@
   overflow: hidden;
 }
 
-.property-card__image {
+.z-card__photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-slow);
 }
 
-.property-card:hover .property-card__image {
-  transform: scale(1.04);
+.z-card:hover .z-card__photo {
+  transform: scale(1.03);
 }
 
-.property-card__placeholder {
+.z-card__placeholder {
   width: 100%;
   height: 100%;
   display: flex;
@@ -50,117 +49,142 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+  background: linear-gradient(135deg, var(--z-gray-100) 0%, var(--z-gray-200) 100%);
   color: var(--z-gray-500);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.property-card__placeholder-icon {
-  font-size: 2.5rem;
+.z-card__placeholder-icon {
+  font-size: 2rem;
   color: var(--z-gray-400);
 }
 
-.property-card__placeholder-type {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--z-gray-500);
-  text-transform: capitalize;
-}
-
-/* ── Badges ─────────────────────────────── */
-.property-card__badges {
+/* Status Pill: Green/Blue dot + text */
+.z-card__status-pill {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  display: flex;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   z-index: 2;
 }
 
-/* ── Favorite Heart Button ──────────────── */
-.property-card__fav-btn {
+.z-card__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.z-card__status-dot--green {
+  background-color: #008034;
+}
+
+.z-card__status-dot--blue {
+  background-color: #006aff;
+}
+
+.z-card__status-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--z-darker);
+  text-transform: capitalize;
+  letter-spacing: -0.01em;
+}
+
+/* Save Home Heart Button */
+.z-card__heart-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
   border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--z-gray-700);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--z-gray-500);
-  font-size: 1rem;
   cursor: pointer;
-  z-index: 3;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   transition: all var(--transition-fast);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  font-size: 0.95rem;
 }
 
-.property-card__fav-btn:hover {
-  background: var(--z-white);
-  color: var(--z-red);
+.z-card__heart-btn:hover {
   transform: scale(1.1);
-}
-
-.property-card__fav-btn--active {
-  background: var(--z-white);
   color: var(--z-red);
 }
 
-/* ── Card Body ──────────────────────────── */
-.property-card__body {
-  padding: 1rem 1.15rem;
+.z-card__heart-btn--active {
+  color: var(--z-red) !important;
+  background-color: var(--z-white);
+}
+
+/* ── 2. Card Body ───────────────────────── */
+.z-card__body {
+  padding: 1rem 1.15rem 1.15rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
 }
 
-.property-card__price-row {
+.z-card__price-row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
 }
 
-.property-card__price {
+.z-card__price {
   font-size: 1.35rem;
   font-weight: 800;
   color: var(--z-darker);
-  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
-.property-card__price-period {
-  font-size: 0.85rem;
+.z-card__price-period {
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--z-gray-500);
   margin-left: 2px;
 }
 
-/* Specs: 3 bds · 2 ba · 1,850 sqft */
-.property-card__specs {
+/* Specs */
+.z-card__specs {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.35rem;
   font-size: 0.875rem;
-  color: var(--z-dark);
+  color: var(--z-gray-700);
 }
 
-.property-card__spec-item strong {
+.z-card__spec strong {
   font-weight: 700;
+  color: var(--z-darker);
 }
 
-.property-card__spec-dot {
+.z-card__spec-divider {
   color: var(--z-gray-400);
+  font-size: 0.8rem;
 }
 
-.property-card__type-tag {
+.z-card__spec-type {
   color: var(--z-gray-500);
-  text-transform: capitalize;
+  font-size: 0.85rem;
 }
 
 /* Address */
-.property-card__address {
+.z-card__address {
   font-size: 0.85rem;
   color: var(--z-gray-700);
   white-space: nowrap;
@@ -169,15 +193,12 @@
   margin-top: 2px;
 }
 
-/* Footer Agent Info */
-.property-card__footer {
-  margin-top: 0.35rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--z-gray-100);
-}
-
-.property-card__agent {
-  font-size: 0.75rem;
+/* Broker */
+.z-card__broker {
+  font-size: 0.7rem;
+  font-weight: 700;
   color: var(--z-gray-400);
-  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 4px;
 }

@@ -67,16 +67,18 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
   const typeLabel = property.property_type_display || pType;
   const isRent = property.listing_type === 'rent';
 
-  return (
-    <Link to={`/properties/${property.id}`} className="property-card">
+  const imageUrl = property.primary_image_url || property.images?.[0]?.image_url || property.image_url;
 
-      {/* ── Image & Badges ───────────────────────── */}
-      <div className="property-card__image-wrap">
-        {(property.primary_image_url || property.images?.[0]?.image_url) ? (
+  return (
+    <Link to={`/properties/${property.id}`} className="z-card">
+
+      {/* ── 1. Photo Container ──────────────────── */}
+      <div className="z-card__photo-box">
+        {imageUrl ? (
           <img
-            src={property.primary_image_url || property.images[0].image_url}
+            src={imageUrl}
             alt={property.title}
-            className="property-card__image"
+            className="z-card__photo"
             loading="lazy"
             onError={(e) => {
               e.target.style.display = 'none';
@@ -86,29 +88,26 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
             }}
           />
         ) : null}
+
         <div
-          className={`property-card__placeholder`}
-          style={{ display: (property.primary_image_url || property.images?.[0]?.image_url) ? 'none' : 'flex' }}
+          className="z-card__placeholder"
+          style={{ display: imageUrl ? 'none' : 'flex' }}
         >
-          <PlaceholderIcon className="property-card__placeholder-icon" />
-          <span className="property-card__placeholder-type">{typeLabel}</span>
+          <PlaceholderIcon className="z-card__placeholder-icon" />
+          <span>{typeLabel}</span>
         </div>
 
-        {/* Top Badges */}
-        <div className="property-card__badges">
-          <span className={`badge ${isRent ? 'badge-rent' : 'badge-sale'}`}>
-            {isRent ? 'For Rent' : 'For Sale'}
+        {/* Status Pill (Zillow Style: Dot + Text) */}
+        <div className="z-card__status-pill">
+          <span className={`z-card__status-dot ${isRent ? 'z-card__status-dot--blue' : 'z-card__status-dot--green'}`} />
+          <span className="z-card__status-text">
+            {typeLabel} {isRent ? 'for rent' : 'for sale'}
           </span>
-          {property.is_featured && (
-            <span className="badge badge-featured">
-              <FaStar size={10} /> Featured
-            </span>
-          )}
         </div>
 
-        {/* Favorite Heart Button */}
+        {/* Save Home Heart Button */}
         <button
-          className={`property-card__fav-btn ${isFav ? 'property-card__fav-btn--active' : ''}`}
+          className={`z-card__heart-btn ${isFav ? 'z-card__heart-btn--active' : ''}`}
           onClick={handleFavorite}
           disabled={favLoading}
           aria-label={isFav ? 'Remove from saved homes' : 'Save home'}
@@ -117,55 +116,54 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
         </button>
       </div>
 
-      {/* ── Card Content (Zillow Format) ─────────── */}
-      <div className="property-card__body">
-        <div className="property-card__price-row">
-          <span className="property-card__price">
+      {/* ── 2. Card Body (Exact Zillow Specs) ────── */}
+      <div className="z-card__body">
+        
+        {/* Price Row */}
+        <div className="z-card__price-row">
+          <span className="z-card__price">
             {formatPrice(property.price)}
-            {isRent && <span className="property-card__price-period">/mo</span>}
+            {isRent && <span className="z-card__price-period">/mo</span>}
           </span>
         </div>
 
-        {/* Specs: 3 bds · 2 ba · 1,850 sqft - Apartment for sale */}
-        <div className="property-card__specs">
+        {/* Specs: 4 bds | 3 ba | 3,200 sqft - House for sale */}
+        <div className="z-card__specs">
           {property.bedrooms > 0 && (
-            <>
-              <span className="property-card__spec-item">
-                <strong>{property.bedrooms}</strong> bds
-              </span>
-              <span className="property-card__spec-dot">·</span>
-            </>
+            <span className="z-card__spec">
+              <strong>{property.bedrooms}</strong> bds
+            </span>
+          )}
+          {property.bedrooms > 0 && property.bathrooms > 0 && (
+            <span className="z-card__spec-divider">•</span>
           )}
           {property.bathrooms > 0 && (
-            <>
-              <span className="property-card__spec-item">
-                <strong>{property.bathrooms}</strong> ba
-              </span>
-              <span className="property-card__spec-dot">·</span>
-            </>
+            <span className="z-card__spec">
+              <strong>{property.bathrooms}</strong> ba
+            </span>
           )}
           {property.area_sqft > 0 && (
             <>
-              <span className="property-card__spec-item">
+              <span className="z-card__spec-divider">•</span>
+              <span className="z-card__spec">
                 <strong>{property.area_sqft?.toLocaleString()}</strong> sqft
               </span>
-              <span className="property-card__spec-dot">·</span>
             </>
           )}
-          <span className="property-card__type-tag">{typeLabel}</span>
+          <span className="z-card__spec-divider">-</span>
+          <span className="z-card__spec-type">{isRent ? 'For Rent' : 'For Sale'}</span>
         </div>
 
         {/* Address */}
-        <p className="property-card__address">
-          {property.address ? `${property.address}, ` : ''}{property.city}
-        </p>
-
-        {/* Agent attribution */}
-        <div className="property-card__footer">
-          <small className="property-card__agent">
-            Prestige Realty · {property.agent_name || 'Licensed Agent'}
-          </small>
+        <div className="z-card__address" title={property.address || property.location || property.city}>
+          {property.address || property.location || `${property.city}, Bangladesh`}
         </div>
+
+        {/* Broker / Agent Attribution */}
+        <div className="z-card__broker">
+          PRESTIGE REALTY BROKERAGE
+        </div>
+
       </div>
 
     </Link>
