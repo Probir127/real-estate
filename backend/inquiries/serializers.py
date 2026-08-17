@@ -23,6 +23,8 @@ class InquiryCreateSerializer(serializers.ModelSerializer):
         return bleach.clean(value.strip())
 
     def validate_phone(self, value):
+        if not value:
+            return ""
         return bleach.clean(value.strip())
 
     def create(self, validated_data):
