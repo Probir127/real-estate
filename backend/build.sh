@@ -2,6 +2,9 @@
 # Exit on error
 set -o errexit
 
+# Navigate into the backend directory
+cd "$(dirname "$0")"
+
 echo "Installing dependencies..."
 pip install -r requirements.txt
 
