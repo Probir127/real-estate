@@ -47,12 +47,12 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
           property.favorite_id = null;
         }
         setIsFav(false);
-        toast.success('Removed from favorites.');
+        toast.success('Removed from saved homes.');
       } else {
         const res = await favoritesApi.add(property.id);
         setIsFav(true);
         property.favorite_id = res?.data?.id;
-        toast.success('Added to favorites!');
+        toast.success('Saved to your favorites!');
       }
       onFavoriteToggle?.();
     } catch (err) {
@@ -62,14 +62,15 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
     }
   };
 
-  const pType = property.property_type || 'default';
+  const pType = property.property_type || 'apartment';
   const PlaceholderIcon = TYPE_ICONS[pType] || FaHome;
   const typeLabel = property.property_type_display || pType;
+  const isRent = property.listing_type === 'rent';
 
   return (
     <Link to={`/properties/${property.id}`} className="property-card">
 
-      {/* ── Image / Gradient Placeholder ─────────── */}
+      {/* ── Image & Badges ───────────────────────── */}
       <div className="property-card__image-wrap">
         {(property.primary_image_url || property.images?.[0]?.image_url) ? (
           <img
@@ -86,68 +87,87 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
           />
         ) : null}
         <div
-          className={`property-card__placeholder placeholder--${pType}`}
+          className={`property-card__placeholder`}
           style={{ display: (property.primary_image_url || property.images?.[0]?.image_url) ? 'none' : 'flex' }}
         >
-          <PlaceholderIcon className="placeholder__icon" />
-          <span className="placeholder__type">{typeLabel}</span>
+          <PlaceholderIcon className="property-card__placeholder-icon" />
+          <span className="property-card__placeholder-type">{typeLabel}</span>
         </div>
 
-        {/* Badges */}
+        {/* Top Badges */}
         <div className="property-card__badges">
-          <span className={`badge ${property.listing_type === 'rent' ? 'badge-blue' : 'badge-gold'}`}>
-            {property.listing_type_display || (property.listing_type === 'rent' ? 'For Rent' : 'For Sale')}
+          <span className={`badge ${isRent ? 'badge-rent' : 'badge-sale'}`}>
+            {isRent ? 'For Rent' : 'For Sale'}
           </span>
           {property.is_featured && (
-            <span className="badge badge-gold">
-              <FaStar size={9} /> Featured
+            <span className="badge badge-featured">
+              <FaStar size={10} /> Featured
             </span>
           )}
         </div>
 
-        {/* Favorite button */}
+        {/* Favorite Heart Button */}
         <button
           className={`property-card__fav-btn ${isFav ? 'property-card__fav-btn--active' : ''}`}
           onClick={handleFavorite}
           disabled={favLoading}
-          aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
+          aria-label={isFav ? 'Remove from saved homes' : 'Save home'}
         >
           <FaHeart />
         </button>
       </div>
 
-      {/* ── Card Body ────────────────────────────── */}
+      {/* ── Card Content (Zillow Format) ─────────── */}
       <div className="property-card__body">
-        <div className="property-card__price">
-          {formatPrice(property.price, property.listing_type)}
-        </div>
-
-        <h3 className="property-card__title">{truncate(property.title, 58)}</h3>
-
-        <div className="property-card__location">
-          <FaMapMarkerAlt />
-          <span>{property.city}{property.state ? `, ${property.state}` : ''}</span>
-        </div>
-
-        <div className="property-card__stats">
-          {property.bedrooms > 0 && (
-            <span><FaBed /> {property.bedrooms} {property.bedrooms === 1 ? 'Bed' : 'Beds'}</span>
-          )}
-          {property.bathrooms > 0 && (
-            <span><FaBath /> {property.bathrooms} {property.bathrooms === 1 ? 'Bath' : 'Baths'}</span>
-          )}
-          {property.area_sqft > 0 && (
-            <span><FaRulerCombined /> {property.area_sqft?.toLocaleString()} sqft</span>
-          )}
-        </div>
-
-        <div className="property-card__footer">
-          <span className="property-card__type">{typeLabel}</span>
-          <span className="property-card__agent">
-            {property.agent_name ? `By ${property.agent_name}` : ''}
+        <div className="property-card__price-row">
+          <span className="property-card__price">
+            {formatPrice(property.price)}
+            {isRent && <span className="property-card__price-period">/mo</span>}
           </span>
         </div>
+
+        {/* Specs: 3 bds · 2 ba · 1,850 sqft - Apartment for sale */}
+        <div className="property-card__specs">
+          {property.bedrooms > 0 && (
+            <>
+              <span className="property-card__spec-item">
+                <strong>{property.bedrooms}</strong> bds
+              </span>
+              <span className="property-card__spec-dot">·</span>
+            </>
+          )}
+          {property.bathrooms > 0 && (
+            <>
+              <span className="property-card__spec-item">
+                <strong>{property.bathrooms}</strong> ba
+              </span>
+              <span className="property-card__spec-dot">·</span>
+            </>
+          )}
+          {property.area_sqft > 0 && (
+            <>
+              <span className="property-card__spec-item">
+                <strong>{property.area_sqft?.toLocaleString()}</strong> sqft
+              </span>
+              <span className="property-card__spec-dot">·</span>
+            </>
+          )}
+          <span className="property-card__type-tag">{typeLabel}</span>
+        </div>
+
+        {/* Address */}
+        <p className="property-card__address">
+          {property.address ? `${property.address}, ` : ''}{property.city}
+        </p>
+
+        {/* Agent attribution */}
+        <div className="property-card__footer">
+          <small className="property-card__agent">
+            Prestige Realty · {property.agent_name || 'Licensed Agent'}
+          </small>
+        </div>
       </div>
+
     </Link>
   );
 }

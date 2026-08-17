@@ -1,55 +1,74 @@
-.favorites-page { padding-bottom: var(--space-3xl); }
+/* ══════════════════════════════════════════
+   SAVED HOMES / FAVORITES — Zillow Style
+   ══════════════════════════════════════════ */
+
+.favorites-page {
+  padding-top: var(--navbar-height);
+  background-color: var(--z-gray-50);
+  min-height: calc(100vh - var(--navbar-height));
+  padding-bottom: 4rem;
+}
 
 .favorites-page__header {
-  padding: var(--space-2xl) 0 var(--space-xl);
-  border-bottom: 1px solid var(--glass-border);
-  margin-bottom: var(--space-2xl);
+  padding: 2.5rem 0 1.5rem;
+  border-bottom: 1px solid var(--z-gray-200);
+  margin-bottom: 2rem;
 }
 
 .favorites-page__title-row {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: 1rem;
 }
 
 .favorites-page__icon {
   font-size: 2rem;
-  color: var(--gold-400);
+  color: var(--z-red);
   flex-shrink: 0;
+}
+
+.favorites-page__header h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--z-darker);
+}
+
+.favorites-page__header p {
+  color: var(--z-gray-500);
+  font-size: 0.95rem;
 }
 
 .favorites-page__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.75rem;
 }
 
 .favorites-page__empty {
   text-align: center;
-  padding: var(--space-3xl) var(--space-md);
+  padding: 4rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-md);
+  gap: 1rem;
+  background-color: var(--z-white);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-md);
+  max-width: 600px;
+  margin: 2rem auto 0;
 }
 
 .favorites-page__empty-icon {
   font-size: 3.5rem;
-  color: var(--slate-600);
+  color: var(--z-gray-400);
 }
 
 .favorites-page__empty h3 {
-  color: var(--white);
+  color: var(--z-darker);
+  font-size: 1.35rem;
 }
 
 .favorites-page__empty p {
-  color: var(--slate-400);
+  color: var(--z-gray-500);
   max-width: 380px;
-}
-
-@media (max-width: 1024px) {
-  .favorites-page__grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 640px) {
-  .favorites-page__grid { grid-template-columns: 1fr; }
 }

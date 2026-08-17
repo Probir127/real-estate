@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   FaHome, FaBars, FaTimes, FaUser, FaHeart,
-  FaTachometerAlt, FaPlus, FaSignOutAlt, FaChevronDown
+  FaTachometerAlt, FaPlus, FaSignOutAlt, FaChevronDown, FaBuilding
 } from 'react-icons/fa';
 import './Navbar.css';
 
@@ -20,7 +20,7 @@ export default function Navbar() {
 
   // Scroll detection
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -44,137 +44,221 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
+    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="container navbar__inner">
 
         {/* Brand */}
         <Link to="/" className="navbar__brand" onClick={() => setMenuOpen(false)}>
-          <FaHome className="navbar__brand-icon" />
-          <span>Prestige<span className="text-gold">Realty</span></span>
+          <div className="navbar__brand-logo-icon">
+            <FaHome />
+          </div>
+          <span className="navbar__brand-text">
+            Prestige<span className="navbar__brand-highlight">Realty</span>
+          </span>
         </Link>
 
         {/* Desktop Nav Links */}
-        <ul className="navbar__links">
-          <li><NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink></li>
-          <li><NavLink to="/properties" className={({ isActive }) => isActive ? 'active' : ''}>Properties</NavLink></li>
-          {isAuthenticated && (
-            <li><NavLink to="/favorites" className={({ isActive }) => isActive ? 'active' : ''}>Favorites</NavLink></li>
-          )}
-          {isAgent && (
-            <li><NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>Dashboard</NavLink></li>
-          )}
-        </ul>
+        <nav className="navbar__nav">
+          <ul className="navbar__links">
+            <li>
+              <NavLink to="/properties?type=sale" className={({ isActive }) => isActive ? 'active' : ''}>
+                Buy
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/properties?type=rent" className={({ isActive }) => isActive ? 'active' : ''}>
+                Rent
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/properties" end className={({ isActive }) => isActive ? 'active' : ''}>
+                All Homes
+              </NavLink>
+            </li>
+            {isAgent && (
+              <li>
+                <NavLink to="/properties/new" className={({ isActive }) => isActive ? 'active' : ''}>
+                  List Property
+                </NavLink>
+              </li>
+            )}
+            {isAuthenticated && (
+              <li>
+                <NavLink to="/favorites" className={({ isActive }) => isActive ? 'active' : ''}>
+                  <FaHeart style={{ marginRight: '4px', fontSize: '0.85rem' }} /> Saved Homes
+                </NavLink>
+              </li>
+            )}
+            {isAgent && (
+              <li>
+                <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
+                  Dashboard
+                </NavLink>
+              </li>
+            )}
+          </ul>
+        </nav>
 
         {/* Desktop Auth */}
         <div className="navbar__auth">
           {isAuthenticated ? (
-            <>
-              {isAgent && (
-                <Link to="/properties/new" className="btn btn-primary btn-sm">
-                  <FaPlus /> List Property
-                </Link>
-              )}
-              <div className="navbar__user-menu" ref={dropRef}>
-                <button
-                  className={`navbar__avatar-btn ${dropOpen ? 'navbar__avatar-btn--active' : ''}`}
-                  onClick={() => setDropOpen(prev => !prev)}
-                  aria-haspopup="true"
-                  aria-expanded={dropOpen}
-                >
+            <div className="navbar__user-menu" ref={dropRef}>
+              <button
+                className={`navbar__avatar-btn ${dropOpen ? 'navbar__avatar-btn--active' : ''}`}
+                onClick={() => setDropOpen(prev => !prev)}
+                aria-haspopup="true"
+                aria-expanded={dropOpen}
+              >
+                <div className="navbar__avatar-circle">
                   <FaUser />
-                  <span>{user?.full_name?.split(' ')[0] || 'Account'}</span>
-                  <FaChevronDown
-                    style={{
-                      fontSize: '0.7rem',
-                      transition: 'transform 0.2s',
-                      transform: dropOpen ? 'rotate(180deg)' : 'rotate(0deg)'
-                    }}
-                  />
-                </button>
+                </div>
+                <span className="navbar__user-name">{user?.full_name?.split(' ')[0] || 'My Account'}</span>
+                <FaChevronDown
+                  className="navbar__chevron"
+                  style={{
+                    transform: dropOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                  }}
+                />
+              </button>
 
-                {dropOpen && (
-                  <div className="navbar__dropdown navbar__dropdown--open">
-                    <Link to="/profile" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
-                      <FaUser /> Profile
-                    </Link>
-                    <Link to="/favorites" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
-                      <FaHeart /> Favorites
-                    </Link>
-                    {isAgent && (
-                      <Link to="/dashboard" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
-                        <FaTachometerAlt /> Dashboard
-                      </Link>
-                    )}
-                    {isAdmin && (
-                      <a
-                        href={adminUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="navbar__dropdown-item text-gold"
-                        onClick={() => setDropOpen(false)}
-                      >
-                        <FaTachometerAlt /> Django Admin Panel
-                      </a>
-                    )}
-                    <div className="navbar__dropdown-divider" />
-                    <button onClick={handleLogout} className="navbar__dropdown-item navbar__dropdown-item--danger">
-                      <FaSignOutAlt /> Sign Out
-                    </button>
+              {dropOpen && (
+                <div className="navbar__dropdown">
+                  <div className="navbar__dropdown-header">
+                    <strong>{user?.full_name || 'User'}</strong>
+                    <small>{user?.email}</small>
                   </div>
-                )}
-              </div>
-            </>
+                  <div className="navbar__dropdown-divider" />
+                  <Link to="/profile" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
+                    <FaUser /> Profile Settings
+                  </Link>
+                  <Link to="/favorites" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
+                    <FaHeart /> Saved Homes
+                  </Link>
+                  {isAgent && (
+                    <>
+                      <Link to="/dashboard" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
+                        <FaTachometerAlt /> Agent Dashboard
+                      </Link>
+                      <Link to="/properties/new" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
+                        <FaPlus /> Post a Listing
+                      </Link>
+                    </>
+                  )}
+                  {isAdmin && (
+                    <a
+                      href={adminUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="navbar__dropdown-item navbar__dropdown-item--admin"
+                      onClick={() => setDropOpen(false)}
+                    >
+                      <FaBuilding /> Django Control Center ↗
+                    </a>
+                  )}
+                  <div className="navbar__dropdown-divider" />
+                  <button onClick={handleLogout} className="navbar__dropdown-item navbar__dropdown-item--danger">
+                    <FaSignOutAlt /> Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
-            <>
-              <Link to="/login" className="btn btn-secondary btn-sm">Sign In</Link>
-              <Link to="/register" className="btn btn-primary btn-sm">Get Started</Link>
-            </>
+            <div className="navbar__auth-buttons">
+              <Link to="/login" className="btn btn-ghost btn-sm">
+                Sign In
+              </Link>
+              <Link to="/register" className="btn btn-primary btn-sm">
+                Join
+              </Link>
+            </div>
           )}
+
+          {/* Mobile hamburger button */}
+          <button
+            className="navbar__hamburger"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </button>
         </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          className="navbar__hamburger"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? <FaTimes /> : <FaBars />}
-        </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer */}
       {menuOpen && (
-        <div className="navbar__mobile">
-          <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
-          <NavLink to="/properties" onClick={() => setMenuOpen(false)}>Properties</NavLink>
-          {isAuthenticated && (
-            <NavLink to="/favorites" onClick={() => setMenuOpen(false)}>Favorites</NavLink>
-          )}
-          {isAgent && (
-            <>
-              <NavLink to="/dashboard" onClick={() => setMenuOpen(false)}>Dashboard</NavLink>
-              <NavLink to="/properties/new" onClick={() => setMenuOpen(false)}>List Property</NavLink>
-            </>
-          )}
-          <div className="navbar__mobile-divider" />
-          {isAuthenticated ? (
-            <>
-              <NavLink to="/profile" onClick={() => setMenuOpen(false)}>Profile</NavLink>
-              {isAdmin && (
-                <a href={adminUrl} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
-                  Django Admin Panel ↗
-                </a>
-              )}
-              <button onClick={handleLogout} className="navbar__mobile-logout">Sign Out</button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" onClick={() => setMenuOpen(false)}>Sign In</Link>
-              <Link to="/register" onClick={() => setMenuOpen(false)} className="btn btn-primary">Get Started</Link>
-            </>
-          )}
+        <div className="navbar__mobile-drawer">
+          <div className="navbar__mobile-links">
+            <NavLink to="/properties?type=sale" onClick={() => setMenuOpen(false)}>
+              Buy Homes
+            </NavLink>
+            <NavLink to="/properties?type=rent" onClick={() => setMenuOpen(false)}>
+              Rent Homes
+            </NavLink>
+            <NavLink to="/properties" end onClick={() => setMenuOpen(false)}>
+              All Properties
+            </NavLink>
+            {isAuthenticated && (
+              <NavLink to="/favorites" onClick={() => setMenuOpen(false)}>
+                <FaHeart style={{ marginRight: '6px' }} /> Saved Homes
+              </NavLink>
+            )}
+            {isAgent && (
+              <>
+                <NavLink to="/properties/new" onClick={() => setMenuOpen(false)}>
+                  <FaPlus style={{ marginRight: '6px' }} /> List Property
+                </NavLink>
+                <NavLink to="/dashboard" onClick={() => setMenuOpen(false)}>
+                  <FaTachometerAlt style={{ marginRight: '6px' }} /> Agent Dashboard
+                </NavLink>
+              </>
+            )}
+            {isAdmin && (
+              <a
+                href={adminUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="navbar__mobile-admin-link"
+              >
+                <FaBuilding style={{ marginRight: '6px' }} /> Django Control Center ↗
+              </a>
+            )}
+          </div>
+
+          <div className="navbar__mobile-auth">
+            {isAuthenticated ? (
+              <div className="navbar__mobile-user-card">
+                <div className="navbar__mobile-user-info">
+                  <FaUser className="navbar__mobile-avatar-icon" />
+                  <div>
+                    <strong>{user?.full_name || 'User'}</strong>
+                    <small>{user?.email}</small>
+                  </div>
+                </div>
+                <div className="navbar__mobile-actions">
+                  <Link to="/profile" className="btn btn-secondary btn-sm" onClick={() => setMenuOpen(false)}>
+                    Profile
+                  </Link>
+                  <button onClick={handleLogout} className="btn btn-dark btn-sm">
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="navbar__mobile-auth-actions">
+                <Link to="/login" className="btn btn-secondary" onClick={() => setMenuOpen(false)}>
+                  Sign In
+                </Link>
+                <Link to="/register" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
+                  Join Prestige Realty
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 }

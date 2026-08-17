@@ -1,362 +1,299 @@
-import { useState, useEffect, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   FaSearch, FaHome, FaBuilding, FaMapMarkerAlt, FaStar,
-  FaUsers, FaHandshake, FaShieldAlt, FaAward, FaPhoneAlt,
-  FaArrowRight, FaPlay, FaCheck
-} from 'react-icons/fa'
-import { propertiesApi } from '../api/client'
-import PropertyCard from '../components/PropertyCard'
-import { getErrorMessage } from '../utils/helpers'
-import './HomePage.css'
-
-const STATS = [
-  { icon: <FaHome />, value: '১২,০০০+', label: 'Properties Listed' },
-  { icon: <FaUsers />, value: '৮,৫০০+', label: 'Happy Clients' },
-  { icon: <FaHandshake />, value: '৪,২০০+', label: 'Deals Closed' },
-  { icon: <FaStar />, value: '৯৮%', label: 'Satisfaction Rate' },
-]
-
-const PROPERTY_TYPES = [
-  { value: '', label: 'All Types' },
-  { value: 'apartment', label: 'Apartment' },
-  { value: 'house', label: 'House' },
-  { value: 'villa', label: 'Villa' },
-  { value: 'commercial', label: 'Commercial' },
-  { value: 'land', label: 'Land' },
-]
+  FaArrowRight, FaKey, FaHandshake, FaShieldAlt, FaCheckCircle
+} from 'react-icons/fa';
+import { propertiesApi } from '../api/client';
+import PropertyCard from '../components/PropertyCard';
+import { getErrorMessage } from '../utils/helpers';
+import './HomePage.css';
 
 const CITIES = [
-  { name: 'Dhaka', count: '4,200+', emoji: '🏙️' },
-  { name: 'Chittagong', count: '1,800+', emoji: '⚓' },
-  { name: 'Sylhet', count: '950+', emoji: '🍃' },
-  { name: 'Rajshahi', count: '620+', emoji: '🌿' },
-  { name: 'Khulna', count: '540+', emoji: '🌊' },
-]
-
-const WHY_US = [
-  {
-    icon: <FaAward />,
-    title: 'Verified Listings',
-    desc: 'Every property is physically verified by our team before going live on the platform.',
-  },
-  {
-    icon: <FaShieldAlt />,
-    title: 'Secure Transactions',
-    desc: 'Fully compliant with Bangladesh property law. All documents verified by legal experts.',
-  },
-  {
-    icon: <FaPhoneAlt />,
-    title: '24/7 Expert Support',
-    desc: 'Our agents are available round the clock to guide you through every step of the process.',
-  },
-]
-
-function useInView(ref) {
-  const [inView, setInView] = useState(false)
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold: 0.15 })
-    if (ref.current) obs.observe(ref.current)
-    return () => obs.disconnect()
-  }, [ref])
-  return inView
-}
-
-function AnimatedSection({ children, className, delay = 0 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref)
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(32px)',
-        transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  )
-}
+  { name: 'Dhaka', count: '4,200+ homes' },
+  { name: 'Chittagong', count: '1,800+ homes' },
+  { name: 'Sylhet', count: '950+ homes' },
+  { name: 'Cox\'s Bazar', count: '420+ homes' },
+  { name: 'Rajshahi', count: '620+ homes' },
+  { name: 'Khulna', count: '540+ homes' },
+];
 
 export default function HomePage() {
-  const navigate = useNavigate()
-  const [featured, setFeatured] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState({ city: '', property_type: '', listing_type: '' })
-  const [heroVisible, setHeroVisible] = useState(false)
+  const navigate = useNavigate();
+  const [featured, setFeatured] = useState([]);
+  const [rentals, setRentals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Search State with Zillow Tabs: 'sale' | 'rent' | ''
+  const [activeTab, setActiveTab] = useState('sale');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [propertyType, setPropertyType] = useState('');
 
   useEffect(() => {
-    setTimeout(() => setHeroVisible(true), 100)
-    const fetchFeatured = async () => {
+    const loadHomeData = async () => {
       try {
-        const res = await propertiesApi.getFeatured()
-        setFeatured(res.data.results || res.data || [])
+        const [featRes, rentRes] = await Promise.allSettled([
+          propertiesApi.getFeatured(),
+          propertiesApi.list({ listing_type: 'rent', page_size: 4 })
+        ]);
+
+        if (featRes.status === 'fulfilled') {
+          setFeatured(featRes.value.data.results || featRes.value.data || []);
+        }
+        if (rentRes.status === 'fulfilled') {
+          setRentals(rentRes.value.data.results || rentRes.value.data || []);
+        }
       } catch (err) {
-        console.error('Failed to load featured properties:', getErrorMessage(err))
+        console.error('Failed to load homepage data:', getErrorMessage(err));
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchFeatured()
-  }, [])
+    };
+    loadHomeData();
+  }, []);
 
   const handleSearch = (e) => {
-    e.preventDefault()
-    const params = new URLSearchParams()
-    if (search.city) params.set('city', search.city)
-    if (search.property_type) params.set('property_type', search.property_type)
-    if (search.listing_type) params.set('listing_type', search.listing_type)
-    navigate(`/properties?${params.toString()}`)
-  }
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (activeTab) params.set('type', activeTab);
+    if (searchQuery.trim()) params.set('search', searchQuery.trim());
+    if (propertyType) params.set('property_type', propertyType);
+    navigate(`/properties?${params.toString()}`);
+  };
+
+  const handleCityClick = (cityName) => {
+    const params = new URLSearchParams();
+    if (activeTab) params.set('type', activeTab);
+    params.set('city', cityName);
+    navigate(`/properties?${params.toString()}`);
+  };
 
   return (
-    <main className="homepage">
+    <div className="home-page">
 
-      {/* ═══ HERO ═══════════════════════════════════════════ */}
-      <section className="hero">
-        {/* Background layers */}
-        <div className="hero__bg" />
-        <div className="hero__orb hero__orb--1" />
-        <div className="hero__orb hero__orb--2" />
-        <div className="hero__orb hero__orb--3" />
-        <div className="hero__grid" />
-        <div className="hero__particles">
-          {[...Array(20)].map((_, i) => (
-            <div key={i} className="hero__particle" style={{ '--i': i }} />
-          ))}
-        </div>
-
-        <div className="container hero__content" style={{
-          opacity: heroVisible ? 1 : 0,
-          transform: heroVisible ? 'translateY(0)' : 'translateY(40px)',
-          transition: 'opacity 1s ease, transform 1s ease',
-        }}>
-          {/* Badge */}
-          <div className="hero__badge">
-            <span className="hero__badge-dot" />
-            বাংলাদেশের #১ প্রিমিয়াম রিয়েল এস্টেট প্ল্যাটফর্ম
-          </div>
-
-          {/* Title */}
-          <h1 className="hero__title">
-            Find Your Dream<br />
-            <span className="hero__title-gold">Home in Bangladesh</span>
+      {/* ── Zillow-Style Hero Section ──────────────── */}
+      <section className="home-hero">
+        <div className="home-hero__overlay" />
+        <div className="container home-hero__content">
+          <h1 className="home-hero__title">
+            Find your place.
           </h1>
-
-          <p className="hero__subtitle">
-            Premium apartments, villas & commercial spaces across Dhaka, Chittagong, Sylhet and 64 districts.
-            Trusted by <strong style={{ color: 'var(--gold-400)' }}>8,500+</strong> happy families.
+          <p className="home-hero__subtitle">
+            Explore homes for sale, luxury apartments for rent, and verified properties across Bangladesh.
           </p>
 
-          {/* Trust badges */}
-          <div className="hero__trust">
-            {['Verified Listings', 'Legal Documentation', 'Instant Support'].map(t => (
-              <span key={t} className="hero__trust-badge">
-                <FaCheck style={{ color: 'var(--gold-500)', fontSize: '0.65rem' }} /> {t}
-              </span>
-            ))}
-          </div>
-
-          {/* Search Bar */}
-          <form className="hero__search" onSubmit={handleSearch}>
-            <div className="hero__search-field">
-              <FaMapMarkerAlt className="hero__search-icon" />
-              <input
-                type="text"
-                placeholder="Search by city or area (e.g. Gulshan, Dhanmondi)…"
-                value={search.city}
-                onChange={(e) => setSearch({ ...search, city: e.target.value })}
-                className="hero__search-input"
-              />
-            </div>
-            <div className="hero__search-divider" />
-            <select
-              value={search.property_type}
-              onChange={(e) => setSearch({ ...search, property_type: e.target.value })}
-              className="hero__search-select"
-            >
-              {PROPERTY_TYPES.map(t => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
-            </select>
-            <div className="hero__search-divider" />
-            <select
-              value={search.listing_type}
-              onChange={(e) => setSearch({ ...search, listing_type: e.target.value })}
-              className="hero__search-select"
-            >
-              <option value="">Buy or Rent</option>
-              <option value="sale">For Sale</option>
-              <option value="rent">For Rent</option>
-            </select>
-            <button type="submit" className="btn btn-primary hero__search-btn">
-              <FaSearch /> Search
-            </button>
-          </form>
-
-          {/* Quick stats */}
-          <div className="hero__quick-stats">
-            {[
-              { value: '৳৫০ লাখ', label: 'Starting Price' },
-              { value: '৬৪+', label: 'Districts Covered' },
-              { value: '২০০+', label: 'Verified Agents' },
-            ].map((s, i) => (
-              <div
-                key={s.label}
-                className="hero__quick-stat"
-                style={{ transitionDelay: `${0.4 + i * 0.1}s` }}
+          {/* Floating Search Card */}
+          <div className="home-search-card">
+            
+            {/* Buy / Rent / All Tabs */}
+            <div className="home-search-card__tabs">
+              <button
+                type="button"
+                className={`home-search-card__tab ${activeTab === 'sale' ? 'active' : ''}`}
+                onClick={() => setActiveTab('sale')}
               >
-                <span className="hero__quick-stat-value gradient-text">{s.value}</span>
-                <span className="hero__quick-stat-label">{s.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="hero__scroll-indicator">
-          <div className="hero__scroll-mouse">
-            <div className="hero__scroll-wheel" />
-          </div>
-          <span>Scroll to explore</span>
-        </div>
-      </section>
-
-      {/* ═══ STATS BAND ═══════════════════════════════════ */}
-      <div className="stats-band">
-        <div className="container">
-          <div className="stats-band__grid">
-            {STATS.map((stat, i) => (
-              <AnimatedSection key={stat.label} className="stat-item" delay={i * 0.1}>
-                <div className="stat-item__icon">{stat.icon}</div>
-                <div className="stat-item__value">{stat.value}</div>
-                <div className="stat-item__label">{stat.label}</div>
-              </AnimatedSection>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ═══ FEATURED PROPERTIES ══════════════════════════ */}
-      <section className="section featured">
-        <div className="container">
-          <AnimatedSection className="section-header">
-            <span className="label">✦ Hand-Picked For You</span>
-            <h2>Featured <span className="gradient-text">Properties</span></h2>
-            <div className="gold-line" />
-            <p style={{ marginTop: '1rem' }}>
-              Explore our curated selection of premium properties across Bangladesh's prime locations.
-            </p>
-          </AnimatedSection>
-
-          {loading ? (
-            <div className="featured__grid">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="skeleton" style={{ height: 400, borderRadius: 18 }} />
-              ))}
-            </div>
-          ) : featured.length > 0 ? (
-            <div className="featured__grid">
-              {featured.map((property, i) => (
-                <AnimatedSection key={property.id} delay={i * 0.08} style={{ height: '100%' }}>
-                  <PropertyCard property={property} />
-                </AnimatedSection>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-state__icon">🏠</div>
-              <h3>No Featured Properties Yet</h3>
-              <p>Check back soon or browse all available listings.</p>
-              <button onClick={() => navigate('/properties')} className="btn btn-outline mt-md">
-                Browse All Properties
+                Buy
+              </button>
+              <button
+                type="button"
+                className={`home-search-card__tab ${activeTab === 'rent' ? 'active' : ''}`}
+                onClick={() => setActiveTab('rent')}
+              >
+                Rent
+              </button>
+              <button
+                type="button"
+                className={`home-search-card__tab ${activeTab === '' ? 'active' : ''}`}
+                onClick={() => setActiveTab('')}
+              >
+                All Homes
               </button>
             </div>
-          )}
 
-          {featured.length > 0 && (
-            <AnimatedSection className="featured__cta">
-              <Link to="/properties" className="btn btn-outline btn-lg">
-                Browse All Properties <FaArrowRight style={{ marginLeft: 8 }} />
-              </Link>
-            </AnimatedSection>
-          )}
-        </div>
-      </section>
+            {/* Search Input Bar */}
+            <form onSubmit={handleSearch} className="home-search-card__form">
+              <div className="home-search-card__input-wrap">
+                <FaSearch className="home-search-card__icon" />
+                <input
+                  type="text"
+                  className="home-search-card__input"
+                  placeholder={
+                    activeTab === 'rent'
+                      ? "Enter city, neighborhood, or address to rent..."
+                      : "Enter city, neighborhood, or address to buy..."
+                  }
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
 
-      {/* ═══ POPULAR CITIES ═══════════════════════════════ */}
-      <section className="section locations">
-        <div className="container">
-          <AnimatedSection className="section-header">
-            <span className="label">✦ Explore By Location</span>
-            <h2>Popular <span className="gradient-text">Cities</span></h2>
-            <div className="gold-line" />
-          </AnimatedSection>
-          <div className="locations__grid">
-            {CITIES.map((city, i) => (
-              <AnimatedSection
-                key={city.name}
-                className="location-card"
-                delay={i * 0.1}
+              <select
+                className="home-search-card__select"
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
               >
-                <div
-                  className="location-card__inner"
-                  onClick={() => navigate(`/properties?city=${city.name}`)}
-                >
-                  <div className="location-card__emoji">{city.emoji}</div>
-                  <div className="location-card__name">{city.name}</div>
-                  <div className="location-card__count">{city.count} properties</div>
-                  <div className="location-card__arrow"><FaArrowRight /></div>
-                </div>
-              </AnimatedSection>
-            ))}
+                <option value="">Home Type</option>
+                <option value="apartment">Apartment</option>
+                <option value="house">House</option>
+                <option value="villa">Villa</option>
+                <option value="commercial">Commercial</option>
+                <option value="land">Land</option>
+              </select>
+
+              <button type="submit" className="btn btn-primary home-search-card__submit">
+                <FaSearch /> Search
+              </button>
+            </form>
+
+            {/* City Quick Pills */}
+            <div className="home-search-card__cities">
+              <span className="home-search-card__cities-label">Popular Locations:</span>
+              <div className="home-search-card__chips">
+                {CITIES.map(c => (
+                  <button
+                    key={c.name}
+                    type="button"
+                    className="home-search-card__chip"
+                    onClick={() => handleCityClick(c.name)}
+                  >
+                    <FaMapMarkerAlt size={10} /> {c.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ═══ WHY US ═══════════════════════════════════════ */}
-      <section className="section why-us">
-        <div className="container">
-          <AnimatedSection className="section-header">
-            <span className="label">✦ Why Choose Us</span>
-            <h2>The Smarter Way to <span className="gradient-text">Buy &amp; Sell</span></h2>
-            <div className="gold-line" />
-          </AnimatedSection>
-          <div className="grid-3">
-            {WHY_US.map((item, i) => (
-              <AnimatedSection key={item.title} className="why-card glass-card" delay={i * 0.15}>
-                <div className="why-card__icon">{item.icon}</div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-              </AnimatedSection>
+      {/* ── Featured "Homes For You" Section ──────── */}
+      <section className="home-section container">
+        <div className="home-section__header">
+          <div>
+            <h2 className="home-section__title">Homes For You</h2>
+            <p className="home-section__subtitle">Based on homes you might like in Bangladesh</p>
+          </div>
+          <Link to="/properties?type=sale" className="home-section__see-all">
+            See all homes <FaArrowRight size={12} />
+          </Link>
+        </div>
+
+        {loading ? (
+          <div className="home-section__loading">
+            <div className="spinner" />
+            <p>Loading homes...</p>
+          </div>
+        ) : featured.length > 0 ? (
+          <div className="home-grid">
+            {featured.slice(0, 6).map(prop => (
+              <PropertyCard key={prop.id} property={prop} />
             ))}
+          </div>
+        ) : (
+          <p className="home-section__empty">No featured properties found.</p>
+        )}
+      </section>
+
+      {/* ── Trending Rentals Section ───────────────── */}
+      {rentals.length > 0 && (
+        <section className="home-section home-section--alt">
+          <div className="container">
+            <div className="home-section__header">
+              <div>
+                <h2 className="home-section__title">Trending Rental Properties</h2>
+                <p className="home-section__subtitle">Explore luxury apartments and modern homes for rent</p>
+              </div>
+              <Link to="/properties?type=rent" className="home-section__see-all">
+                See all rentals <FaArrowRight size={12} />
+              </Link>
+            </div>
+
+            <div className="home-grid">
+              {rentals.map(prop => (
+                <PropertyCard key={prop.id} property={prop} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Zillow-Style Action Cards (Buy / Rent / Sell) */}
+      <section className="home-section container">
+        <div className="home-section__header home-section__header--center">
+          <h2 className="home-section__title">See how Prestige Realty can help</h2>
+          <p className="home-section__subtitle">Guiding your real estate journey with trust and verified listings</p>
+        </div>
+
+        <div className="home-cards-grid">
+          {/* Card 1: Buy */}
+          <div className="home-action-card">
+            <div className="home-action-card__icon-wrap home-action-card__icon-wrap--blue">
+              <FaHome />
+            </div>
+            <h3 className="home-action-card__title">Buy a home</h3>
+            <p className="home-action-card__text">
+              Find your place with an immersive photo experience and verified listings, including luxury penthouses, villas, and family residences.
+            </p>
+            <Link to="/properties?type=sale" className="btn btn-secondary btn-sm">
+              Browse homes
+            </Link>
+          </div>
+
+          {/* Card 2: Rent */}
+          <div className="home-action-card">
+            <div className="home-action-card__icon-wrap home-action-card__icon-wrap--green">
+              <FaKey />
+            </div>
+            <h3 className="home-action-card__title">Rent a home</h3>
+            <p className="home-action-card__text">
+              We provide a seamless rental discovery experience — from browsing verified apartments to contacting top agents directly.
+            </p>
+            <Link to="/properties?type=rent" className="btn btn-secondary btn-sm">
+              Find rentals
+            </Link>
+          </div>
+
+          {/* Card 3: Sell */}
+          <div className="home-action-card">
+            <div className="home-action-card__icon-wrap home-action-card__icon-wrap--amber">
+              <FaHandshake />
+            </div>
+            <h3 className="home-action-card__title">List your property</h3>
+            <p className="home-action-card__text">
+              Reach thousands of qualified buyers and tenants across Bangladesh with our premium real estate marketing network.
+            </p>
+            <Link to="/properties/new" className="btn btn-secondary btn-sm">
+              Post a listing
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ═══ CTA BANNER ═══════════════════════════════════ */}
-      <div className="container">
-        <AnimatedSection className="cta-banner">
-          <div className="cta-banner__glow" />
-          <span className="label" style={{ marginBottom: '1.5rem', display: 'inline-block' }}>✦ Get Started Today</span>
-          <h2>Ready to <span className="gradient-text">List Your Property?</span></h2>
-          <p>
-            Join thousands of sellers who trust Prestige Realty to connect them with
-            verified buyers across Bangladesh.
-          </p>
-          <div className="cta-banner__actions">
-            <Link to="/register" className="btn btn-primary btn-lg">
-              Get Started Free
-            </Link>
-            <Link to="/properties" className="btn btn-outline btn-lg">
-              Browse Listings
-            </Link>
+      {/* ── Trust & Stats Banner ───────────────────── */}
+      <section className="home-trust-banner">
+        <div className="container home-trust-banner__inner">
+          <div className="home-trust-banner__item">
+            <strong>12,000+</strong>
+            <span>Verified Listings</span>
           </div>
-        </AnimatedSection>
-      </div>
+          <div className="home-trust-banner__divider" />
+          <div className="home-trust-banner__item">
+            <strong>8,500+</strong>
+            <span>Happy Homeowners</span>
+          </div>
+          <div className="home-trust-banner__divider" />
+          <div className="home-trust-banner__item">
+            <strong>100%</strong>
+            <span>Legal Title Checked</span>
+          </div>
+          <div className="home-trust-banner__divider" />
+          <div className="home-trust-banner__item">
+            <strong>24/7</strong>
+            <span>Licensed Agent Support</span>
+          </div>
+        </div>
+      </section>
 
-    </main>
-  )
+    </div>
+  );
 }
