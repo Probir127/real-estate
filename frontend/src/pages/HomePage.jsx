@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   FaSearch, FaHome, FaBuilding, FaMapMarkerAlt, FaStar,
-  FaArrowRight, FaKey, FaHandshake, FaShieldAlt, FaCheckCircle
+  FaArrowRight, FaKey, FaHandshake, FaShieldAlt, FaCheckCircle,
+  FaChevronRight, FaRegHeart
 } from 'react-icons/fa';
 import { propertiesApi } from '../api/client';
 import PropertyCard from '../components/PropertyCard';
@@ -18,16 +19,52 @@ const CITIES = [
   { name: 'Khulna', count: '540+ homes' },
 ];
 
+const DIRECTORY_DATA = {
+  real_estate: [
+    { title: 'Dhaka Real Estate', link: '/properties?city=Dhaka' },
+    { title: 'Chittagong Real Estate', link: '/properties?city=Chittagong' },
+    { title: 'Sylhet Real Estate', link: '/properties?city=Sylhet' },
+    { title: 'Cox\'s Bazar Real Estate', link: '/properties?city=Cox%27s+Bazar' },
+    { title: 'Rajshahi Real Estate', link: '/properties?city=Rajshahi' },
+    { title: 'Khulna Real Estate', link: '/properties?city=Khulna' },
+    { title: 'Gulshan Penthouses', link: '/properties?search=Gulshan' },
+    { title: 'Dhanmondi Apartments', link: '/properties?search=Dhanmondi' },
+    { title: 'Baridhara Luxury Villas', link: '/properties?search=Baridhara' },
+    { title: 'Uttara Family Homes', link: '/properties?search=Uttara' },
+    { title: 'Motijheel Commercial Spaces', link: '/properties?search=Motijheel' },
+    { title: 'Banani Modern Flats', link: '/properties?search=Banani' },
+  ],
+  rentals: [
+    { title: 'Apartments for Rent in Dhaka', link: '/properties?type=rent&city=Dhaka' },
+    { title: 'Flats for Rent in Banani', link: '/properties?type=rent&search=Banani' },
+    { title: 'Furnished Studios in Bashundhara', link: '/properties?type=rent&search=Bashundhara' },
+    { title: 'Houses for Rent in Sylhet', link: '/properties?type=rent&city=Sylhet' },
+    { title: 'Office Space for Rent in Motijheel', link: '/properties?type=rent&search=Motijheel' },
+    { title: 'Apartments for Rent in Chittagong', link: '/properties?type=rent&city=Chittagong' },
+    { title: 'Affordable Studios in Khulna', link: '/properties?type=rent&city=Khulna' },
+    { title: 'Commercial Rentals in Dhaka', link: '/properties?type=rent&property_type=commercial' },
+  ],
+  popular_searches: [
+    { title: 'Luxury Penthouses with City View', link: '/properties?search=Penthouse' },
+    { title: 'Homes with 3+ Bedrooms', link: '/properties?min_bedrooms=3' },
+    { title: 'Beachfront Properties', link: '/properties?search=Beachfront' },
+    { title: 'Villas with Private Pool', link: '/properties?property_type=villa' },
+    { title: 'Agricultural Land & Plots', link: '/properties?property_type=land' },
+    { title: 'Brand New Construction', link: '/properties?ordering=-created_at' },
+  ]
+};
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [featured, setFeatured] = useState([]);
   const [rentals, setRentals] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Search State with Zillow Tabs: 'sale' | 'rent' | ''
+  // Zillow Search State
   const [activeTab, setActiveTab] = useState('sale');
   const [searchQuery, setSearchQuery] = useState('');
   const [propertyType, setPropertyType] = useState('');
+  const [activeDirectoryTab, setActiveDirectoryTab] = useState('real_estate');
 
   useEffect(() => {
     const loadHomeData = async () => {
@@ -69,58 +106,59 @@ export default function HomePage() {
   };
 
   return (
-    <div className="home-page">
+    <div className="z-home">
 
-      {/* ── Zillow-Style Hero Section ──────────────── */}
-      <section className="home-hero">
-        <div className="home-hero__overlay" />
-        <div className="container home-hero__content">
-          <h1 className="home-hero__title">
+      {/* ── 1. Zillow Hero Section ──────────────────── */}
+      <section className="z-hero">
+        <div className="z-hero__bg" />
+        <div className="container z-hero__container">
+          
+          <h1 className="z-hero__title">
             Find your place.
           </h1>
-          <p className="home-hero__subtitle">
+          <p className="z-hero__subtitle">
             Explore homes for sale, luxury apartments for rent, and verified properties across Bangladesh.
           </p>
 
-          {/* Floating Search Card */}
-          <div className="home-search-card">
+          {/* Search Card Container */}
+          <div className="z-search-box">
             
-            {/* Buy / Rent / All Tabs */}
-            <div className="home-search-card__tabs">
+            {/* Tabs: Buy | Rent | All Homes */}
+            <div className="z-search-box__tabs">
               <button
                 type="button"
-                className={`home-search-card__tab ${activeTab === 'sale' ? 'active' : ''}`}
+                className={`z-search-box__tab ${activeTab === 'sale' ? 'active' : ''}`}
                 onClick={() => setActiveTab('sale')}
               >
                 Buy
               </button>
               <button
                 type="button"
-                className={`home-search-card__tab ${activeTab === 'rent' ? 'active' : ''}`}
+                className={`z-search-box__tab ${activeTab === 'rent' ? 'active' : ''}`}
                 onClick={() => setActiveTab('rent')}
               >
                 Rent
               </button>
               <button
                 type="button"
-                className={`home-search-card__tab ${activeTab === '' ? 'active' : ''}`}
+                className={`z-search-box__tab ${activeTab === '' ? 'active' : ''}`}
                 onClick={() => setActiveTab('')}
               >
                 All Homes
               </button>
             </div>
 
-            {/* Search Input Bar */}
-            <form onSubmit={handleSearch} className="home-search-card__form">
-              <div className="home-search-card__input-wrap">
-                <FaSearch className="home-search-card__icon" />
+            {/* Input Form */}
+            <form onSubmit={handleSearch} className="z-search-box__form">
+              <div className="z-search-box__input-wrapper">
+                <FaSearch className="z-search-box__input-icon" />
                 <input
                   type="text"
-                  className="home-search-card__input"
+                  className="z-search-box__input"
                   placeholder={
                     activeTab === 'rent'
-                      ? "Enter city, neighborhood, or address to rent..."
-                      : "Enter city, neighborhood, or address to buy..."
+                      ? "Enter an address, neighborhood, city, or ZIP code to rent..."
+                      : "Enter an address, neighborhood, city, or ZIP code to buy..."
                   }
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -128,7 +166,7 @@ export default function HomePage() {
               </div>
 
               <select
-                className="home-search-card__select"
+                className="z-search-box__select"
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
               >
@@ -140,20 +178,20 @@ export default function HomePage() {
                 <option value="land">Land</option>
               </select>
 
-              <button type="submit" className="btn btn-primary home-search-card__submit">
+              <button type="submit" className="z-search-box__submit-btn">
                 <FaSearch /> Search
               </button>
             </form>
 
-            {/* City Quick Pills */}
-            <div className="home-search-card__cities">
-              <span className="home-search-card__cities-label">Popular Locations:</span>
-              <div className="home-search-card__chips">
+            {/* Popular Locations */}
+            <div className="z-search-box__locations">
+              <span className="z-search-box__locations-title">Popular Cities:</span>
+              <div className="z-search-box__pills">
                 {CITIES.map(c => (
                   <button
                     key={c.name}
                     type="button"
-                    className="home-search-card__chip"
+                    className="z-search-box__pill"
                     onClick={() => handleCityClick(c.name)}
                   >
                     <FaMapMarkerAlt size={10} /> {c.name}
@@ -163,52 +201,53 @@ export default function HomePage() {
             </div>
 
           </div>
+
         </div>
       </section>
 
-      {/* ── Featured "Homes For You" Section ──────── */}
-      <section className="home-section container">
-        <div className="home-section__header">
+      {/* ── 2. Homes For You (Featured Listings) ────── */}
+      <section className="z-section container">
+        <div className="z-section__header">
           <div>
-            <h2 className="home-section__title">Homes For You</h2>
-            <p className="home-section__subtitle">Based on homes you might like in Bangladesh</p>
+            <h2 className="z-section__title">Homes For You</h2>
+            <p className="z-section__subtitle">Based on homes you might like in Bangladesh</p>
           </div>
-          <Link to="/properties?type=sale" className="home-section__see-all">
+          <Link to="/properties?type=sale" className="z-section__link">
             See all homes <FaArrowRight size={12} />
           </Link>
         </div>
 
         {loading ? (
-          <div className="home-section__loading">
+          <div className="z-loading">
             <div className="spinner" />
             <p>Loading homes...</p>
           </div>
         ) : featured.length > 0 ? (
-          <div className="home-grid">
+          <div className="z-grid">
             {featured.slice(0, 6).map(prop => (
               <PropertyCard key={prop.id} property={prop} />
             ))}
           </div>
         ) : (
-          <p className="home-section__empty">No featured properties found.</p>
+          <p className="z-empty">No featured properties found.</p>
         )}
       </section>
 
-      {/* ── Trending Rentals Section ───────────────── */}
+      {/* ── 3. Trending Rentals Section ──────────────── */}
       {rentals.length > 0 && (
-        <section className="home-section home-section--alt">
+        <section className="z-section z-section--alt">
           <div className="container">
-            <div className="home-section__header">
+            <div className="z-section__header">
               <div>
-                <h2 className="home-section__title">Trending Rental Properties</h2>
-                <p className="home-section__subtitle">Explore luxury apartments and modern homes for rent</p>
+                <h2 className="z-section__title">Trending Rental Properties</h2>
+                <p className="z-section__subtitle">Explore luxury apartments and flats for rent</p>
               </div>
-              <Link to="/properties?type=rent" className="home-section__see-all">
+              <Link to="/properties?type=rent" className="z-section__link">
                 See all rentals <FaArrowRight size={12} />
               </Link>
             </div>
 
-            <div className="home-grid">
+            <div className="z-grid">
               {rentals.map(prop => (
                 <PropertyCard key={prop.id} property={prop} />
               ))}
@@ -217,79 +256,137 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ── Zillow-Style Action Cards (Buy / Rent / Sell) */}
-      <section className="home-section container">
-        <div className="home-section__header home-section__header--center">
-          <h2 className="home-section__title">See how Prestige Realty can help</h2>
-          <p className="home-section__subtitle">Guiding your real estate journey with trust and verified listings</p>
-        </div>
-
-        <div className="home-cards-grid">
-          {/* Card 1: Buy */}
-          <div className="home-action-card">
-            <div className="home-action-card__icon-wrap home-action-card__icon-wrap--blue">
-              <FaHome />
+      {/* ── 4. Zillow's 3 Iconic Action Cards ────────── */}
+      <section className="z-section container">
+        <div className="z-action-cards-grid">
+          
+          {/* Card 1: Buy a Home */}
+          <div className="z-action-card">
+            <div className="z-action-card__img-wrap">
+              <img
+                src="https://www.zillowstatic.com/bedrock/app/vUID/v4/static-assets/Buy_a_home.png"
+                alt="Buy a home"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&auto=format&fit=crop&q=80';
+                }}
+              />
             </div>
-            <h3 className="home-action-card__title">Buy a home</h3>
-            <p className="home-action-card__text">
-              Find your place with an immersive photo experience and verified listings, including luxury penthouses, villas, and family residences.
+            <h3 className="z-action-card__title">Buy a home</h3>
+            <p className="z-action-card__desc">
+              Find your place with an immersive photo experience and the most listings, including things you won't find anywhere else.
             </p>
-            <Link to="/properties?type=sale" className="btn btn-secondary btn-sm">
+            <Link to="/properties?type=sale" className="btn btn-secondary z-action-card__btn">
               Browse homes
             </Link>
           </div>
 
-          {/* Card 2: Rent */}
-          <div className="home-action-card">
-            <div className="home-action-card__icon-wrap home-action-card__icon-wrap--green">
-              <FaKey />
+          {/* Card 2: Rent a Home */}
+          <div className="z-action-card">
+            <div className="z-action-card__img-wrap">
+              <img
+                src="https://www.zillowstatic.com/bedrock/app/vUID/v4/static-assets/Rent_a_home.png"
+                alt="Rent a home"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80';
+                }}
+              />
             </div>
-            <h3 className="home-action-card__title">Rent a home</h3>
-            <p className="home-action-card__text">
-              We provide a seamless rental discovery experience — from browsing verified apartments to contacting top agents directly.
+            <h3 className="z-action-card__title">Rent a home</h3>
+            <p className="z-action-card__desc">
+              We're creating a seamless online experience – from shopping on the largest rental network, to applying, to connecting with top agents.
             </p>
-            <Link to="/properties?type=rent" className="btn btn-secondary btn-sm">
+            <Link to="/properties?type=rent" className="btn btn-secondary z-action-card__btn">
               Find rentals
             </Link>
           </div>
 
-          {/* Card 3: Sell */}
-          <div className="home-action-card">
-            <div className="home-action-card__icon-wrap home-action-card__icon-wrap--amber">
-              <FaHandshake />
+          {/* Card 3: Sell / List a Home */}
+          <div className="z-action-card">
+            <div className="z-action-card__img-wrap">
+              <img
+                src="https://www.zillowstatic.com/bedrock/app/vUID/v4/static-assets/Sell_a_home.png"
+                alt="Sell a home"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=600&auto=format&fit=crop&q=80';
+                }}
+              />
             </div>
-            <h3 className="home-action-card__title">List your property</h3>
-            <p className="home-action-card__text">
-              Reach thousands of qualified buyers and tenants across Bangladesh with our premium real estate marketing network.
+            <h3 className="z-action-card__title">List your home</h3>
+            <p className="z-action-card__desc">
+              No matter what path you take to sell or rent your property, Prestige Realty connects you with qualified buyers and trusted licensed brokers.
             </p>
-            <Link to="/properties/new" className="btn btn-secondary btn-sm">
-              Post a listing
+            <Link to="/properties/new" className="btn btn-secondary z-action-card__btn">
+              See your options
             </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 5. Real Estate Directory Explorer ───────── */}
+      <section className="z-directory-section">
+        <div className="container">
+          <div className="z-directory-card">
+            
+            {/* Directory Navigation Tabs */}
+            <div className="z-directory-tabs">
+              <button
+                type="button"
+                className={`z-directory-tab ${activeDirectoryTab === 'real_estate' ? 'active' : ''}`}
+                onClick={() => setActiveDirectoryTab('real_estate')}
+              >
+                Real Estate
+              </button>
+              <button
+                type="button"
+                className={`z-directory-tab ${activeDirectoryTab === 'rentals' ? 'active' : ''}`}
+                onClick={() => setActiveDirectoryTab('rentals')}
+              >
+                Rentals
+              </button>
+              <button
+                type="button"
+                className={`z-directory-tab ${activeDirectoryTab === 'popular_searches' ? 'active' : ''}`}
+                onClick={() => setActiveDirectoryTab('popular_searches')}
+              >
+                Popular Searches
+              </button>
+            </div>
+
+            {/* Links Grid */}
+            <div className="z-directory-links-grid">
+              {DIRECTORY_DATA[activeDirectoryTab]?.map((item, idx) => (
+                <Link key={idx} to={item.link} className="z-directory-link">
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ── Trust & Stats Banner ───────────────────── */}
-      <section className="home-trust-banner">
-        <div className="container home-trust-banner__inner">
-          <div className="home-trust-banner__item">
+      {/* ── 6. Trust & Stats Bar ────────────────────── */}
+      <section className="z-stats-bar">
+        <div className="container z-stats-bar__inner">
+          <div className="z-stats-bar__item">
             <strong>12,000+</strong>
-            <span>Verified Listings</span>
+            <span>Verified Bangladesh Listings</span>
           </div>
-          <div className="home-trust-banner__divider" />
-          <div className="home-trust-banner__item">
+          <div className="z-stats-bar__item">
             <strong>8,500+</strong>
-            <span>Happy Homeowners</span>
+            <span>Happy Homeowners & Renters</span>
           </div>
-          <div className="home-trust-banner__divider" />
-          <div className="home-trust-banner__item">
+          <div className="z-stats-bar__item">
             <strong>100%</strong>
             <span>Legal Title Checked</span>
           </div>
-          <div className="home-trust-banner__divider" />
-          <div className="home-trust-banner__item">
+          <div className="z-stats-bar__item">
             <strong>24/7</strong>
-            <span>Licensed Agent Support</span>
+            <span>Licensed Agent Advisory</span>
           </div>
         </div>
       </section>

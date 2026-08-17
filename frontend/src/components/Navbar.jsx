@@ -44,22 +44,12 @@ export default function Navbar() {
   };
 
   return (
-    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
-      <div className="container navbar__inner">
+    <header className={`z-nav ${scrolled ? 'z-nav--scrolled' : ''}`}>
+      <div className="container z-nav__inner">
 
-        {/* Brand */}
-        <Link to="/" className="navbar__brand" onClick={() => setMenuOpen(false)}>
-          <div className="navbar__brand-logo-icon">
-            <FaHome />
-          </div>
-          <span className="navbar__brand-text">
-            Prestige<span className="navbar__brand-highlight">Realty</span>
-          </span>
-        </Link>
-
-        {/* Desktop Nav Links */}
-        <nav className="navbar__nav">
-          <ul className="navbar__links">
+        {/* ── 1. Left Nav: Buy, Rent, Sell, Homes ─────── */}
+        <nav className="z-nav__left">
+          <ul className="z-nav__menu">
             <li>
               <NavLink to="/properties?type=sale" className={({ isActive }) => isActive ? 'active' : ''}>
                 Buy
@@ -82,64 +72,74 @@ export default function Navbar() {
                 </NavLink>
               </li>
             )}
+          </ul>
+        </nav>
+
+        {/* ── 2. Center Brand Logo (Zillow-Style) ────── */}
+        <div className="z-nav__center">
+          <Link to="/" className="z-nav__brand" onClick={() => setMenuOpen(false)}>
+            <div className="z-nav__brand-icon">
+              <FaHome />
+            </div>
+            <span className="z-nav__brand-name">
+              Prestige<span className="z-nav__brand-name--blue">Realty</span>
+            </span>
+          </Link>
+        </div>
+
+        {/* ── 3. Right Nav: Saved, Manage, Auth ───────── */}
+        <div className="z-nav__right">
+          <ul className="z-nav__secondary-menu">
             {isAuthenticated && (
               <li>
-                <NavLink to="/favorites" className={({ isActive }) => isActive ? 'active' : ''}>
-                  <FaHeart style={{ marginRight: '4px', fontSize: '0.85rem' }} /> Saved Homes
+                <NavLink to="/favorites" className="z-nav__saved-link">
+                  <FaHeart className="z-nav__saved-icon" /> Saved Homes
                 </NavLink>
               </li>
             )}
             {isAgent && (
               <li>
-                <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
+                <NavLink to="/dashboard" className="z-nav__link">
                   Dashboard
                 </NavLink>
               </li>
             )}
           </ul>
-        </nav>
 
-        {/* Desktop Auth */}
-        <div className="navbar__auth">
           {isAuthenticated ? (
-            <div className="navbar__user-menu" ref={dropRef}>
+            <div className="z-nav__user-dropdown-wrap" ref={dropRef}>
               <button
-                className={`navbar__avatar-btn ${dropOpen ? 'navbar__avatar-btn--active' : ''}`}
+                className={`z-nav__user-btn ${dropOpen ? 'active' : ''}`}
                 onClick={() => setDropOpen(prev => !prev)}
                 aria-haspopup="true"
                 aria-expanded={dropOpen}
               >
-                <div className="navbar__avatar-circle">
+                <div className="z-nav__avatar">
                   <FaUser />
                 </div>
-                <span className="navbar__user-name">{user?.full_name?.split(' ')[0] || 'My Account'}</span>
-                <FaChevronDown
-                  className="navbar__chevron"
-                  style={{
-                    transform: dropOpen ? 'rotate(180deg)' : 'rotate(0deg)'
-                  }}
-                />
+                <span className="z-nav__user-text">{user?.full_name?.split(' ')[0] || 'Account'}</span>
+                <FaChevronDown className="z-nav__chevron" />
               </button>
 
               {dropOpen && (
-                <div className="navbar__dropdown">
-                  <div className="navbar__dropdown-header">
+                <div className="z-nav__dropdown-menu">
+                  <div className="z-nav__dropdown-header">
                     <strong>{user?.full_name || 'User'}</strong>
                     <small>{user?.email}</small>
                   </div>
-                  <div className="navbar__dropdown-divider" />
-                  <Link to="/profile" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
-                    <FaUser /> Profile Settings
+                  <div className="z-nav__dropdown-divider" />
+                  <Link to="/profile" className="z-nav__dropdown-item" onClick={() => setDropOpen(false)}>
+                    <FaUser /> Profile & Account
                   </Link>
-                  <Link to="/favorites" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
+                  <Link to="/favorites" className="z-nav__dropdown-item" onClick={() => setDropOpen(false)}>
                     <FaHeart /> Saved Homes
                   </Link>
                   {isAgent && (
                     <>
-                      <Link to="/dashboard" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
+                      <Link to="/dashboard" className="z-nav__dropdown-item" onClick={() => setDropOpen(false)}>
                         <FaTachometerAlt /> Agent Dashboard
                       </Link>
-                      <Link to="/properties/new" className="navbar__dropdown-item" onClick={() => setDropOpen(false)}>
+                      <Link to="/properties/new" className="z-nav__dropdown-item" onClick={() => setDropOpen(false)}>
                         <FaPlus /> Post a Listing
                       </Link>
                     </>
@@ -149,36 +149,35 @@ export default function Navbar() {
                       href={adminUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="navbar__dropdown-item navbar__dropdown-item--admin"
+                      className="z-nav__dropdown-item z-nav__dropdown-item--admin"
                       onClick={() => setDropOpen(false)}
                     >
                       <FaBuilding /> Django Control Center ↗
                     </a>
                   )}
-                  <div className="navbar__dropdown-divider" />
-                  <button onClick={handleLogout} className="navbar__dropdown-item navbar__dropdown-item--danger">
+                  <div className="z-nav__dropdown-divider" />
+                  <button onClick={handleLogout} className="z-nav__dropdown-item z-nav__dropdown-item--danger">
                     <FaSignOutAlt /> Sign Out
                   </button>
                 </div>
               )}
             </div>
           ) : (
-            <div className="navbar__auth-buttons">
-              <Link to="/login" className="btn btn-ghost btn-sm">
+            <div className="z-nav__auth-btns">
+              <Link to="/login" className="z-nav__signin-btn">
                 Sign In
               </Link>
-              <Link to="/register" className="btn btn-primary btn-sm">
+              <Link to="/register" className="btn btn-primary btn-sm z-nav__join-btn">
                 Join
               </Link>
             </div>
           )}
 
-          {/* Mobile hamburger button */}
+          {/* Mobile Hamburger */}
           <button
-            className="navbar__hamburger"
+            className="z-nav__hamburger"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle navigation menu"
-            aria-expanded={menuOpen}
+            aria-label="Toggle menu"
           >
             {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
@@ -186,10 +185,10 @@ export default function Navbar() {
 
       </div>
 
-      {/* Mobile Drawer */}
+      {/* ── Mobile Navigation Drawer ────────────────── */}
       {menuOpen && (
-        <div className="navbar__mobile-drawer">
-          <div className="navbar__mobile-links">
+        <div className="z-nav__mobile-drawer">
+          <div className="z-nav__mobile-links">
             <NavLink to="/properties?type=sale" onClick={() => setMenuOpen(false)}>
               Buy Homes
             </NavLink>
@@ -201,16 +200,16 @@ export default function Navbar() {
             </NavLink>
             {isAuthenticated && (
               <NavLink to="/favorites" onClick={() => setMenuOpen(false)}>
-                <FaHeart style={{ marginRight: '6px' }} /> Saved Homes
+                <FaHeart style={{ marginRight: '8px', color: '#e02424' }} /> Saved Homes
               </NavLink>
             )}
             {isAgent && (
               <>
                 <NavLink to="/properties/new" onClick={() => setMenuOpen(false)}>
-                  <FaPlus style={{ marginRight: '6px' }} /> List Property
+                  <FaPlus style={{ marginRight: '8px' }} /> List Property
                 </NavLink>
                 <NavLink to="/dashboard" onClick={() => setMenuOpen(false)}>
-                  <FaTachometerAlt style={{ marginRight: '6px' }} /> Agent Dashboard
+                  <FaTachometerAlt style={{ marginRight: '8px' }} /> Agent Dashboard
                 </NavLink>
               </>
             )}
@@ -220,25 +219,25 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setMenuOpen(false)}
-                className="navbar__mobile-admin-link"
+                className="z-nav__mobile-admin-link"
               >
-                <FaBuilding style={{ marginRight: '6px' }} /> Django Control Center ↗
+                <FaBuilding style={{ marginRight: '8px' }} /> Django Control Center ↗
               </a>
             )}
           </div>
 
-          <div className="navbar__mobile-auth">
+          <div className="z-nav__mobile-auth">
             {isAuthenticated ? (
-              <div className="navbar__mobile-user-card">
-                <div className="navbar__mobile-user-info">
-                  <FaUser className="navbar__mobile-avatar-icon" />
+              <div className="z-nav__mobile-user-card">
+                <div className="z-nav__mobile-user-info">
+                  <FaUser className="z-nav__mobile-avatar-icon" />
                   <div>
                     <strong>{user?.full_name || 'User'}</strong>
                     <small>{user?.email}</small>
                   </div>
                 </div>
-                <div className="navbar__mobile-actions">
-                  <Link to="/profile" className="btn btn-secondary btn-sm" onClick={() => setMenuOpen(false)}>
+                <div className="z-nav__mobile-actions">
+                  <Link to="/profile" className="btn btn-outline btn-sm" onClick={() => setMenuOpen(false)}>
                     Profile
                   </Link>
                   <button onClick={handleLogout} className="btn btn-dark btn-sm">
@@ -247,11 +246,11 @@ export default function Navbar() {
                 </div>
               </div>
             ) : (
-              <div className="navbar__mobile-auth-actions">
-                <Link to="/login" className="btn btn-secondary" onClick={() => setMenuOpen(false)}>
+              <div className="z-nav__mobile-auth-actions">
+                <Link to="/login" className="btn btn-outline w-full" onClick={() => setMenuOpen(false)}>
                   Sign In
                 </Link>
-                <Link to="/register" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
+                <Link to="/register" className="btn btn-primary w-full" onClick={() => setMenuOpen(false)}>
                   Join Prestige Realty
                 </Link>
               </div>
