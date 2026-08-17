@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   FaSearch, FaHome, FaBuilding, FaMapMarkerAlt, FaStar,
-  FaArrowRight, FaChevronRight, FaRegHeart
+  FaArrowRight, FaChevronRight, FaRegHeart, FaDollarSign, FaShieldAlt
 } from 'react-icons/fa';
 import { propertiesApi } from '../api/client';
 import PropertyCard from '../components/PropertyCard';
-import { getErrorMessage } from '../utils/helpers';
+import { getErrorMessage, formatPrice } from '../utils/helpers';
 import './HomePage.css';
 
 const CITIES = [
@@ -58,9 +58,6 @@ export default function HomePage() {
   const [featured, setFeatured] = useState([]);
   const [rentals, setRentals] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  // Zillow Search State
-  const [activeTab, setActiveTab] = useState('sale');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDirectoryTab, setActiveDirectoryTab] = useState('real_estate');
 
@@ -90,14 +87,12 @@ export default function HomePage() {
   const handleSearch = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (activeTab) params.set('type', activeTab);
     if (searchQuery.trim()) params.set('search', searchQuery.trim());
     navigate(`/properties?${params.toString()}`);
   };
 
   const handleCityClick = (cityName) => {
     const params = new URLSearchParams();
-    if (activeTab) params.set('type', activeTab);
     params.set('city', cityName);
     navigate(`/properties?${params.toString()}`);
   };
@@ -110,69 +105,84 @@ export default function HomePage() {
         <div className="z-hero__bg" />
         <div className="container z-hero__container">
           
-          <h1 className="z-hero__title">
-            Find your place.
-          </h1>
+          <div className="z-hero__content-box">
+            <h1 className="z-hero__title">
+              Rentals. Homes.<br />
+              Agents. Loans.
+            </h1>
 
-          {/* Zillow Sleek Floating Search Bar */}
-          <div className="z-search-wrapper">
-            
-            {/* Tabs: Buy | Rent | Sold */}
-            <div className="z-search-tabs">
-              <button
-                type="button"
-                className={`z-search-tab ${activeTab === 'sale' ? 'active' : ''}`}
-                onClick={() => setActiveTab('sale')}
-              >
-                Buy
-              </button>
-              <button
-                type="button"
-                className={`z-search-tab ${activeTab === 'rent' ? 'active' : ''}`}
-                onClick={() => setActiveTab('rent')}
-              >
-                Rent
-              </button>
-              <button
-                type="button"
-                className={`z-search-tab ${activeTab === '' ? 'active' : ''}`}
-                onClick={() => setActiveTab('')}
-              >
-                All Homes
-              </button>
-            </div>
-
-            {/* Pure Zillow Single-Pill Search Form */}
-            <form onSubmit={handleSearch} className="z-search-pill-form">
+            {/* Zillow Single Pill Search Form */}
+            <form onSubmit={handleSearch} className="z-hero-search-box">
               <input
                 type="text"
-                className="z-search-pill-input"
-                placeholder={
-                  activeTab === 'rent'
-                    ? "Enter an address, neighborhood, city, or ZIP code"
-                    : "Enter an address, neighborhood, city, or ZIP code"
-                }
+                className="z-hero-search-input"
+                placeholder="Enter an address, neighborhood, city, or ZIP code"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button type="submit" className="z-search-pill-btn" aria-label="Search">
+              <button type="submit" className="z-hero-search-btn" aria-label="Search">
                 <FaSearch />
               </button>
             </form>
+          </div>
 
-            {/* Popular City Chips */}
-            <div className="z-hero-chips">
-              <span className="z-hero-chips__title">Explore:</span>
-              {CITIES.map(c => (
-                <button
-                  key={c.name}
-                  type="button"
-                  className="z-hero-chip"
-                  onClick={() => handleCityClick(c.name)}
-                >
-                  {c.name}
-                </button>
-              ))}
+        </div>
+      </section>
+
+      {/* ── 2. Get Home Recommendations (Exact Zillow Block from Screenshot) ─ */}
+      <section className="z-recommendations-section">
+        <div className="container z-recommendations__inner">
+          
+          {/* Left Text */}
+          <div className="z-recommendations__left">
+            <h2 className="z-recommendations__title">Get home recommendations</h2>
+            <p className="z-recommendations__desc">Sign in for a more personalized experience.</p>
+            <Link to="/login" className="z-recommendations__btn">
+              Sign in
+            </Link>
+          </div>
+
+          {/* Right Visual Stack with Floating Badges */}
+          <div className="z-recommendations__right">
+            
+            {/* Floating Badge 1 (Green) */}
+            <div className="z-rec-badge z-rec-badge--budget">
+              <div className="z-rec-badge__icon z-rec-badge__icon--green">
+                <FaDollarSign />
+              </div>
+              <div className="z-rec-badge__text">
+                <strong>Recommended homes</strong>
+                <span>based on your monthly budget</span>
+              </div>
+            </div>
+
+            {/* Floating Badge 2 (Orange) */}
+            <div className="z-rec-badge z-rec-badge--location">
+              <div className="z-rec-badge__icon z-rec-badge__icon--orange">
+                <FaMapMarkerAlt />
+              </div>
+              <div className="z-rec-badge__text">
+                <strong>Recommended homes</strong>
+                <span>based on your preferred location</span>
+              </div>
+            </div>
+
+            {/* Stacked Preview Card */}
+            <div className="z-rec-stack-card">
+              <div className="z-rec-stack-card__img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&auto=format&fit=crop&q=80"
+                  alt="Recommended home"
+                  className="z-rec-stack-card__img"
+                />
+              </div>
+              <div className="z-rec-stack-card__body">
+                <div className="z-rec-stack-card__price">৳3,50,00,000</div>
+                <div className="z-rec-stack-card__specs">
+                  <strong>4</strong> bd &nbsp;|&nbsp; <strong>3</strong> ba &nbsp;|&nbsp; <strong>3,102</strong> sqft &nbsp;|&nbsp; House for Sale
+                </div>
+                <div className="z-rec-stack-card__line-skeleton" />
+              </div>
             </div>
 
           </div>
@@ -180,7 +190,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 2. Homes For You (Featured Listings) ────── */}
+      {/* ── 3. Homes For You (Featured Listings) ────── */}
       <section className="z-section container">
         <div className="z-section__header">
           <div>
@@ -208,7 +218,7 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* ── 3. Trending Rentals Section ──────────────── */}
+      {/* ── 4. Trending Rentals Section ──────────────── */}
       {rentals.length > 0 && (
         <section className="z-section z-section--alt">
           <div className="container">
@@ -231,7 +241,7 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ── 4. Zillow's 3 Iconic Action Cards ────────── */}
+      {/* ── 5. Zillow's 3 Iconic Action Cards ────────── */}
       <section className="z-section container">
         <div className="z-action-cards-grid">
           
@@ -289,7 +299,7 @@ export default function HomePage() {
                 }}
               />
             </div>
-            <h3 className="z-action-card__title">List your home</h3>
+            <h3 className="z-action-card__title">Sell a home</h3>
             <p className="z-action-card__desc">
               No matter what path you take to sell or rent your property, Prestige Realty connects you with qualified buyers and trusted licensed brokers.
             </p>
@@ -301,7 +311,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 5. Real Estate Directory Explorer ───────── */}
+      {/* ── 6. Real Estate Directory Explorer ───────── */}
       <section className="z-directory-section">
         <div className="container">
           <div className="z-directory-card">
@@ -340,28 +350,6 @@ export default function HomePage() {
               ))}
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* ── 6. Trust & Stats Bar ────────────────────── */}
-      <section className="z-stats-bar">
-        <div className="container z-stats-bar__inner">
-          <div className="z-stats-bar__item">
-            <strong>12,000+</strong>
-            <span>Verified Bangladesh Listings</span>
-          </div>
-          <div className="z-stats-bar__item">
-            <strong>8,500+</strong>
-            <span>Happy Homeowners & Renters</span>
-          </div>
-          <div className="z-stats-bar__item">
-            <strong>100%</strong>
-            <span>Legal Title Checked</span>
-          </div>
-          <div className="z-stats-bar__item">
-            <strong>24/7</strong>
-            <span>Licensed Agent Advisory</span>
           </div>
         </div>
       </section>

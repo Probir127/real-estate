@@ -45,9 +45,9 @@ export default function Navbar() {
 
   return (
     <header className={`z-nav ${scrolled ? 'z-nav--scrolled' : ''}`}>
-      <div className="container z-nav__inner">
+      <div className="z-nav__inner">
 
-        {/* ── 1. Left Nav: Buy, Rent, Sell, Homes ─────── */}
+        {/* ── 1. Left Nav: Buy, Rent, Sell, Get a mortgage, Find an agent ─── */}
         <nav className="z-nav__left">
           <ul className="z-nav__menu">
             <li>
@@ -61,21 +61,24 @@ export default function Navbar() {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/properties" end className={({ isActive }) => isActive ? 'active' : ''}>
-                All Homes
+              <NavLink to="/properties/new" className={({ isActive }) => isActive ? 'active' : ''}>
+                Sell
               </NavLink>
             </li>
-            {isAgent && (
-              <li>
-                <NavLink to="/properties/new" className={({ isActive }) => isActive ? 'active' : ''}>
-                  List Property
-                </NavLink>
-              </li>
-            )}
+            <li>
+              <NavLink to="/properties" className={({ isActive }) => isActive ? 'active' : ''}>
+                Get a mortgage
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/properties" className={({ isActive }) => isActive ? 'active' : ''}>
+                Find an agent
+              </NavLink>
+            </li>
           </ul>
         </nav>
 
-        {/* ── 2. Center Brand Logo (Zillow-Style) ────── */}
+        {/* ── 2. Center Brand Logo (Exact Zillow Style) ─ */}
         <div className="z-nav__center">
           <Link to="/" className="z-nav__brand" onClick={() => setMenuOpen(false)}>
             <div className="z-nav__brand-icon">
@@ -87,23 +90,24 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* ── 3. Right Nav: Saved, Manage, Auth ───────── */}
+        {/* ── 3. Right Nav: Manage rentals, Advertise, Get help, Sign In ──── */}
         <div className="z-nav__right">
           <ul className="z-nav__secondary-menu">
-            {isAuthenticated && (
-              <li>
-                <NavLink to="/favorites" className="z-nav__saved-link">
-                  <FaHeart className="z-nav__saved-icon" /> Saved Homes
-                </NavLink>
-              </li>
-            )}
-            {isAgent && (
-              <li>
-                <NavLink to="/dashboard" className="z-nav__link">
-                  Dashboard
-                </NavLink>
-              </li>
-            )}
+            <li>
+              <NavLink to="/dashboard" className="z-nav__link">
+                Manage rentals
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/properties/new" className="z-nav__link">
+                Advertise
+              </NavLink>
+            </li>
+            <li>
+              <a href="#footer" className="z-nav__link">
+                Get help
+              </a>
+            </li>
           </ul>
 
           {isAuthenticated ? (
@@ -164,11 +168,8 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="z-nav__auth-btns">
-              <Link to="/login" className="z-nav__signin-btn">
+              <Link to="/login" className="z-nav__signin-pill">
                 Sign In
-              </Link>
-              <Link to="/register" className="btn btn-primary btn-sm z-nav__join-btn">
-                Join
               </Link>
             </div>
           )}
@@ -190,10 +191,13 @@ export default function Navbar() {
         <div className="z-nav__mobile-drawer">
           <div className="z-nav__mobile-links">
             <NavLink to="/properties?type=sale" onClick={() => setMenuOpen(false)}>
-              Buy Homes
+              Buy
             </NavLink>
             <NavLink to="/properties?type=rent" onClick={() => setMenuOpen(false)}>
-              Rent Homes
+              Rent
+            </NavLink>
+            <NavLink to="/properties/new" onClick={() => setMenuOpen(false)}>
+              Sell
             </NavLink>
             <NavLink to="/properties" end onClick={() => setMenuOpen(false)}>
               All Properties
@@ -247,11 +251,8 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="z-nav__mobile-auth-actions">
-                <Link to="/login" className="btn btn-outline w-full" onClick={() => setMenuOpen(false)}>
-                  Sign In
-                </Link>
-                <Link to="/register" className="btn btn-primary w-full" onClick={() => setMenuOpen(false)}>
-                  Join Prestige Realty
+                <Link to="/login" className="btn btn-primary w-full" onClick={() => setMenuOpen(false)}>
+                  Sign In / Join
                 </Link>
               </div>
             )}

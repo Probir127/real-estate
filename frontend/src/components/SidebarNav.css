@@ -1,0 +1,88 @@
+/* ══════════════════════════════════════════
+   SIDEBAR NAV — Exact Zillow Left Vertical Bar
+   ══════════════════════════════════════════ */
+
+.z-sidebar-nav {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  bottom: 0;
+  width: 68px;
+  background-color: var(--z-white);
+  border-right: 1px solid var(--z-gray-300);
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0;
+  user-select: none;
+}
+
+.z-sidebar-nav__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.z-sidebar-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  padding: 0.65rem 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--z-gray-700);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.z-sidebar-link__icon-wrap {
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+  color: var(--z-darker);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.z-sidebar-link__label {
+  font-size: 0.675rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--z-gray-700);
+  transition: color var(--transition-fast);
+}
+
+.z-sidebar-link:hover {
+  background-color: var(--z-blue-light);
+}
+
+.z-sidebar-link:hover .z-sidebar-link__icon-wrap,
+.z-sidebar-link:hover .z-sidebar-link__label {
+  color: var(--z-blue);
+}
+
+.z-sidebar-link.active {
+  color: var(--z-blue);
+}
+
+.z-sidebar-link.active .z-sidebar-link__icon-wrap {
+  color: var(--z-blue);
+}
+
+.z-sidebar-link.active .z-sidebar-link__label {
+  color: var(--z-blue);
+  font-weight: 700;
+}
+
+/* On mobile/tablets hide the sidebar and use normal layout */
+@media (max-width: 1024px) {
+  .z-sidebar-nav {
+    display: none;
+  }
+}

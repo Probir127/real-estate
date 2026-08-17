@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════
-   HOMEPAGE — Exact Zillow Style
+   HOMEPAGE — Exact 1:1 Zillow 2026 Layout
    ══════════════════════════════════════════ */
 
 .z-home {
@@ -8,172 +8,271 @@
 }
 
 /* ══════════════════════════════════════════
-   1. HERO SECTION (Exact Zillow Specs)
+   1. HERO SECTION (From User's Screenshot)
    ══════════════════════════════════════════ */
 .z-hero {
   position: relative;
   min-height: 480px;
-  background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&auto=format&fit=crop&q=80');
+  background-image: url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1920&auto=format&fit=crop&q=80');
   background-size: cover;
-  background-position: center 38%;
+  background-position: center 30%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 4.5rem 1.5rem;
+  padding: 5rem 2rem;
 }
 
 .z-hero__bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.35) 100%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.3) 100%);
 }
 
 .z-hero__container {
   position: relative;
   z-index: 2;
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
+}
+
+.z-hero__content-box {
+  max-width: 600px;
 }
 
 .z-hero__title {
   color: var(--z-white);
-  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-size: clamp(2.75rem, 5vw, 4.25rem);
   font-weight: 900;
+  line-height: 1.1;
   letter-spacing: -0.03em;
   margin-bottom: 2rem;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
-/* ── Zillow Sleek Floating Search Wrapper ─── */
-.z-search-wrapper {
-  width: 100%;
-  max-width: 720px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-/* Tabs: Buy | Rent | Sold */
-.z-search-tabs {
-  display: inline-flex;
-  gap: 0.5rem;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
-  padding: 4px 6px;
-  border-radius: var(--radius-full);
-}
-
-.z-search-tab {
-  background: transparent;
-  border: none;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
-  padding: 0.4rem 1.25rem;
-  cursor: pointer;
-  border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
-}
-
-.z-search-tab:hover {
-  color: var(--z-white);
-}
-
-.z-search-tab.active {
-  background-color: var(--z-white);
-  color: var(--z-darker);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-/* Pure Zillow Single-Pill Search Form */
-.z-search-pill-form {
+/* Zillow Single Pill Search Form */
+.z-hero-search-box {
   width: 100%;
   display: flex;
   align-items: center;
   background-color: var(--z-white);
-  border-radius: var(--radius-full);
-  padding: 6px 8px 6px 1.5rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 6px 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
-.z-search-pill-input {
+.z-hero-search-input {
   flex: 1;
   border: none;
   outline: none;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--z-dark);
   background: transparent;
-  padding: 0.65rem 0;
+  padding: 0.75rem 0.5rem 0.75rem 0;
 }
 
-.z-search-pill-input::placeholder {
+.z-hero-search-input::placeholder {
   color: var(--z-gray-500);
 }
 
-.z-search-pill-btn {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background-color: var(--z-blue);
-  color: var(--z-white);
+.z-hero-search-btn {
+  background: transparent;
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  flex-shrink: 0;
-}
-
-.z-search-pill-btn:hover {
-  background-color: var(--z-blue-hover);
-  transform: scale(1.05);
-}
-
-/* Popular Chips under Search */
-.z-hero-chips {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 0.5rem;
-}
-
-.z-hero-chips__title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-.z-hero-chip {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  color: var(--z-white);
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-full);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.z-hero-chip:hover {
-  background: var(--z-white);
   color: var(--z-darker);
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  transition: color var(--transition-fast);
+}
+
+.z-hero-search-btn:hover {
+  color: var(--z-blue);
 }
 
 /* ══════════════════════════════════════════
-   2. SECTION HEADERS & GRIDS
+   2. GET HOME RECOMMENDATIONS SECTION
+   (Exact Match to User's Screenshot)
+   ══════════════════════════════════════════ */
+.z-recommendations-section {
+  background-color: var(--z-white);
+  padding: 5rem 1.5rem;
+  border-bottom: 1px solid var(--z-gray-200);
+}
+
+.z-recommendations__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+}
+
+.z-recommendations__left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 440px;
+}
+
+.z-recommendations__title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--z-darker);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.z-recommendations__desc {
+  font-size: 1.05rem;
+  color: var(--z-gray-700);
+  margin-bottom: 1.75rem;
+}
+
+.z-recommendations__btn {
+  display: inline-block;
+  background-color: var(--z-white);
+  border: 1px solid var(--z-blue);
+  color: var(--z-blue);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.65rem 2rem;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.z-recommendations__btn:hover {
+  background-color: var(--z-blue-light);
+  color: var(--z-blue-hover);
+  border-color: var(--z-blue-hover);
+}
+
+/* ── Stacked Visual Cards & Badges ──────── */
+.z-recommendations__right {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 340px;
+}
+
+.z-rec-badge {
+  position: absolute;
+  background-color: var(--z-white);
+  border-radius: var(--radius-full);
+  padding: 8px 16px 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--z-gray-200);
+  z-index: 10;
+  animation: float 4s ease-in-out infinite alternate;
+}
+
+.z-rec-badge--budget {
+  top: 10px;
+  left: 20px;
+}
+
+.z-rec-badge--location {
+  top: 75px;
+  left: 30px;
+  animation-delay: 1.5s;
+}
+
+.z-rec-badge__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--z-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.z-rec-badge__icon--green {
+  background-color: #0b6845;
+}
+
+.z-rec-badge__icon--orange {
+  background-color: #d94b00;
+}
+
+.z-rec-badge__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.z-rec-badge__text strong {
+  font-size: 0.85rem;
+  color: var(--z-darker);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.z-rec-badge__text span {
+  font-size: 0.75rem;
+  color: var(--z-gray-500);
+}
+
+.z-rec-stack-card {
+  width: 320px;
+  background-color: var(--z-white);
+  border: 1px solid var(--z-gray-300);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 8px 8px 0px -2px #f0f2f5, 16px 16px 0px -4px #e0e0e6;
+  overflow: hidden;
+  margin-left: 80px;
+}
+
+.z-rec-stack-card__img-wrap {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+}
+
+.z-rec-stack-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.z-rec-stack-card__body {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.z-rec-stack-card__price {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--z-darker);
+}
+
+.z-rec-stack-card__specs {
+  font-size: 0.85rem;
+  color: var(--z-gray-700);
+}
+
+.z-rec-stack-card__line-skeleton {
+  width: 75%;
+  height: 8px;
+  background-color: var(--z-gray-200);
+  border-radius: var(--radius-full);
+  margin-top: 0.5rem;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-6px); }
+}
+
+/* ══════════════════════════════════════════
+   3. SECTION HEADERS & GRIDS
    ══════════════════════════════════════════ */
 .z-section {
   padding: 4.5rem 1.5rem;
@@ -244,7 +343,7 @@
 }
 
 /* ══════════════════════════════════════════
-   3. ZILLOW'S 3 ACTION CARDS
+   4. ZILLOW'S 3 ACTION CARDS
    ══════════════════════════════════════════ */
 .z-action-cards-grid {
   display: grid;
@@ -321,7 +420,7 @@
 }
 
 /* ══════════════════════════════════════════
-   4. DIRECTORY EXPLORER
+   5. DIRECTORY EXPLORER
    ══════════════════════════════════════════ */
 .z-directory-section {
   padding: 3.5rem 1.5rem 4.5rem;
@@ -392,38 +491,27 @@
   text-decoration: underline;
 }
 
-/* ══════════════════════════════════════════
-   5. TRUST & STATS BAR
-   ══════════════════════════════════════════ */
-.z-stats-bar {
-  background-color: var(--z-navy);
-  color: var(--z-white);
-  padding: 3rem 1.5rem;
-}
-
-.z-stats-bar__inner {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  text-align: center;
-}
-
-.z-stats-bar__item strong {
-  display: block;
-  font-size: 2.1rem;
-  font-weight: 800;
-  color: var(--z-white);
-  margin-bottom: 0.25rem;
-}
-
-.z-stats-bar__item span {
-  font-size: 0.9rem;
-  color: var(--z-gray-300);
-  font-weight: 500;
-}
-
-@media (max-width: 768px) {
-  .z-grid {
+@media (max-width: 900px) {
+  .z-recommendations__inner {
     grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .z-recommendations__left {
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .z-rec-stack-card {
+    margin-left: 0;
+  }
+
+  .z-rec-badge--budget {
+    left: 0;
+  }
+
+  .z-rec-badge--location {
+    left: 10px;
   }
 }
