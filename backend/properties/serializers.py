@@ -29,10 +29,13 @@ class PropertyImageSerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         request = self.context.get('request')
+        if obj.image:
+            try:
+                return request.build_absolute_uri(obj.image.url) if request else obj.image.url
+            except Exception:
+                pass
         if obj.external_url:
             return obj.external_url
-        if obj.image:
-            return request.build_absolute_uri(obj.image.url) if request else obj.image.url
         return None
 
     def validate_image(self, value):
@@ -92,10 +95,13 @@ class PropertyListSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         img = obj.primary_image
         if img:
+            if img.image:
+                try:
+                    return request.build_absolute_uri(img.image.url) if request else img.image.url
+                except Exception:
+                    pass
             if img.external_url:
                 return img.external_url
-            if img.image:
-                return request.build_absolute_uri(img.image.url) if request else img.image.url
         return None
 
     def get_is_favorited(self, obj):
@@ -155,10 +161,13 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         img = obj.primary_image
         if img:
+            if img.image:
+                try:
+                    return request.build_absolute_uri(img.image.url) if request else img.image.url
+                except Exception:
+                    pass
             if img.external_url:
                 return img.external_url
-            if img.image:
-                return request.build_absolute_uri(img.image.url) if request else img.image.url
         return None
 
     def get_is_favorited(self, obj):

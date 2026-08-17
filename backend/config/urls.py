@@ -47,8 +47,10 @@ urlpatterns = [
     path('api/inquiries/', include('inquiries.urls')),
 ]
 
-# Serve media files in development (DEBUG=True)
-# In production, configure Nginx/Apache to serve /media/ directly
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+from django.urls import re_path
+from django.views.static import serve
+
+# Serve media files (uploaded images) in both development and production container environments
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]
