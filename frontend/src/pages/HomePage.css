@@ -416,6 +416,44 @@
   gap: 1.5rem;
 }
 
+/* ══════════════════ CITY FILTER TABS ══════════════════ */
+.hp-city-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.hp-city-tab {
+  background: #ffffff;
+  border: 1.5px solid #dce8e4;
+  color: #4a6b62;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.hp-city-tab:hover {
+  background: #f0f8f5;
+  border-color: #0b5d4e;
+  color: #0b5d4e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(11, 93, 78, 0.12);
+}
+
+.hp-city-tab.active {
+  background: #0b5d4e;
+  border-color: #0b5d4e;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(11, 93, 78, 0.35);
+}
+
+
+
 .hp-section__head--center {
   display: block;
   text-align: center;
