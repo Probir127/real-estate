@@ -12,7 +12,7 @@ export default function PriceHistorySection({ property }) {
       event: isRent ? 'Listed for rent' : 'Listed for sale',
       price: currentPrice,
       change: '—',
-      source: 'Prestige Realty Brokerage',
+      source: 'Zennor Realty Brokerage',
     },
     {
       date: 'Jan 2025',
@@ -26,7 +26,7 @@ export default function PriceHistorySection({ property }) {
       event: 'Sold',
       price: Math.round(currentPrice * 0.82),
       change: '—',
-      source: 'Prestige Deeds Registry',
+      source: 'Zennor Deeds Registry',
     },
   ];
 

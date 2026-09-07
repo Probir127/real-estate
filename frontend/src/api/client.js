@@ -128,6 +128,7 @@ export const authApi = {
 export const propertiesApi = {
   list: (params) => api.get('/properties/', { params }),
   getFeatured: () => api.get('/properties/featured/'),
+  featured: () => api.get('/properties/featured/'),
   getById: (id) => api.get(`/properties/${id}/`),
   create: (data) => api.post('/properties/', data),
   update: (id, data) => api.patch(`/properties/${id}/`, data),
@@ -152,6 +153,11 @@ export const inquiriesApi = {
   send: (data) => api.post('/inquiries/', data),
   getReceived: (params) => api.get('/inquiries/received/', { params }),
   markRead: (id) => api.patch(`/inquiries/${id}/read/`),
+};
+
+// ─── AI Chatbot API ──────────────────────────────────────────────────────────
+export const chatApi = {
+  sendMessage: (message, messages = []) => api.post('/chat/', { message, messages }),
 };
 
 export default api;

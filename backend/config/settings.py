@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'properties',
     'favorites',
     'inquiries',
+    'chatbot',
 ]
 
 MIDDLEWARE = [
@@ -127,16 +128,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
-    ],
+    'DEFAULT_THROTTLE_CLASSES': [],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day',
-        'login': '5/minute',        # Login endpoint throttle
-        'register': '10/hour',      # Register endpoint throttle
-        'inquiry': '20/day',        # Inquiry form throttle
+        'anon': '10000/day',
+        'user': '100000/day',
+        'login': '100/minute',
+        'register': '1000/hour',
+        'inquiry': '1000/day',
     },
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -218,3 +216,9 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024   # 5 MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
 ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB per image
+
+# ─────────────────────────────────────────────────────────
+# Hugging Face AI Chatbot Integration
+# ─────────────────────────────────────────────────────────
+HUGGINGFACE_API_KEY = config('HUGGINGFACE_API_KEY', default='')
+HUGGINGFACE_MODEL = config('HUGGINGFACE_MODEL', default='meta-llama/Llama-3.1-8B-Instruct')

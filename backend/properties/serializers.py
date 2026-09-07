@@ -85,7 +85,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
             'id', 'title', 'price', 'listing_type', 'listing_type_display',
             'property_type', 'property_type_display',
             'city', 'state', 'address',
-            'bedrooms', 'bathrooms', 'area_sqft',
+            'bedrooms', 'bathrooms', 'area_sqft', 'garage',
             'is_featured', 'status',
             'primary_image_url', 'agent_name',
             'is_favorited', 'favorite_id', 'created_at',

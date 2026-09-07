@@ -113,9 +113,9 @@ export default function LoginPage() {
             <div className="z-auth-brand__icon">
               <FaHome />
             </div>
-            <span>Prestige<strong>Realty</strong></span>
+            <span>Zennor<strong>.</strong></span>
           </div>
-          <h1 className="z-auth-title">Welcome to Prestige Realty</h1>
+          <h1 className="z-auth-title">Welcome to Zennor</h1>
         </div>
 
         {/* Tab Switcher: Sign In | New Account */}
@@ -197,7 +197,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     className="z-quick-btn"
-                    onClick={() => handleQuickLogin('agent@prestigerealty.bd', 'Password123!')}
+                    onClick={() => handleQuickLogin('agent@zennor.com.bd', 'Password123!')}
                     disabled={loading}
                   >
                     <FaUserTie className="text-blue" />
@@ -303,7 +303,7 @@ export default function LoginPage() {
         </AnimatePresence>
 
         <p className="z-legal-notice">
-          By signing in, I accept Prestige Realty's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+          By signing in, I accept Zennor's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
         </p>
 
       </motion.div>

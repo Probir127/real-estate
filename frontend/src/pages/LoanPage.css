@@ -1,0 +1,363 @@
+/* ─── LoanPage.css ─────────────────────────────────────────── */
+.z-loan-page {
+  background-color: var(--sand-50);
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.z-loan-hero {
+  background-color: var(--brand-950);
+  color: #ffffff;
+  padding: 3.5rem 0 4.5rem 0;
+}
+
+.z-loan-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  max-width: 42rem;
+  line-height: 1.15;
+}
+
+.z-loan-hero__sub {
+  margin-top: 0.85rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 38rem;
+  line-height: 1.6;
+}
+
+.z-loan-calc-container {
+  margin-top: -2rem;
+}
+
+.z-loan-card {
+  background: #ffffff;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: 0 4px 20px -2px rgba(11, 93, 78, 0.08);
+}
+
+@media (min-width: 640px) {
+  .z-loan-card {
+    padding: 2.25rem;
+  }
+}
+
+.z-loan-card__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .z-loan-card__grid {
+    grid-template-columns: 1fr 340px;
+  }
+}
+
+.z-loan-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.z-calc-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.z-calc-group__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.z-calc-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink-700);
+}
+
+.z-calc-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ink-900);
+}
+
+.z-slider {
+  width: 100%;
+  accent-color: var(--brand-700);
+  height: 6px;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+}
+
+.z-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--ink-500);
+  margin-top: 0.35rem;
+}
+
+.z-lenders-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .z-lenders-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.z-lender-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--sand-200);
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.z-lender-btn:hover {
+  border-color: var(--brand-400);
+  background-color: var(--sand-50);
+}
+
+.z-lender-btn.active {
+  border-color: var(--brand-700);
+  background-color: var(--brand-50);
+  box-shadow: 0 0 0 1px var(--brand-700);
+}
+
+.z-lender-btn__name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink-900);
+}
+
+.z-lender-btn__meta {
+  font-size: 0.775rem;
+  color: var(--ink-500);
+  margin-top: 0.15rem;
+}
+
+/* ─── Right Dark Summary Card ────────────────────────────── */
+.z-loan-summary {
+  background-color: var(--brand-950);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.z-loan-summary__sub {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 500;
+}
+
+.z-loan-summary__amount {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-top: 0.25rem;
+}
+
+.z-loan-summary__duration {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.2rem;
+}
+
+.z-loan-breakdown {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.z-loan-breakdown__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.z-loan-breakdown__row dt {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.z-loan-breakdown__row dd {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.z-loan-disclaimer {
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.z-loan-cta-btn {
+  margin-top: 1.5rem;
+  display: block;
+  text-align: center;
+  background-color: var(--gold-500);
+  color: var(--brand-950);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: background-color var(--transition-fast);
+}
+
+.z-loan-cta-btn:hover {
+  background-color: var(--gold-400);
+  color: var(--brand-950);
+}
+
+/* ─── Table Section ───────────────────────────────────────── */
+.z-loan-table-sec {
+  margin-top: 3.5rem;
+}
+
+.z-sec-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink-900);
+  letter-spacing: -0.02em;
+}
+
+.z-table-wrap {
+  margin-top: 1.25rem;
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.z-loan-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.z-loan-table thead tr {
+  background-color: var(--sand-50);
+  border-bottom: 1px solid var(--sand-200);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+}
+
+.z-loan-table th {
+  padding: 0.85rem 1.25rem;
+  font-weight: 700;
+}
+
+.z-loan-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--sand-100);
+  font-size: 0.875rem;
+}
+
+.z-loan-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.z-loan-table tbody tr:hover {
+  background-color: var(--sand-50);
+}
+
+.text-right {
+  text-align: right;
+}
+
+.z-table-footnote {
+  margin-top: 0.65rem;
+  font-size: 0.775rem;
+  color: var(--ink-500);
+}
+
+/* ─── FAQ Section ─────────────────────────────────────────── */
+.z-loan-faq-sec {
+  margin-top: 3.5rem;
+}
+
+.z-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .z-faq-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.z-faq-card {
+  background: #ffffff;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.z-faq-card:hover {
+  border-color: var(--brand-300);
+}
+
+.z-faq-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  font-weight: 700;
+  color: var(--ink-900);
+  font-size: 0.95rem;
+}
+
+.z-faq-summary::-webkit-details-marker {
+  display: none;
+}
+
+.z-faq-icon {
+  color: var(--ink-500);
+  transition: transform 0.2s ease;
+}
+
+.z-faq-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.z-faq-answer {
+  margin-top: 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ink-500);
+}

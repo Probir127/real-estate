@@ -1,204 +1,212 @@
-/* ══════════════════════════════════════════
-   PROPERTY CARD — Exact Zillow Style
-   ══════════════════════════════════════════ */
+﻿/* --- PropertyCard Premium Luxury --- */
+.pcard {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid var(--sand-200, #e3eae7);
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s ease;
+  cursor: pointer;
+}
 
-.z-card {
+.pcard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px -10px rgba(11, 93, 78, 0.2), 0 6px 16px -4px rgba(0, 0, 0, 0.07);
+  border-color: var(--brand-300, #78cfb4);
+}
+
+.pcard__link {
   display: flex;
   flex-direction: column;
-  background-color: var(--z-white);
-  border: 1px solid var(--z-gray-300);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  height: 100%;
+  color: inherit;
   text-decoration: none;
-  color: var(--z-dark);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
-  position: relative;
 }
 
-.z-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  border-color: var(--z-gray-400);
-}
-
-/* ── 1. Photo Container ─────────────────── */
-.z-card__photo-box {
+.pcard__img-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
-  background-color: var(--z-gray-100);
   overflow: hidden;
+  background: var(--sand-100, #f1f5f3);
+  flex-shrink: 0;
 }
 
-.z-card__photo {
+.pcard__skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, #eef2f0 30%, #f6f9f7 50%, #eef2f0 70%);
+  background-size: 300% 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.pcard__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-slow);
+  display: block;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.z-card:hover .z-card__photo {
-  transform: scale(1.03);
-}
+.pcard__img--loaded { opacity: 1; }
 
-.z-card__placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, var(--z-gray-100) 0%, var(--z-gray-200) 100%);
-  color: var(--z-gray-500);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
+.pcard:hover .pcard__img--loaded { transform: scale(1.06); }
 
-.z-card__placeholder-icon {
-  font-size: 2rem;
-  color: var(--z-gray-400);
-}
-
-/* Status Pill: Green/Blue dot + text */
-.z-card__status-pill {
+.pcard__badges {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(4px);
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  top: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  gap: 0.4rem;
   z-index: 2;
 }
 
-.z-card__status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+.pcard__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.28rem 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.z-card__status-dot--green {
-  background-color: #008034;
+.pcard__badge--type {
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--brand-800, #0a4a3f);
+  border: 1px solid rgba(11, 93, 78, 0.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.z-card__status-dot--blue {
-  background-color: #006aff;
+.pcard__badge--featured {
+  background: var(--gold-400, #e6b95c);
+  color: #3d2200;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.z-card__status-text {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--z-darker);
-  text-transform: capitalize;
-  letter-spacing: -0.01em;
-}
-
-/* Save Home Heart Button */
-.z-card__heart-btn {
+.pcard__save {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 34px;
-  height: 34px;
+  top: 0.65rem;
+  right: 0.65rem;
+  z-index: 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: none;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  color: var(--z-gray-700);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  transition: all var(--transition-fast);
-  font-size: 0.95rem;
+  color: var(--ink-400, #7a8c87);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-.z-card__heart-btn:hover {
-  transform: scale(1.1);
-  color: var(--z-red);
+.pcard__save:hover { color: #ef4444; transform: scale(1.12); background: #fff5f5; }
+.pcard__save--active { color: #ef4444; background: #fff0f0; }
+.pcard__save svg { width: 0.95rem; height: 0.95rem; }
+
+.pcard__price-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem 0.875rem 0.8rem;
+  background: linear-gradient(to top, rgba(4, 19, 15, 0.78) 0%, rgba(4, 19, 15, 0.3) 55%, transparent 100%);
 }
 
-.z-card__heart-btn--active {
-  color: var(--z-red) !important;
-  background-color: var(--z-white);
+.pcard__price {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-/* ── 2. Card Body ───────────────────────── */
-.z-card__body {
-  padding: 1rem 1.15rem 1.15rem;
+.pcard__price-period { font-size: 0.75rem; font-weight: 500; opacity: 0.88; margin-left: 0.2rem; }
+
+.pcard__body {
+  padding: 0.95rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
+  flex: 1;
 }
 
-.z-card__price-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-}
+.pcard__type-row { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.1rem; }
 
-.z-card__price {
-  font-size: 1.35rem;
+.pcard__type-label {
+  font-size: 0.7rem;
   font-weight: 800;
-  color: var(--z-darker);
-  letter-spacing: -0.02em;
+  color: var(--brand-700, #0b5d4e);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.z-card__price-period {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--z-gray-500);
-  margin-left: 2px;
+.pcard__dot { color: var(--ink-300, #8c9b96); font-size: 0.55rem; }
+
+.pcard__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--brand-600, #0f7a62);
 }
 
-/* Specs */
-.z-card__specs {
+.pcard__verified svg { color: var(--brand-600, #0f7a62); flex-shrink: 0; }
+
+.pcard__title {
+  font-size: 0.935rem;
+  font-weight: 700;
+  color: var(--ink-900, #0c1a16);
+  line-height: 1.35;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  letter-spacing: -0.01em;
+}
+
+.pcard__address {
   display: flex;
   align-items: center;
+  gap: 0.3rem;
+  font-size: 0.77rem;
+  color: var(--ink-500, #5b6b66);
+  margin: 0;
+}
+
+.pcard__address span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pcard__address svg { flex-shrink: 0; color: var(--ink-400, #7a8c87); }
+
+.pcard__specs {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   flex-wrap: wrap;
-  gap: 0.35rem;
-  font-size: 0.875rem;
-  color: var(--z-gray-700);
+  padding: 0.55rem 0 0.2rem;
+  border-top: 1px solid var(--sand-200, #e3eae7);
+  margin-top: 0.35rem;
 }
 
-.z-card__spec strong {
-  font-weight: 700;
-  color: var(--z-darker);
-}
-
-.z-card__spec-divider {
-  color: var(--z-gray-400);
-  font-size: 0.8rem;
-}
-
-.z-card__spec-type {
-  color: var(--z-gray-500);
-  font-size: 0.85rem;
-}
-
-/* Address */
-.z-card__address {
-  font-size: 0.85rem;
-  color: var(--z-gray-700);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 2px;
-}
-
-/* Broker */
-.z-card__broker {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--z-gray-400);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-top: 4px;
-}
+.pcard__spec { display: inline-flex; align-items: center; gap: 0.28rem; font-size: 0.78rem; color: var(--ink-700, #2b3a35); }
+.pcard__spec svg { color: var(--ink-400, #7a8c87); flex-shrink: 0; }
+.pcard__spec b { font-weight: 800; color: var(--ink-900, #0c1a16); font-size: 0.82rem; }
+.pcard__spec span { font-size: 0.7rem; color: var(--ink-500, #5b6b66); }
+.pcard__time { font-size: 0.68rem; color: var(--ink-300, #8c9b96); margin: 0.1rem 0 0; }

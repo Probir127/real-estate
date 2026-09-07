@@ -7,6 +7,38 @@
   background-color: var(--z-gray-50);
 }
 
+/* ── Missing Badge Classes (were used in JSX but never defined!) ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.badge-sale {
+  background: rgba(11, 93, 78, 0.9);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.badge-rent {
+  background: rgba(14, 122, 100, 0.9);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.badge-featured {
+  background: var(--gold-400);
+  color: #4a2c00;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
 .pd-container {
   padding-top: 1.5rem;
   padding-bottom: 4rem;

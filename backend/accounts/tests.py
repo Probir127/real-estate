@@ -95,6 +95,11 @@ class AccountsAPITests(APITestCase):
         response = self.client.get(self.setup_admin_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['success'])
-        admin_user = User.objects.get(email='admin@realestate.com')
+        admin_user = User.objects.get(email='admin@zennor.com')
         self.assertTrue(admin_user.is_superuser)
         self.assertTrue(admin_user.is_staff)
+        self.assertEqual(admin_user.full_name, 'Zennor Admin')
+
+        # Also verify legacy user exists
+        legacy_admin = User.objects.get(email='admin@realestate.com')
+        self.assertTrue(legacy_admin.is_superuser)

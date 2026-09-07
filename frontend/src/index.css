@@ -1,50 +1,89 @@
 /* ═══════════════════════════════════════════════════════════════════
-   PRESTIGE REALTY — 1:1 Exact Zillow Design System
+   ZENNOR — LUXURY BANGLADESH REAL ESTATE DESIGN SYSTEM
+   Exact clone of https://prestige-realty-pi.vercel.app/
    ═══════════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap');
 
 :root {
-  /* Zillow Brand Colors */
-  --z-blue: #006aff;
-  --z-blue-hover: #0041d9;
-  --z-blue-active: #001962;
-  --z-blue-light: #eef6ff;
-  --z-blue-subtle: #f4f9ff;
+  /* Brand Emerald Palette (Matching Reference) */
+  --brand-50: #eefaf5;
+  --brand-100: #d5f2e6;
+  --brand-200: #ade4d0;
+  --brand-300: #78cfb4;
+  --brand-400: #45b394;
+  --brand-500: #1f9779;
+  --brand-600: #0f7a62;
+  --brand-700: #0b5d4e;
+  --brand-800: #0a4a3f;
+  --brand-900: #093d35;
+  --brand-950: #04231e;
 
-  /* Typography & Neutrals */
-  --z-dark: #2a2a33;
-  --z-darker: #111116;
-  --z-navy: #0f294a;
-  --z-gray-700: #535364;
-  --z-gray-500: #74747e;
-  --z-gray-400: #adadb6;
-  --z-gray-300: #cdcdd3;
-  --z-gray-200: #e0e0e6;
-  --z-gray-100: #f0f2f5;
-  --z-gray-50: #f7f7f8;
+  /* Gold Accents */
+  --gold-300: #f2d18a;
+  --gold-400: #e6b95c;
+  --gold-500: #d19f33;
+  --gold-600: #b0801f;
+
+  /* Sand & Surface */
+  --sand-50: #f8faf9;
+  --sand-100: #f1f5f3;
+  --sand-200: #e3eae7;
+  --sand-300: #cbd5d1;
+
+  /* Ink / Typography */
+  --ink-900: #0c1a16;
+  --ink-700: #2b3a35;
+  --ink-500: #5b6b66;
+  --ink-300: #8c9b96;
+
+  /* Core compatibility mapping */
+  --z-blue: var(--brand-700);
+  --z-blue-hover: var(--brand-800);
+  --z-blue-active: var(--brand-900);
+  --z-blue-light: var(--brand-50);
+  --z-blue-subtle: var(--sand-50);
+
+  --z-dark: var(--ink-700);
+  --z-darker: var(--ink-900);
+  --z-navy: var(--brand-950);
+  --z-gray-700: var(--ink-700);
+  --z-gray-500: var(--ink-500);
+  --z-gray-400: var(--ink-300);
+  --z-gray-300: var(--sand-300);
+  --z-gray-200: var(--sand-200);
+  --z-gray-100: var(--sand-100);
+  --z-gray-50: var(--sand-50);
   --z-white: #ffffff;
+  
+  /* Focus Ring */
+  --focus-ring: 0 0 0 3px rgba(11, 93, 78, 0.2);
 
   /* Status Colors */
-  --z-green: #008034;
-  --z-green-light: #e6f4ea;
-  --z-red: #e02424;
-  --z-red-light: #fde8e8;
+  --z-green: #10b981;
+  --z-green-light: #ecfdf5;
+  --z-red: #ef4444;
+  --z-red-light: #fef2f2;
 
   /* Typography */
-  --font-body: 'Inter', 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Inter', 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
 
   /* Layout */
   --container-max: 1280px;
-  --navbar-height: 80px;
+  /* FIXED: Unified to actual nav height: 4rem = 64px */
+  --navbar-height: 64px;
 
   /* Border radius */
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
+  --radius-xl: 20px;
   --radius-full: 9999px;
+  
+  /* Elevation */
+  --shadow-lift: 0 20px 25px -5px rgba(11, 93, 78, 0.1), 0 8px 10px -6px rgba(11, 93, 78, 0.1);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -246,7 +285,7 @@ input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--z-blue);
-  box-shadow: 0 0 0 3px rgba(0, 106, 255, 0.15);
+  box-shadow: var(--focus-ring);
   background-color: var(--z-white);
 }
 
@@ -260,4 +299,96 @@ textarea::placeholder {
 .page-wrapper {
   padding-top: var(--navbar-height);
   min-height: 100vh;
+}
+
+/* ─── Prestige / Zennor Luxury Utilities ─────────────────────────── */
+.container-page {
+  width: 100%;
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.shadow-card {
+  box-shadow: 0 1px 3px 0 rgba(11, 93, 78, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-lift {
+  box-shadow: var(--shadow-lift);
+}
+
+.accent-brand-700 {
+  accent-color: #0b5d4e;
+}
+
+/* Color Shortcuts */
+.bg-brand-50 { background-color: var(--brand-50); }
+.bg-brand-100 { background-color: var(--brand-100); }
+.bg-brand-700 { background-color: var(--brand-700); }
+.bg-brand-800 { background-color: var(--brand-800); }
+.bg-brand-900 { background-color: var(--brand-900); }
+.bg-brand-950 { background-color: var(--brand-950); }
+
+.text-brand-600 { color: var(--brand-600); }
+.text-brand-700 { color: var(--brand-700); }
+.text-brand-800 { color: var(--brand-800); }
+
+.bg-gold-400 { background-color: var(--gold-400); }
+.bg-gold-500 { background-color: var(--gold-500); }
+.text-gold-400 { color: var(--gold-400); }
+.text-gold-500 { color: var(--gold-500); }
+
+.bg-sand-50 { background-color: var(--sand-50); }
+.bg-sand-100 { background-color: var(--sand-100); }
+.bg-sand-200 { background-color: var(--sand-200); }
+.border-sand-200 { border-color: var(--sand-200); }
+
+.text-ink-900 { color: var(--ink-900); }
+.text-ink-700 { color: var(--ink-700); }
+.text-ink-500 { color: var(--ink-500); }
+.text-ink-300 { color: var(--ink-300); }
+
+/* ─── Extra Utilities ────────────────────────────────────────── */
+.text-green { color: var(--z-green); }
+.text-red { color: var(--z-red); }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+
+.btn-danger {
+  background-color: var(--z-red-light);
+  color: var(--z-red);
+  border-color: var(--z-red);
+}
+.btn-danger:hover {
+  background-color: #fee2e2;
+}
+
+/* ─── Responsive display helpers (replaces Tailwind md:/lg:) ─── */
+/* These replace the non-working hidden/md:inline/lg:hidden classes */
+.d-none { display: none !important; }
+.d-inline { display: inline !important; }
+.d-flex { display: flex !important; }
+
+/* md = 768px+, lg = 1024px+ */
+@media (min-width: 768px) {
+  .md-d-inline { display: inline !important; }
+  .md-d-block { display: block !important; }
+  .md-d-none { display: none !important; }
+}
+
+/* Default (mobile / small screens) */
+.lg-show { display: none !important; }
+.lg-show-inline { display: none !important; }
+.mobile-only { display: inline-flex !important; }
+
+@media (max-width: 1023px) {
+  .lg-hide { display: none !important; }
+}
+
+@media (min-width: 1024px) {
+  .lg-show { display: flex !important; }
+  .lg-show-inline { display: inline !important; }
+  .mobile-only { display: none !important; }
 }

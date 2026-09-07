@@ -297,19 +297,34 @@ class Command(BaseCommand):
     help = 'Seed database with Bangladesh real estate sample properties and images'
 
     def handle(self, *args, **options):
-        # Get or create an agent user to own the properties
+        # Get or create Zennor agent user to own the properties
         agent, created = User.objects.get_or_create(
-            email='agent@prestigerealty.bd',
+            email='agent@zennor.bd',
             defaults={
-                'full_name': 'Prestige Realty Agent',
+                'full_name': 'Zennor Agent',
                 'is_agent': True,
                 'is_active': True,
             }
         )
+        agent.full_name = 'Zennor Agent'
+        agent.is_agent = True
+        agent.is_active = True
+        agent.set_password('Password123!')
+        agent.save()
         if created:
-            agent.set_password('Agent@123')
-            agent.save()
             self.stdout.write(self.style.SUCCESS(f'Created agent user: {agent.email}'))
+
+        # Also support legacy agent@prestigerealty.bd with Password123!
+        legacy_agent, _ = User.objects.get_or_create(
+            email='agent@prestigerealty.bd',
+            defaults={
+                'full_name': 'Zennor Agent',
+                'is_agent': True,
+                'is_active': True,
+            }
+        )
+        legacy_agent.set_password('Password123!')
+        legacy_agent.save()
 
         for prop_data in PROPERTIES:
             images_list = prop_data.pop('images', [])

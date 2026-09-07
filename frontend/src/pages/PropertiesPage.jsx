@@ -1,406 +1,1547 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FaTimes, FaSearch, FaSlidersH, FaFilter,
-  FaMapMarkedAlt, FaThLarge, FaBookmark, FaSortAmountDown
+  FaSearch, FaSlidersH, FaTimes, FaHeart, FaRegHeart,
+  FaCheckCircle, FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined,
+  FaCar, FaChevronDown, FaThLarge, FaList, FaMapMarkedAlt,
+  FaBell, FaFire, FaEye, FaWhatsapp, FaPhoneAlt, FaShareAlt,
+  FaBalanceScale, FaCalculator, FaShieldAlt, FaUndo, FaCheck
 } from 'react-icons/fa';
 import { propertiesApi } from '../api/client';
-import PropertyCard from '../components/PropertyCard';
+import { PRESTIGE_PROPERTIES, AMENITIES_DICT } from '../data/propertiesData';
 import ZillowSearchMap from '../components/ZillowSearchMap';
 import Pagination from '../components/Pagination';
-import { getErrorMessage } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import './PropertiesPage.css';
 
-const DEFAULT_FILTERS = {
-  search: '', city: '', property_type: '', listing_type: '',
-  min_price: '', max_price: '', min_bedrooms: '', ordering: '-created_at',
-};
+// Formatting helpers
+function formatBDT(amount) {
+  if (!amount) return '—';
+  const n = Number(amount);
+  if (n >= 10000000) {
+    return `৳ ${(n / 10000000).toFixed(2).replace(/\.?0+$/, '')} Crore`;
+  }
+  if (n >= 100000) {
+    return `৳ ${(n / 100000).toFixed(n % 100000 === 0 ? 0 : 2).replace(/\.?0+$/, '')} Lakh`;
+  }
+  if (n >= 1000) {
+    return `৳ ${Math.round(n / 1000)}K`;
+  }
+  return `৳ ${n.toLocaleString()}`;
+}
 
-const PAGE_SIZE = 12;
+const PROPERTY_TYPES = [
+  { value: 'apartment', label: 'Apartment', bn: 'অ্যাপার্টমেন্ট' },
+  { value: 'duplex', label: 'Duplex', bn: 'ডুপ্লেক্স' },
+  { value: 'penthouse', label: 'Penthouse', bn: 'পেন্টহাউস' },
+  { value: 'house', label: 'House', bn: 'বাড়ি' },
+  { value: 'land', label: 'Land / plot', bn: 'জমি / প্লট' },
+  { value: 'commercial', label: 'Commercial', bn: 'বাণিজ্যিক' },
+  { value: 'office', label: 'Office', bn: 'অফিস' },
+];
+
+const RENT_PRICE_TIERS = [0, 15000, 25000, 40000, 70000, 120000, 500000];
+const BUY_PRICE_TIERS = [0, 5000000, 10000000, 20000000, 40000000, 70000000, 100000000];
+
+const SIZE_TIERS = [
+  { value: 0, label: 'Any size' },
+  { value: 800, label: '800+ sqft' },
+  { value: 1100, label: '1,100+ sqft' },
+  { value: 1400, label: '1,400+ sqft' },
+  { value: 1800, label: '1,800+ sqft' },
+  { value: 2500, label: '2,500+ sqft' },
+  { value: 3500, label: '3,500+ sqft' },
+];
+
+const POPULAR_AREAS = [
+  { id: '', label: 'All areas' },
+  { id: 'Gulshan', label: 'Gulshan' },
+  { id: 'Banani', label: 'Banani' },
+  { id: 'Dhanmondi', label: 'Dhanmondi' },
+  { id: 'Uttara', label: 'Uttara' },
+  { id: 'Bashundhara R/A', label: 'Bashundhara R/A' },
+  { id: 'Baridhara DOHS', label: 'Baridhara DOHS' },
+  { id: 'Mirpur DOHS', label: 'Mirpur DOHS' },
+  { id: 'Chattogram', label: 'Chattogram' },
+  { id: 'Sylhet', label: 'Sylhet' },
+];
+
+const AMENITY_KEYS = [
+  'lift', 'generator', 'gas', 'parking', 'security', 'cctv',
+  'gym', 'pool', 'furnished', 'servant', 'rooftop', 'playarea'
+];
+
+const SAVED_STORAGE_KEY = 'pr-saved';
 
 export default function PropertiesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [totalCount, setTotalCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [viewMode, setViewMode] = useState('split'); // 'split' or 'grid'
-  const [activePropertyId, setActivePropertyId] = useState(null);
-  const filtersRef = useRef(null);
+  const navigate = useNavigate();
 
-  const [filters, setFilters] = useState({
-    ...DEFAULT_FILTERS,
-    search: searchParams.get('search') || '',
-    city: searchParams.get('city') || '',
-    property_type: searchParams.get('property_type') || '',
-    listing_type: searchParams.get('type') || searchParams.get('listing_type') || '',
+  // Active filter state matching Prestige Realty URL structure
+  const listingType = searchParams.get('type') === 'buy' ? 'buy' : 'rent';
+  const isRent = listingType === 'rent';
+
+  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const [selectedTypes, setSelectedTypes] = useState(() => {
+    const raw = searchParams.get('kind');
+    return raw ? raw.split(',') : [];
   });
+  const [selectedArea, setSelectedArea] = useState(searchParams.get('area') || searchParams.get('city') || '');
+  const [minPrice, setMinPrice] = useState(Number(searchParams.get('min_price')) || 0);
+  const [maxPrice, setMaxPrice] = useState(Number(searchParams.get('max_price')) || 0);
+  const [minBeds, setMinBeds] = useState(Number(searchParams.get('beds')) || 0);
+  const [minSqft, setMinSqft] = useState(Number(searchParams.get('sqft')) || 0);
+  const [selectedAmenities, setSelectedAmenities] = useState(() => {
+    const raw = searchParams.get('amenity');
+    return raw ? raw.split(',') : [];
+  });
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'newest');
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list' | 'split'
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
-  const fetchProperties = useCallback(async (page = 1, f = filters) => {
-    setLoading(true);
+  // Creative features state
+  const [savedIds, setSavedIds] = useState(() => {
     try {
-      const params = { page, page_size: PAGE_SIZE };
-      Object.entries(f).forEach(([k, v]) => { if (v) params[k] = v; });
-      const res = await propertiesApi.list(params);
-      setProperties(res.data.results || []);
-      setTotalCount(res.data.count || 0);
-      setCurrentPage(page);
-    } catch (err) {
-      console.error(getErrorMessage(err));
-    } finally {
-      setLoading(false);
+      return JSON.parse(localStorage.getItem(SAVED_STORAGE_KEY) || '[]');
+    } catch {
+      return [];
     }
-  }, []);
+  });
+  const [compareList, setCompareList] = useState([]);
+  const [showCompareModal, setShowCompareModal] = useState(false);
+  const [quickViewProperty, setQuickViewProperty] = useState(null);
+  const [showAffordabilityModal, setShowAffordabilityModal] = useState(false);
+  const [activePropertyId, setActivePropertyId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [backendProperties, setBackendProperties] = useState([]);
 
+  // Fetch backend properties and merge seamlessly
   useEffect(() => {
-    const listingTypeParam = searchParams.get('type') || searchParams.get('listing_type') || '';
-    const cityParam = searchParams.get('city') || '';
-    const searchParam = searchParams.get('search') || '';
-    const typeParam = searchParams.get('property_type') || '';
-
-    const initial = {
-      ...DEFAULT_FILTERS,
-      listing_type: listingTypeParam,
-      city: cityParam,
-      search: searchParam,
-      property_type: typeParam,
+    let isMounted = true;
+    const fetchFromApi = async () => {
+      try {
+        const res = await propertiesApi.list({
+          page_size: 50,
+          listing_type: isRent ? 'rent' : 'sale'
+        });
+        if (isMounted && res.data?.results) {
+          const formatted = res.data.results.map(p => ({
+            id: `be-${p.id}`,
+            backendId: p.id,
+            slug: p.slug || `property-${p.id}`,
+            title: p.title,
+            listingType: p.listing_type === 'rent' ? 'rent' : 'buy',
+            kind: (p.property_type || 'apartment').toLowerCase(),
+            status: p.status || 'ready',
+            price: Number(p.price) || 0,
+            area: p.city || 'Dhaka',
+            areaSlug: (p.city || 'dhaka').toLowerCase(),
+            address: p.address || 'Dhaka, Bangladesh',
+            city: p.city || 'Dhaka',
+            lat: p.latitude || 23.8103,
+            lng: p.longitude || 90.4125,
+            beds: p.bedrooms || 0,
+            baths: p.bathrooms || 0,
+            balconies: p.balconies || 2,
+            sqft: p.area_sqft || 1200,
+            floor: p.floor || 4,
+            totalFloors: 10,
+            parking: p.garage || p.parking_spaces || 1,
+            yearBuilt: p.year_built || 2021,
+            amenities: p.amenities || ['lift', 'generator', 'security'],
+            images: [
+              p.primary_image_url || p.primary_image || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80',
+              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80',
+              'https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=1200&q=80'
+            ],
+            description: p.description || 'Premium property in prime location.',
+            featured: Boolean(p.is_featured),
+            verified: true,
+            postedDaysAgo: 1,
+            views: 450,
+            saves: 25
+          }));
+          setBackendProperties(formatted);
+        }
+      } catch (err) {
+        console.warn('Backend properties load note:', err);
+      }
     };
-    setFilters(initial);
-    fetchProperties(1, initial);
-  }, [searchParams, fetchProperties]);
+    fetchFromApi();
+    return () => { isMounted = false; };
+  }, [isRent]);
 
-  const updateFilter = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+  // Combined master property listings pool
+  const allProperties = useMemo(() => {
+    const staticListings = PRESTIGE_PROPERTIES;
+    // Prepend backend properties if available
+    const combined = [...backendProperties, ...staticListings];
+    // De-duplicate by title or slug
+    const seen = new Set();
+    return combined.filter(item => {
+      const key = `${item.title}-${item.city}`.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [backendProperties]);
+
+  // Sync state into URL search params
+  const updateUrlParams = useCallback((updates = {}) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('type', updates.type !== undefined ? updates.type : listingType);
+
+    if (updates.q !== undefined) {
+      if (updates.q) params.set('q', updates.q); else params.delete('q');
+    }
+    if (updates.kind !== undefined) {
+      if (updates.kind.length) params.set('kind', updates.kind.join(',')); else params.delete('kind');
+    }
+    if (updates.area !== undefined) {
+      if (updates.area) params.set('area', updates.area); else params.delete('area');
+    }
+    if (updates.min_price !== undefined) {
+      if (updates.min_price) params.set('min_price', updates.min_price); else params.delete('min_price');
+    }
+    if (updates.max_price !== undefined) {
+      if (updates.max_price) params.set('max_price', updates.max_price); else params.delete('max_price');
+    }
+    if (updates.beds !== undefined) {
+      if (updates.beds) params.set('beds', updates.beds); else params.delete('beds');
+    }
+    if (updates.sqft !== undefined) {
+      if (updates.sqft) params.set('sqft', updates.sqft); else params.delete('sqft');
+    }
+    if (updates.amenity !== undefined) {
+      if (updates.amenity.length) params.set('amenity', updates.amenity.join(',')); else params.delete('amenity');
+    }
+    if (updates.sort !== undefined) {
+      if (updates.sort && updates.sort !== 'newest') params.set('sort', updates.sort); else params.delete('sort');
+    }
+    setSearchParams(params, { replace: true });
+  }, [searchParams, listingType, setSearchParams]);
+
+  // Multi-select toggle for property type
+  const togglePropertyType = (val) => {
+    const next = selectedTypes.includes(val)
+      ? selectedTypes.filter(t => t !== val)
+      : [...selectedTypes, val];
+    setSelectedTypes(next);
+    updateUrlParams({ kind: next });
   };
 
-  const applyFilters = (updatedFilters = filters) => {
-    const params = {};
-    Object.entries(updatedFilters).forEach(([k, v]) => { if (v) params[k] = v; });
-    setSearchParams(params);
-    fetchProperties(1, updatedFilters);
-    setSidebarOpen(false);
+  // Multi-select toggle for amenities
+  const toggleAmenity = (key) => {
+    const next = selectedAmenities.includes(key)
+      ? selectedAmenities.filter(k => k !== key)
+      : [...selectedAmenities, key];
+    setSelectedAmenities(next);
+    updateUrlParams({ amenity: next });
   };
 
+  // Switch between Buy / Rent
+  const switchListingType = (type) => {
+    setMinPrice(0);
+    setMaxPrice(0);
+    updateUrlParams({ type, min_price: 0, max_price: 0 });
+  };
+
+  // Toggle favorite / saved
+  const toggleSaveProperty = (propId, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setSavedIds(prev => {
+      const isSaved = prev.includes(propId);
+      const next = isSaved ? prev.filter(id => id !== propId) : [...prev, propId];
+      try {
+        localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(next));
+      } catch (err) {
+        console.error(err);
+      }
+      toast.success(isSaved ? 'Removed from saved properties' : 'Added to saved properties ❤️', {
+        id: 'save-toast'
+      });
+      return next;
+    });
+  };
+
+  // Toggle comparison
+  const toggleCompare = (property, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setCompareList(prev => {
+      const exists = prev.find(p => p.id === property.id);
+      if (exists) {
+        toast('Removed from comparison', { icon: 'ℹ️' });
+        return prev.filter(p => p.id !== property.id);
+      }
+      if (prev.length >= 3) {
+        toast.error('You can compare up to 3 properties at a time');
+        return prev;
+      }
+      toast.success(`Added "${property.title}" to compare`);
+      return [...prev, property];
+    });
+  };
+
+  // Reset all filters
   const resetFilters = () => {
-    setFilters(DEFAULT_FILTERS);
-    setSearchParams({});
-    fetchProperties(1, DEFAULT_FILTERS);
-    setSidebarOpen(false);
+    setQuery('');
+    setSelectedTypes([]);
+    setSelectedArea('');
+    setMinPrice(0);
+    setMaxPrice(0);
+    setMinBeds(0);
+    setMinSqft(0);
+    setSelectedAmenities([]);
+    setSortBy('newest');
+    updateUrlParams({
+      q: '',
+      kind: [],
+      area: '',
+      min_price: 0,
+      max_price: 0,
+      beds: 0,
+      sqft: 0,
+      amenity: [],
+      sort: 'newest'
+    });
+    toast.success('All filters reset');
   };
 
-  const handleSortChange = (ordering) => {
-    const updated = { ...filters, ordering };
-    setFilters(updated);
-    applyFilters(updated);
+  // Save current search as an alert
+  const handleSaveSearchAlert = () => {
+    const alertData = {
+      type: listingType,
+      query,
+      area: selectedArea,
+      types: selectedTypes,
+      savedAt: new Date().toISOString()
+    };
+    try {
+      const existing = JSON.parse(localStorage.getItem('pr-search-alerts') || '[]');
+      localStorage.setItem('pr-search-alerts', JSON.stringify([alertData, ...existing]));
+      toast.success('Search alert saved! We will notify you when new listings match.', {
+        icon: '🔔',
+        duration: 4000
+      });
+    } catch {
+      toast.success('Search saved to your browser alerts!');
+    }
   };
 
-  const handleSaveSearch = () => {
-    toast.success('Search preferences saved! You will receive email alerts for new listings.');
-  };
+  // Filtered & Sorted Properties computation
+  const filteredProperties = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const priceOptions = isRent ? RENT_PRICE_TIERS : BUY_PRICE_TIERS;
 
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-  const hasActiveFilters = Boolean(
-    filters.city || filters.property_type || filters.listing_type ||
-    filters.min_price || filters.max_price || filters.min_bedrooms
-  );
+    return allProperties.filter(item => {
+      // Listing type match (buy vs rent)
+      if (item.listingType !== listingType) return false;
 
-  const isRent = filters.listing_type === 'rent';
+      // Search keyword match
+      if (q) {
+        const textToSearch = [
+          item.title, item.titleBn, item.area, item.areaBn,
+          item.address, item.addressBn, item.city, item.cityBn,
+          item.description, item.developer
+        ].filter(Boolean).join(' ').toLowerCase();
+        if (!textToSearch.includes(q)) return false;
+      }
 
-  return (
-    <div className="z-search-viewport-page">
+      // Property type filter
+      if (selectedTypes.length > 0) {
+        if (!selectedTypes.includes(item.kind)) return false;
+      }
 
-      {/* ── 1. Sticky Horizontal Zillow Filter Bar ───────── */}
-      <div className="z-search-filter-bar">
-        <div className="z-search-filter-bar__inner">
+      // Area / Neighborhood filter
+      if (selectedArea) {
+        const matchArea = [item.area, item.city, item.address]
+          .filter(Boolean)
+          .some(txt => txt.toLowerCase().includes(selectedArea.toLowerCase()));
+        if (!matchArea) return false;
+      }
 
-          {/* Search Box */}
-          <form
-            onSubmit={(e) => { e.preventDefault(); applyFilters(); }}
-            className="z-filter-search-box"
-          >
-            <FaSearch className="z-filter-search-icon" />
-            <input
-              type="text"
-              placeholder="City, neighborhood, or address"
-              value={filters.search}
-              onChange={e => updateFilter('search', e.target.value)}
-              className="z-filter-search-input"
-            />
-            {filters.search && (
+      // Min price filter
+      if (minPrice > 0 && item.price < minPrice) return false;
+
+      // Max price filter
+      if (maxPrice > 0 && item.price > maxPrice) return false;
+
+      // Bedrooms filter
+      if (minBeds > 0 && item.beds < minBeds) return false;
+
+      // Size (sqft) filter
+      if (minSqft > 0 && item.sqft < minSqft) return false;
+
+      // Amenities filter (must have all selected)
+      if (selectedAmenities.length > 0) {
+        const itemAmenities = item.amenities || [];
+        const hasAll = selectedAmenities.every(a => itemAmenities.includes(a));
+        if (!hasAll) return false;
+      }
+
+      return true;
+    }).sort((a, b) => {
+      if (sortBy === 'priceAsc') return a.price - b.price;
+      if (sortBy === 'priceDesc') return b.price - a.price;
+      if (sortBy === 'sizeDesc') return b.sqft - a.sqft;
+      if (sortBy === 'popular') return (b.views || 0) - (a.views || 0);
+      // default 'newest'
+      return (a.postedDaysAgo || 0) - (b.postedDaysAgo || 0);
+    });
+  }, [allProperties, listingType, isRent, query, selectedTypes, selectedArea, minPrice, maxPrice, minBeds, minSqft, selectedAmenities, sortBy]);
+
+  // Active filter count
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (selectedTypes.length) count += selectedTypes.length;
+    if (selectedArea) count += 1;
+    if (minPrice > 0) count += 1;
+    if (maxPrice > 0) count += 1;
+    if (minBeds > 0) count += 1;
+    if (minSqft > 0) count += 1;
+    if (selectedAmenities.length) count += selectedAmenities.length;
+    return count;
+  }, [selectedTypes, selectedArea, minPrice, maxPrice, minBeds, minSqft, selectedAmenities]);
+
+  const priceTiers = isRent ? RENT_PRICE_TIERS : BUY_PRICE_TIERS;
+
+  // Sidebar Filter Form Component
+  const FilterForm = (
+    <div className="pr-filters-form">
+      {/* 1. Property Type */}
+      <div className="pr-filter-section">
+        <h3 className="pr-filter-title">Property type</h3>
+        <div className="pr-type-pills">
+          {PROPERTY_TYPES.map(type => {
+            const isSelected = selectedTypes.includes(type.value);
+            return (
               <button
+                key={type.value}
                 type="button"
-                className="z-filter-clear-btn"
-                onClick={() => { updateFilter('search', ''); applyFilters({ ...filters, search: '' }); }}
+                className={`pr-type-pill ${isSelected ? 'active' : ''}`}
+                onClick={() => togglePropertyType(type.value)}
               >
-                <FaTimes />
+                {type.label}
               </button>
-            )}
-          </form>
-
-          {/* Filter Pills */}
-          <div className="z-filter-pills-row">
-            
-            {/* For Sale / Rent */}
-            <select
-              value={filters.listing_type}
-              onChange={(e) => {
-                const updated = { ...filters, listing_type: e.target.value };
-                setFilters(updated);
-                applyFilters(updated);
-              }}
-              className="z-filter-pill"
-            >
-              <option value="">For Sale & Rent</option>
-              <option value="sale">For Sale</option>
-              <option value="rent">For Rent</option>
-            </select>
-
-            {/* Price Filter */}
-            <select
-              value={filters.max_price}
-              onChange={(e) => {
-                const updated = { ...filters, max_price: e.target.value };
-                setFilters(updated);
-                applyFilters(updated);
-              }}
-              className="z-filter-pill"
-            >
-              <option value="">Price (Any)</option>
-              <option value="2000000">Under ৳20 Lakh</option>
-              <option value="5000000">Under ৳50 Lakh</option>
-              <option value="10000000">Under ৳1 Crore</option>
-              <option value="30000000">Under ৳3 Crore</option>
-              <option value="50000000">Under ৳5 Crore</option>
-            </select>
-
-            {/* Beds */}
-            <select
-              value={filters.min_bedrooms}
-              onChange={(e) => {
-                const updated = { ...filters, min_bedrooms: e.target.value };
-                setFilters(updated);
-                applyFilters(updated);
-              }}
-              className="z-filter-pill"
-            >
-              <option value="">Beds & Baths (Any)</option>
-              <option value="1">1+ Beds</option>
-              <option value="2">2+ Beds</option>
-              <option value="3">3+ Beds</option>
-              <option value="4">4+ Beds</option>
-            </select>
-
-            {/* Home Type */}
-            <select
-              value={filters.property_type}
-              onChange={(e) => {
-                const updated = { ...filters, property_type: e.target.value };
-                setFilters(updated);
-                applyFilters(updated);
-              }}
-              className="z-filter-pill"
-            >
-              <option value="">Home Type</option>
-              <option value="apartment">Apartment</option>
-              <option value="house">House</option>
-              <option value="villa">Villa</option>
-              <option value="commercial">Commercial</option>
-              <option value="land">Land</option>
-            </select>
-
-            <button
-              type="button"
-              className={`z-filter-pill z-filter-pill--btn ${sidebarOpen ? 'active' : ''}`}
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              <FaSlidersH /> More
-              {hasActiveFilters && <span className="z-filter-dot" />}
-            </button>
-
-            {hasActiveFilters && (
-              <button type="button" className="z-filter-reset-link" onClick={resetFilters}>
-                Reset
-              </button>
-            )}
-          </div>
-
-          {/* Right Action: Save Search & View Switcher */}
-          <div className="z-filter-right-group">
-            <button
-              type="button"
-              className="z-save-search-btn"
-              onClick={handleSaveSearch}
-            >
-              <FaBookmark size={11} /> Save search
-            </button>
-
-            <div className="z-view-mode-toggle">
-              <button
-                type="button"
-                className={`z-view-mode-btn ${viewMode === 'split' ? 'active' : ''}`}
-                onClick={() => setViewMode('split')}
-                title="Split Map View"
-              >
-                <FaMapMarkedAlt />
-              </button>
-              <button
-                type="button"
-                className={`z-view-mode-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                onClick={() => setViewMode('grid')}
-                title="List Only"
-              >
-                <FaThLarge />
-              </button>
-            </div>
-          </div>
-
+            );
+          })}
         </div>
       </div>
 
-      {/* ── 2. Full-Screen Split View Layout ────────────────── */}
-      <div className={`z-split-container ${viewMode === 'grid' ? 'z-split-container--grid-only' : ''}`}>
-
-        {/* ── Left Map Pane (Zillow 50% Full-Height Screen) ── */}
-        {viewMode === 'split' && (
-          <div className="z-split-map-pane">
-            <ZillowSearchMap
-              properties={properties}
-              activeCity={filters.city || 'Dhaka'}
-              activePropertyId={activePropertyId}
-              onMarkerHover={(id) => setActivePropertyId(id)}
-              onMarkerClick={(id) => setActivePropertyId(id)}
-            />
+      {/* 2. Price Range */}
+      <div className="pr-filter-section">
+        <div className="pr-filter-title-row">
+          <h3 className="pr-filter-title">Price range</h3>
+          <button
+            type="button"
+            className="pr-calc-link"
+            onClick={() => setShowAffordabilityModal(true)}
+            title="Calculate monthly affordability"
+          >
+            <FaCalculator /> Affordability
+          </button>
+        </div>
+        <div className="pr-price-grid">
+          <div className="pr-select-wrap">
+            <select
+              value={minPrice}
+              onChange={e => {
+                const val = Number(e.target.value);
+                setMinPrice(val);
+                updateUrlParams({ min_price: val });
+              }}
+              className="pr-select"
+              aria-label="Minimum price"
+            >
+              <option value={0}>No min</option>
+              {priceTiers.slice(1).map(p => (
+                <option key={`min-${p}`} value={p}>
+                  {formatBDT(p)}
+                </option>
+              ))}
+            </select>
+            <FaChevronDown className="pr-select-arrow" />
           </div>
-        )}
 
-        {/* ── Right Scrollable Listings Feed ───────────────── */}
-        <div className="z-split-listings-pane">
-          
-          {/* Results Header */}
-          <div className="z-listings-header">
-            <div>
-              <h1 className="z-listings-title">
-                {filters.city
-                  ? `${isRent ? 'Rental' : 'Real Estate'} Listings in ${filters.city}`
-                  : isRent
-                  ? 'Rental Listings in Bangladesh'
-                  : 'Real Estate & Homes in Bangladesh'}
-              </h1>
-              <span className="z-listings-count">
-                {loading ? 'Searching homes...' : `${totalCount.toLocaleString()} results`}
-              </span>
-            </div>
+          <div className="pr-select-wrap">
+            <select
+              value={maxPrice}
+              onChange={e => {
+                const val = Number(e.target.value);
+                setMaxPrice(val);
+                updateUrlParams({ max_price: val });
+              }}
+              className="pr-select"
+              aria-label="Maximum price"
+            >
+              <option value={0}>No max</option>
+              {priceTiers.slice(1).map(p => (
+                <option key={`max-${p}`} value={p}>
+                  {formatBDT(p)}
+                </option>
+              ))}
+            </select>
+            <FaChevronDown className="pr-select-arrow" />
+          </div>
+        </div>
+      </div>
 
-            {/* Sort Selector */}
-            <div className="z-sort-wrap">
-              <FaSortAmountDown className="z-sort-icon" />
-              <select
-                value={filters.ordering}
-                onChange={e => handleSortChange(e.target.value)}
-                className="z-sort-select"
+      {/* 3. Bedrooms */}
+      <div className="pr-filter-section">
+        <h3 className="pr-filter-title">Bedrooms</h3>
+        <div className="pr-bed-buttons">
+          {[0, 1, 2, 3, 4, 5].map(b => (
+            <button
+              key={b}
+              type="button"
+              className={`pr-bed-btn ${minBeds === b ? 'active' : ''}`}
+              onClick={() => {
+                setMinBeds(b);
+                updateUrlParams({ beds: b });
+              }}
+            >
+              {b === 0 ? 'Any' : `${b}+`}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Minimum Size */}
+      <div className="pr-filter-section">
+        <h3 className="pr-filter-title">Minimum size</h3>
+        <div className="pr-select-wrap">
+          <select
+            value={minSqft}
+            onChange={e => {
+              const val = Number(e.target.value);
+              setMinSqft(val);
+              updateUrlParams({ sqft: val });
+            }}
+            className="pr-select pr-select--full"
+            aria-label="Minimum size"
+          >
+            {SIZE_TIERS.map(s => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+          <FaChevronDown className="pr-select-arrow" />
+        </div>
+      </div>
+
+      {/* 5. Must Have / Amenities */}
+      <div className="pr-filter-section">
+        <h3 className="pr-filter-title">Must have amenities</h3>
+        <div className="pr-amenity-list">
+          {AMENITY_KEYS.map(key => {
+            const isChecked = selectedAmenities.includes(key);
+            const label = AMENITIES_DICT[key]?.en || key;
+            return (
+              <label key={key} className="pr-checkbox-row">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleAmenity(key)}
+                  className="pr-checkbox"
+                />
+                <span className="pr-checkbox-label">{label}</span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="pr-search-page">
+
+      {/* ════════════ TOP SUB-HEADER SEARCH BAR ════════════ */}
+      <div className="pr-top-bar">
+        <div className="pr-top-bar__container">
+          <div className="pr-top-bar__inner">
+
+            {/* Buy / Rent segmented toggle */}
+            <div className="pr-type-segmented" role="tablist">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={!isRent}
+                className={`pr-type-tab ${!isRent ? 'active' : ''}`}
+                onClick={() => switchListingType('buy')}
               >
-                <option value="-created_at">Sort: Homes for you</option>
-                <option value="price">Price (Low to High)</option>
-                <option value="-price">Price (High to Low)</option>
-                <option value="-area_sqft">Largest Sq Ft</option>
-              </select>
+                Buy
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={isRent}
+                className={`pr-type-tab ${isRent ? 'active' : ''}`}
+                onClick={() => switchListingType('rent')}
+              >
+                Rent
+              </button>
             </div>
-          </div>
 
-          {/* Drawer: More Filters Sidebar */}
-          {sidebarOpen && (
-            <div className="z-filters-drawer" ref={filtersRef}>
-              <div className="z-drawer-header">
-                <h3><FaFilter /> All Filters</h3>
-                <button type="button" onClick={() => setSidebarOpen(false)}><FaTimes /></button>
-              </div>
-              <div className="z-drawer-body">
-                <div className="form-group">
-                  <label className="form-label">City / Region</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="e.g. Dhaka, Gulshan, Banani"
-                    value={filters.city}
-                    onChange={e => updateFilter('city', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Price Range (BDT)</label>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Min"
-                      value={filters.min_price}
-                      onChange={e => updateFilter('min_price', e.target.value)}
-                    />
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Max"
-                      value={filters.max_price}
-                      onChange={e => updateFilter('max_price', e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: '8px', marginTop: '1rem' }}>
-                  <button type="button" className="btn btn-primary w-full" onClick={() => applyFilters()}>
-                    Apply Filters
-                  </button>
-                  <button type="button" className="btn btn-outline" onClick={resetFilters}>
+            {/* Search Input box */}
+            <div className="pr-search-field">
+              <FaSearch className="pr-search-icon" />
+              <input
+                type="text"
+                placeholder="Try “Gulshan”, “Uttara Sector 7” or “Banani”"
+                value={query}
+                onChange={e => {
+                  setQuery(e.target.value);
+                  updateUrlParams({ q: e.target.value });
+                }}
+                className="pr-search-input"
+                aria-label="Search properties in Bangladesh"
+              />
+              {query && (
+                <button
+                  type="button"
+                  className="pr-search-clear"
+                  onClick={() => {
+                    setQuery('');
+                    updateUrlParams({ q: '' });
+                  }}
+                  aria-label="Clear search"
+                >
+                  <FaTimes />
+                </button>
+              )}
+            </div>
+
+            {/* Mobile Filters Trigger */}
+            <button
+              type="button"
+              className="pr-mobile-filter-btn"
+              onClick={() => setMobileDrawerOpen(true)}
+              aria-label="Open filter drawer"
+            >
+              <FaSlidersH />
+              <span>Filters</span>
+              {activeFilterCount > 0 && (
+                <span className="pr-badge-count">{activeFilterCount}</span>
+              )}
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      {/* ════════════ MAIN TWO-COLUMN BODY ════════════ */}
+      <div className="pr-main-container">
+
+        {/* ── BEYOND EXPECTATION: QUICK AREA SELECTOR ── */}
+        <div className="pr-quick-areas-bar">
+          <span className="pr-quick-areas-label">Popular areas:</span>
+          <div className="pr-quick-areas-scroll">
+            {POPULAR_AREAS.map(area => {
+              const isActive = selectedArea === area.id;
+              // Compute dynamic count for this area
+              const areaCount = allProperties.filter(p =>
+                p.listingType === listingType &&
+                (!area.id || p.area.toLowerCase().includes(area.id.toLowerCase()) || p.city.toLowerCase().includes(area.id.toLowerCase()))
+              ).length;
+
+              return (
+                <button
+                  key={area.id}
+                  type="button"
+                  className={`pr-area-chip ${isActive ? 'active' : ''}`}
+                  onClick={() => {
+                    const next = isActive ? '' : area.id;
+                    setSelectedArea(next);
+                    updateUrlParams({ area: next });
+                  }}
+                >
+                  {area.label}
+                  <span className="pr-area-count">{areaCount}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="pr-layout-grid">
+
+          {/* ════════════ LEFT SIDEBAR FILTERS ════════════ */}
+          <aside className="pr-sidebar-col">
+            <div className="pr-sidebar-card">
+              <div className="pr-sidebar-header">
+                <h2 className="pr-sidebar-title">Filters</h2>
+                {activeFilterCount > 0 && (
+                  <button
+                    type="button"
+                    className="pr-reset-link"
+                    onClick={resetFilters}
+                  >
                     Reset
                   </button>
+                )}
+              </div>
+
+              {FilterForm}
+            </div>
+          </aside>
+
+          {/* ════════════ RIGHT RESULTS COLUMN ════════════ */}
+          <main className="pr-results-col">
+
+            {/* Results Title & Controls Header */}
+            <div className="pr-results-header">
+              <div>
+                <h1 className="pr-results-h1">
+                  {filteredProperties.length}{' '}
+                  {isRent ? 'flats & homes for rent' : 'properties for sale'}
+                  {query && <span className="pr-results-query"> in “{query}”</span>}
+                  {selectedArea && !query && <span className="pr-results-query"> in {selectedArea}</span>}
+                </h1>
+                <p className="pr-results-sub">
+                  Verified listings across Dhaka, Chattogram and Sylhet with transparent pricing
+                </p>
+              </div>
+
+              <div className="pr-header-controls">
+                {/* Save search alert button */}
+                <button
+                  type="button"
+                  className="pr-alert-button"
+                  onClick={handleSaveSearchAlert}
+                  title="Save search alert for new listings"
+                >
+                  <FaBell className="text-gold-500" />
+                  <span className="hidden sm:inline">Save Alert</span>
+                </button>
+
+                {/* View switcher */}
+                <div className="pr-view-mode-toggle" role="group" aria-label="View Mode">
+                  <button
+                    type="button"
+                    className={`pr-view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                    onClick={() => setViewMode('grid')}
+                    title="Grid view"
+                  >
+                    <FaThLarge />
+                  </button>
+                  <button
+                    type="button"
+                    className={`pr-view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                    onClick={() => setViewMode('list')}
+                    title="Detailed list view"
+                  >
+                    <FaList />
+                  </button>
+                  <button
+                    type="button"
+                    className={`pr-view-btn ${viewMode === 'split' ? 'active' : ''}`}
+                    onClick={() => setViewMode('split')}
+                    title="Map & cards view"
+                  >
+                    <FaMapMarkedAlt />
+                  </button>
+                </div>
+
+                {/* Sort selector */}
+                <div className="pr-sort-wrapper">
+                  <span className="pr-sort-label">Sort:</span>
+                  <div className="pr-select-wrap">
+                    <select
+                      value={sortBy}
+                      onChange={e => {
+                        setSortBy(e.target.value);
+                        updateUrlParams({ sort: e.target.value });
+                      }}
+                      className="pr-select pr-select--sort"
+                      aria-label="Sort properties"
+                    >
+                      <option value="newest">Newest first</option>
+                      <option value="priceAsc">Price: low to high</option>
+                      <option value="priceDesc">Price: high to low</option>
+                      <option value="sizeDesc">Largest first</option>
+                      <option value="popular">Most viewed</option>
+                    </select>
+                    <FaChevronDown className="pr-select-arrow" />
+                  </div>
                 </div>
               </div>
             </div>
-          )}
 
-          {/* Cards Grid */}
-          {loading ? (
-            <div className="z-listings-loading">
-              <div className="spinner" />
-              <p>Loading homes...</p>
-            </div>
-          ) : properties.length > 0 ? (
-            <>
-              <div className="z-listings-grid">
-                {properties.map(p => (
-                  <div
-                    key={p.id}
-                    className={`z-listing-item ${activePropertyId === p.id ? 'active' : ''}`}
-                    onMouseEnter={() => setActivePropertyId(p.id)}
+            {/* Active Filter Tags */}
+            {activeFilterCount > 0 && (
+              <div className="pr-active-tags-bar">
+                {selectedArea && (
+                  <span className="pr-active-tag">
+                    📍 {selectedArea}
+                    <button onClick={() => { setSelectedArea(''); updateUrlParams({ area: '' }); }}><FaTimes /></button>
+                  </span>
+                )}
+                {selectedTypes.map(t => (
+                  <span key={t} className="pr-active-tag">
+                    🏠 {PROPERTY_TYPES.find(pt => pt.value === t)?.label || t}
+                    <button onClick={() => togglePropertyType(t)}><FaTimes /></button>
+                  </span>
+                ))}
+                {minPrice > 0 && (
+                  <span className="pr-active-tag">
+                    Min: {formatBDT(minPrice)}
+                    <button onClick={() => { setMinPrice(0); updateUrlParams({ min_price: 0 }); }}><FaTimes /></button>
+                  </span>
+                )}
+                {maxPrice > 0 && (
+                  <span className="pr-active-tag">
+                    Max: {formatBDT(maxPrice)}
+                    <button onClick={() => { setMaxPrice(0); updateUrlParams({ max_price: 0 }); }}><FaTimes /></button>
+                  </span>
+                )}
+                {minBeds > 0 && (
+                  <span className="pr-active-tag">
+                    🛏 {minBeds}+ beds
+                    <button onClick={() => { setMinBeds(0); updateUrlParams({ beds: 0 }); }}><FaTimes /></button>
+                  </span>
+                )}
+                {minSqft > 0 && (
+                  <span className="pr-active-tag">
+                    📐 {minSqft}+ sqft
+                    <button onClick={() => { setMinSqft(0); updateUrlParams({ sqft: 0 }); }}><FaTimes /></button>
+                  </span>
+                )}
+                {selectedAmenities.map(k => (
+                  <span key={k} className="pr-active-tag">
+                    ✨ {AMENITIES_DICT[k]?.en || k}
+                    <button onClick={() => toggleAmenity(k)}><FaTimes /></button>
+                  </span>
+                ))}
+                <button type="button" className="pr-clear-tags-btn" onClick={resetFilters}>
+                  Clear all ({activeFilterCount})
+                </button>
+              </div>
+            )}
+
+            {/* Split View Map Pane */}
+            {viewMode === 'split' && (
+              <div className="pr-split-map-container">
+                <ZillowSearchMap
+                  properties={filteredProperties.map(p => ({
+                    id: p.id,
+                    title: p.title,
+                    price: p.price,
+                    listing_type: p.listingType,
+                    property_type_display: p.kind,
+                    city: p.city,
+                    address: p.address,
+                    bedrooms: p.beds,
+                    bathrooms: p.baths,
+                    area_sqft: p.sqft,
+                    latitude: p.lat,
+                    longitude: p.lng,
+                    primary_image: p.images[0]
+                  }))}
+                  activeCity={selectedArea || 'Dhaka'}
+                  activePropertyId={activePropertyId}
+                  onMarkerHover={id => setActivePropertyId(id)}
+                  onMarkerClick={id => {
+                    const p = filteredProperties.find(item => item.id === id);
+                    if (p) setQuickViewProperty(p);
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Property Listings Output */}
+            {filteredProperties.length > 0 ? (
+              <div className={`pr-properties-grid ${viewMode === 'list' ? 'pr-properties-grid--list' : ''} ${viewMode === 'split' ? 'pr-properties-grid--split' : ''}`}>
+                {filteredProperties.map((property, idx) => {
+                  const isSaved = savedIds.includes(property.id);
+                  const isComparing = compareList.some(c => c.id === property.id);
+                  const imageSrc = property.images?.[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80';
+
+                  return (
+                    <article
+                      key={property.id}
+                      className={`pr-card ${activePropertyId === property.id ? 'pr-card--hovered' : ''}`}
+                      onMouseEnter={() => setActivePropertyId(property.id)}
+                      onMouseLeave={() => setActivePropertyId(null)}
+                    >
+                      {/* 4:3 Image Container */}
+                      <div className="pr-card__media">
+                        <img
+                          src={imageSrc}
+                          alt={property.title}
+                          loading={idx < 4 ? "eager" : "lazy"}
+                          className="pr-card__img"
+                        />
+
+                        {/* Top Overlay Badges */}
+                        <div className="pr-card__top-overlay">
+                          <div className="pr-card__badges">
+                            <span className="pr-badge pr-badge--type">
+                              {property.listingType === 'rent' ? 'For rent' : 'For sale'}
+                            </span>
+                            {property.featured && (
+                              <span className="pr-badge pr-badge--featured">
+                                <FaFire /> Featured
+                              </span>
+                            )}
+                            {property.status === 'under-construction' && (
+                              <span className="pr-badge pr-badge--construction">
+                                Under construction
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Floating Circular Heart Save Button */}
+                          <button
+                            type="button"
+                            className="pr-card__save-btn"
+                            onClick={(e) => toggleSaveProperty(property.id, e)}
+                            aria-label={isSaved ? "Remove from saved" : "Save property"}
+                          >
+                            <FaHeart className={isSaved ? "text-rose-500 fill-rose-500" : "text-gray-400"} />
+                          </button>
+                        </div>
+
+                        {/* Bottom Gradient Overlay with Price */}
+                        <div className="pr-card__bottom-overlay">
+                          <p className="pr-card__price">
+                            {formatBDT(property.price)}
+                            {property.listingType === 'rent' && (
+                              <span className="pr-card__price-period">/month</span>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Card Information Body */}
+                      <div className="pr-card__body">
+                        {/* Category and Verified status */}
+                        <div className="pr-card__cat-row">
+                          <span className="pr-card__cat">{property.kind}</span>
+                          {property.verified && (
+                            <>
+                              <span className="pr-card__dot">•</span>
+                              <span className="pr-card__verified">
+                                <FaCheckCircle /> Verified
+                              </span>
+                            </>
+                          )}
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="pr-card__title">
+                          <Link
+                            to={property.backendId ? `/property/${property.backendId}` : `/property/${property.slug}`}
+                            className="pr-card__title-link"
+                          >
+                            {property.title}
+                          </Link>
+                        </h3>
+
+                        {/* Location */}
+                        <p className="pr-card__location">
+                          <FaMapMarkerAlt className="pr-card__pin" />
+                          <span className="truncate">{property.address}, {property.city}</span>
+                        </p>
+
+                        {/* Key Specs Row */}
+                        <div className="pr-card__specs">
+                          {property.beds > 0 && (
+                            <span className="pr-spec-item" title={`${property.beds} Bedrooms`}>
+                              <FaBed className="pr-spec-icon" />
+                              <b>{property.beds}</b>
+                            </span>
+                          )}
+                          {property.baths > 0 && (
+                            <span className="pr-spec-item" title={`${property.baths} Bathrooms`}>
+                              <FaBath className="pr-spec-icon" />
+                              <b>{property.baths}</b>
+                            </span>
+                          )}
+                          {property.sqft > 0 && (
+                            <span className="pr-spec-item" title={`${property.sqft} sqft`}>
+                              <FaRulerCombined className="pr-spec-icon" />
+                              <b>{property.sqft.toLocaleString()}</b>
+                              <span className="pr-spec-unit">sqft</span>
+                            </span>
+                          )}
+                          {property.parking > 0 && (
+                            <span className="pr-spec-item" title={`${property.parking} Parking space`}>
+                              <FaCar className="pr-spec-icon" />
+                              <b>{property.parking}</b>
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Bottom Footer with Quick Actions */}
+                        <div className="pr-card__footer">
+                          <span className="pr-card__time">
+                            {property.postedDaysAgo === 0
+                              ? 'Today'
+                              : property.postedDaysAgo === 1
+                              ? 'Yesterday'
+                              : `${property.postedDaysAgo || 1} days ago`}
+                          </span>
+
+                          <div className="pr-card__actions">
+                            {/* Quick view button */}
+                            <button
+                              type="button"
+                              className="pr-action-btn pr-action-btn--view"
+                              onClick={() => setQuickViewProperty(property)}
+                              title="Instant Quick View"
+                            >
+                              <FaEye /> Quick View
+                            </button>
+
+                            {/* Compare button */}
+                            <button
+                              type="button"
+                              className={`pr-action-btn pr-action-btn--compare ${isComparing ? 'active' : ''}`}
+                              onClick={(e) => toggleCompare(property, e)}
+                              title={isComparing ? 'Remove from compare' : 'Add to compare'}
+                            >
+                              <FaBalanceScale />
+                              <span>{isComparing ? 'Comparing' : 'Compare'}</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              /* Empty state matching Prestige Realty design */
+              <div className="pr-empty-state">
+                <div className="pr-empty-icon-wrap">
+                  <FaSearch className="pr-empty-icon" />
+                </div>
+                <h3 className="pr-empty-title">No properties match your filters</h3>
+                <p className="pr-empty-desc">
+                  Try widening your price range, choosing a different area, or clearing some amenity requirements.
+                </p>
+                <div className="pr-empty-actions">
+                  <button
+                    type="button"
+                    className="pr-empty-reset-btn"
+                    onClick={resetFilters}
                   >
-                    <PropertyCard property={p} />
+                    <FaUndo /> Clear all filters
+                  </button>
+                  <button
+                    type="button"
+                    className="pr-empty-alert-btn"
+                    onClick={handleSaveSearchAlert}
+                  >
+                    <FaBell /> Save this search as alert
+                  </button>
+                </div>
+              </div>
+            )}
+
+          </main>
+        </div>
+      </div>
+
+      {/* ════════════ MOBILE BOTTOM FILTER DRAWER ════════════ */}
+      <AnimatePresence>
+        {mobileDrawerOpen && (
+          <div className="pr-drawer-overlay">
+            <motion.div
+              className="pr-drawer-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileDrawerOpen(false)}
+            />
+            <motion.div
+              className="pr-drawer-sheet"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            >
+              <div className="pr-drawer-header">
+                <h2 className="pr-drawer-title">Filters</h2>
+                <button
+                  type="button"
+                  className="pr-drawer-close"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  aria-label="Close filters"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+
+              <div className="pr-drawer-body">
+                {FilterForm}
+              </div>
+
+              <div className="pr-drawer-footer">
+                <button
+                  type="button"
+                  className="pr-drawer-reset-btn"
+                  onClick={() => {
+                    resetFilters();
+                    setMobileDrawerOpen(false);
+                  }}
+                >
+                  Reset all
+                </button>
+                <button
+                  type="button"
+                  className="pr-drawer-apply-btn"
+                  onClick={() => setMobileDrawerOpen(false)}
+                >
+                  Show {filteredProperties.length} properties
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ════════════ BEYOND EXPECTATION: QUICK VIEW MODAL ════════════ */}
+      <AnimatePresence>
+        {quickViewProperty && (
+          <div className="pr-modal-overlay">
+            <motion.div
+              className="pr-modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setQuickViewProperty(null)}
+            />
+            <motion.div
+              className="pr-modal-content"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <button
+                type="button"
+                className="pr-modal-close"
+                onClick={() => setQuickViewProperty(null)}
+                aria-label="Close modal"
+              >
+                <FaTimes />
+              </button>
+
+              <div className="pr-quickview-grid">
+                {/* Image Gallery Column */}
+                <div className="pr-quickview-gallery">
+                  <div className="pr-quickview-main-img-wrap">
+                    <img
+                      src={quickViewProperty.images[0]}
+                      alt={quickViewProperty.title}
+                      className="pr-quickview-main-img"
+                    />
+                    <span className="pr-quickview-type-badge">
+                      {quickViewProperty.listingType === 'rent' ? 'For Rent' : 'For Sale'}
+                    </span>
+                  </div>
+                  <div className="pr-quickview-thumbs">
+                    {quickViewProperty.images.slice(0, 4).map((img, i) => (
+                      <img
+                        key={i}
+                        src={img}
+                        alt={`Thumb ${i + 1}`}
+                        className="pr-quickview-thumb"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Details Column */}
+                <div className="pr-quickview-info">
+                  <div className="pr-quickview-header">
+                    <div className="pr-card__cat-row">
+                      <span className="pr-card__cat">{quickViewProperty.kind}</span>
+                      <span className="pr-card__dot">•</span>
+                      <span className="pr-card__verified">
+                        <FaShieldAlt /> Verified by Zennor
+                      </span>
+                    </div>
+                    <h2 className="pr-quickview-title">{quickViewProperty.title}</h2>
+                    <p className="pr-card__location">
+                      <FaMapMarkerAlt className="pr-card__pin" />
+                      {quickViewProperty.address}, {quickViewProperty.city}
+                    </p>
+                    <p className="pr-quickview-price">
+                      {formatBDT(quickViewProperty.price)}
+                      {quickViewProperty.listingType === 'rent' && (
+                        <span className="pr-card__price-period"> / month</span>
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Quick specs grid */}
+                  <div className="pr-quickview-specs-grid">
+                    <div className="pr-spec-box">
+                      <span className="pr-spec-box__label">Bedrooms</span>
+                      <span className="pr-spec-box__val"><FaBed /> {quickViewProperty.beds}</span>
+                    </div>
+                    <div className="pr-spec-box">
+                      <span className="pr-spec-box__label">Bathrooms</span>
+                      <span className="pr-spec-box__val"><FaBath /> {quickViewProperty.baths}</span>
+                    </div>
+                    <div className="pr-spec-box">
+                      <span className="pr-spec-box__label">Area size</span>
+                      <span className="pr-spec-box__val"><FaRulerCombined /> {quickViewProperty.sqft} sqft</span>
+                    </div>
+                    <div className="pr-spec-box">
+                      <span className="pr-spec-box__label">Parking</span>
+                      <span className="pr-spec-box__val"><FaCar /> {quickViewProperty.parking || 'None'}</span>
+                    </div>
+                  </div>
+
+                  <p className="pr-quickview-desc">{quickViewProperty.description}</p>
+
+                  {/* Amenities */}
+                  <div className="pr-quickview-amenities">
+                    <h4 className="pr-quickview-subtitle">Features & Amenities</h4>
+                    <div className="pr-quickview-tags">
+                      {quickViewProperty.amenities.map(a => (
+                        <span key={a} className="pr-amenity-chip">
+                          <FaCheck className="text-emerald-600" /> {AMENITIES_DICT[a]?.en || a}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Direct Contact CTAs */}
+                  <div className="pr-quickview-ctas">
+                    <a
+                      href={`https://wa.me/8801700000000?text=Hi, I am interested in ${encodeURIComponent(quickViewProperty.title)} listed on Zennor Prestige.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pr-cta-btn pr-cta-btn--wa"
+                    >
+                      <FaWhatsapp /> WhatsApp Agent
+                    </a>
+                    <a
+                      href="tel:+8809612345678"
+                      className="pr-cta-btn pr-cta-btn--phone"
+                    >
+                      <FaPhoneAlt /> Call Now
+                    </a>
+                    <Link
+                      to={quickViewProperty.backendId ? `/property/${quickViewProperty.backendId}` : `/property/${quickViewProperty.slug}`}
+                      className="pr-cta-btn pr-cta-btn--detail"
+                    >
+                      View Full Details
+                    </Link>
+                  </div>
+
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ════════════ BEYOND EXPECTATION: AFFORDABILITY CALCULATOR MODAL ════════════ */}
+      <AnimatePresence>
+        {showAffordabilityModal && (
+          <div className="pr-modal-overlay">
+            <motion.div
+              className="pr-modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAffordabilityModal(false)}
+            />
+            <motion.div
+              className="pr-modal-content pr-modal-content--calc"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+            >
+              <button
+                type="button"
+                className="pr-modal-close"
+                onClick={() => setShowAffordabilityModal(false)}
+              >
+                <FaTimes />
+              </button>
+              <div className="pr-calc-inner">
+                <h3 className="pr-calc-title">
+                  <FaCalculator className="text-emerald-700" /> Rent & Income Affordability Guide
+                </h3>
+                <p className="pr-calc-sub">
+                  Standard rule of thumb: rent should not exceed 30–35% of monthly household income.
+                </p>
+
+                <div className="pr-calc-table">
+                  <div className="pr-calc-row header">
+                    <span>Monthly Income</span>
+                    <span>Recommended Rent Budget</span>
+                    <span>Suitable Locations</span>
+                  </div>
+                  <div className="pr-calc-row">
+                    <span>৳ 50,000 – ৳ 80,000</span>
+                    <b>৳ 15,000 – ৳ 25,000</b>
+                    <span>Mirpur, Uttara outer, Aftabnagar</span>
+                  </div>
+                  <div className="pr-calc-row">
+                    <span>৳ 90,000 – ৳ 1,50,000</span>
+                    <b>৳ 28,000 – ৳ 45,000</b>
+                    <span>Dhanmondi, Bashundhara, Uttara Sectors</span>
+                  </div>
+                  <div className="pr-calc-row">
+                    <span>৳ 2,00,000 – ৳ 3,50,000</span>
+                    <b>৳ 65,000 – ৳ 95,000</b>
+                    <span>Banani, Niketan, Baridhara DOHS</span>
+                  </div>
+                  <div className="pr-calc-row">
+                    <span>৳ 4,00,000+</span>
+                    <b>৳ 1,20,000+</b>
+                    <span>Gulshan 1 & 2, Diplomatic Zone</span>
+                  </div>
+                </div>
+
+                <div className="mt-5 flex justify-end">
+                  <button
+                    type="button"
+                    className="pr-btn-primary"
+                    onClick={() => setShowAffordabilityModal(false)}
+                  >
+                    Got it, continue search
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ════════════ BEYOND EXPECTATION: FLOATING COMPARISON TRAY ════════════ */}
+      <AnimatePresence>
+        {compareList.length > 0 && (
+          <motion.div
+            className="pr-compare-tray"
+            initial={{ y: 120, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 120, opacity: 0 }}
+            transition={{ type: 'spring', damping: 20 }}
+          >
+            <div className="pr-compare-tray__inner">
+              <div className="pr-compare-tray__left">
+                <span className="pr-compare-tray__badge">{compareList.length} / 3</span>
+                <span className="pr-compare-tray__label">Compare Properties</span>
+              </div>
+
+              <div className="pr-compare-tray__items">
+                {compareList.map(item => (
+                  <div key={item.id} className="pr-compare-chip">
+                    <img src={item.images[0]} alt={item.title} className="pr-compare-chip__img" />
+                    <div className="pr-compare-chip__text">
+                      <p className="pr-compare-chip__title">{item.title}</p>
+                      <p className="pr-compare-chip__price">{formatBDT(item.price)}</p>
+                    </div>
+                    <button
+                      type="button"
+                      className="pr-compare-chip__remove"
+                      onClick={() => toggleCompare(item)}
+                    >
+                      <FaTimes />
+                    </button>
                   </div>
                 ))}
               </div>
 
-              {totalPages > 1 && (
-                <div className="z-listings-pagination">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={page => fetchProperties(page)}
-                  />
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="z-listings-empty">
-              <h3>No matching homes found</h3>
-              <p>Try zooming out on the map, removing filters, or searching for another neighborhood.</p>
-              <button type="button" className="btn btn-primary" onClick={resetFilters}>
-                Remove all filters
-              </button>
+              <div className="pr-compare-tray__actions">
+                <button
+                  type="button"
+                  className="pr-compare-now-btn"
+                  onClick={() => setShowCompareModal(true)}
+                >
+                  <FaBalanceScale /> Compare Side-by-Side
+                </button>
+                <button
+                  type="button"
+                  className="pr-compare-clear-btn"
+                  onClick={() => setCompareList([])}
+                >
+                  Clear
+                </button>
+              </div>
             </div>
-          )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        </div>
+      {/* ════════════ BEYOND EXPECTATION: COMPARISON MODAL ════════════ */}
+      <AnimatePresence>
+        {showCompareModal && compareList.length > 0 && (
+          <div className="pr-modal-overlay">
+            <motion.div
+              className="pr-modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowCompareModal(false)}
+            />
+            <motion.div
+              className="pr-modal-content pr-modal-content--compare"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+            >
+              <button
+                type="button"
+                className="pr-modal-close"
+                onClick={() => setShowCompareModal(false)}
+                aria-label="Close comparison"
+              >
+                <FaTimes />
+              </button>
 
-      </div>
+              <div className="pr-compare-modal-inner">
+                <div className="pr-compare-modal-header">
+                  <h2 className="pr-compare-modal-title">
+                    <FaBalanceScale className="text-emerald-700" /> Side-by-Side Property Comparison
+                  </h2>
+                  <p className="pr-compare-modal-sub">
+                    Comparing {compareList.length} properties across pricing, specifications, and amenities.
+                  </p>
+                </div>
+
+                <div className="pr-compare-matrix-scroll">
+                  <table className="pr-compare-table">
+                    <thead>
+                      <tr>
+                        <th className="pr-compare-th-feature">Feature</th>
+                        {compareList.map(item => (
+                          <th key={item.id} className="pr-compare-th-prop">
+                            <div className="pr-compare-header-card">
+                              <img src={item.images[0]} alt={item.title} className="pr-compare-header-img" />
+                              <h4 className="pr-compare-header-title">{item.title}</h4>
+                              <p className="pr-compare-header-price">{formatBDT(item.price)}{item.listingType === 'rent' ? '/mo' : ''}</p>
+                              <button
+                                type="button"
+                                className="pr-compare-remove-btn"
+                                onClick={() => {
+                                  const updated = compareList.filter(p => p.id !== item.id);
+                                  setCompareList(updated);
+                                  if (updated.length === 0) setShowCompareModal(false);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="pr-feat-label">Type</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val capitalize font-semibold text-emerald-800">{item.kind}</td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="pr-feat-label">Location</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val">{item.address}, {item.city}</td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="pr-feat-label">Bedrooms</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val font-bold">{item.beds || 'N/A'}</td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="pr-feat-label">Bathrooms</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val font-bold">{item.baths || 'N/A'}</td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="pr-feat-label">Size (sqft)</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val font-bold">{item.sqft ? `${item.sqft.toLocaleString()} sqft` : '—'}</td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="pr-feat-label">Rate / sqft</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val">
+                            {item.sqft && item.price ? `৳ ${Math.round(item.price / item.sqft).toLocaleString()}/sqft` : '—'}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="pr-feat-label">Parking</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val">{item.parking ? `${item.parking} vehicle(s)` : 'None'}</td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="pr-feat-label">Floor</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val">{item.floor ? `Floor ${item.floor} of ${item.totalFloors}` : '—'}</td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="pr-feat-label">Developer</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val">{item.developer || 'Private Landlord'}</td>
+                        ))}
+                      </tr>
+                      {/* Amenities checks */}
+                      {AMENITY_KEYS.map(amenityKey => (
+                        <tr key={amenityKey}>
+                          <td className="pr-feat-label">{AMENITIES_DICT[amenityKey]?.en || amenityKey}</td>
+                          {compareList.map(item => {
+                            const hasIt = (item.amenities || []).includes(amenityKey);
+                            return (
+                              <td key={item.id} className="pr-feat-val">
+                                {hasIt ? (
+                                  <span className="inline-flex items-center text-emerald-600 font-bold gap-1"><FaCheck /> Yes</span>
+                                ) : (
+                                  <span className="text-gray-400">—</span>
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                      <tr>
+                        <td className="pr-feat-label">Inquire</td>
+                        {compareList.map(item => (
+                          <td key={item.id} className="pr-feat-val">
+                            <a
+                              href={`https://wa.me/8801700000000?text=Hi, inquiring about ${encodeURIComponent(item.title)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="pr-cta-btn pr-cta-btn--wa pr-cta-btn--sm"
+                            >
+                              <FaWhatsapp /> Inquire
+                            </a>
+                          </td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

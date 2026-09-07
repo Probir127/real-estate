@@ -1,0 +1,404 @@
+/* ─── ValuationPage.css ────────────────────────────────────── */
+.z-val-page {
+  background-color: var(--sand-50);
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.z-val-hero {
+  background-color: var(--brand-950);
+  color: #ffffff;
+  padding: 3.5rem 0 4.5rem 0;
+}
+
+.z-val-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: #ffffff;
+}
+
+.z-val-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  max-width: 42rem;
+  line-height: 1.15;
+}
+
+.z-val-hero__sub {
+  margin-top: 0.85rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 42rem;
+  line-height: 1.6;
+}
+
+.z-val-container {
+  margin-top: -2rem;
+}
+
+.z-val-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .z-val-grid {
+    grid-template-columns: 1fr 400px;
+  }
+}
+
+.z-val-form-card {
+  background: #ffffff;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: 0 4px 20px -2px rgba(11, 93, 78, 0.08);
+}
+
+@media (min-width: 640px) {
+  .z-val-form-card {
+    padding: 2.25rem;
+  }
+}
+
+.z-val-card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ink-900);
+  margin-bottom: 1.5rem;
+}
+
+.z-val-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.z-val-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.z-val-group__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.z-val-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink-700);
+  margin-bottom: 0.4rem;
+}
+
+.z-val-val {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink-900);
+}
+
+.z-select-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.z-val-select {
+  height: 2.75rem;
+  width: 100%;
+  appearance: none;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--sand-200);
+  background-color: var(--sand-50);
+  padding-left: 0.85rem;
+  padding-right: 2.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink-900);
+  outline: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.z-val-select:focus {
+  border-color: var(--brand-500);
+  background-color: #ffffff;
+}
+
+.z-select-chevron {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 0.8rem;
+  color: var(--ink-500);
+}
+
+.z-val-help {
+  font-size: 0.75rem;
+  color: var(--ink-500);
+  margin-top: 0.4rem;
+}
+
+.z-pill-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.z-pill-grid.sm-cols-2 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .z-pill-grid.sm-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.z-pill-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.z-choice-btn {
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid var(--sand-200);
+  background: #ffffff;
+  color: var(--ink-700);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.z-choice-btn:hover {
+  border-color: var(--brand-300);
+}
+
+.z-choice-btn.active {
+  border-color: var(--brand-700);
+  background-color: var(--brand-50);
+  color: var(--brand-700);
+  font-weight: 700;
+}
+
+/* ─── Right Sticky Result Sidebar ────────────────────────── */
+.z-val-sidebar {
+  position: sticky;
+  top: 6rem;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.z-val-result-card {
+  background-color: var(--brand-950);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  color: #ffffff;
+  box-shadow: var(--shadow-lift);
+}
+
+.z-val-result-header {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+}
+
+.z-val-result-amount {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-top: 0.5rem;
+}
+
+.z-val-result-range {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 0.35rem;
+}
+
+.z-val-meter {
+  height: 0.5rem;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  margin-top: 1.25rem;
+}
+
+.z-val-meter-fill {
+  height: 100%;
+  width: 65%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(to right, var(--brand-400), var(--gold-400));
+}
+
+.z-val-metrics {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  font-size: 0.875rem;
+}
+
+.z-val-metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.z-val-metric-row dt {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.z-val-metric-row dd {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.z-val-notice {
+  margin-top: 1.25rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.z-val-visit-btn {
+  margin-top: 1.25rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--gold-500);
+  color: var(--brand-950);
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.z-val-visit-btn:hover {
+  background-color: var(--gold-400);
+}
+
+.z-val-sell-banner {
+  background: #ffffff;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--transition-fast);
+  display: block;
+}
+
+.z-val-sell-banner:hover {
+  border-color: var(--brand-400);
+}
+
+.z-val-sell-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--brand-700);
+  margin-top: 0.75rem;
+}
+
+/* ─── Modal ───────────────────────────────────────────────── */
+.z-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 35, 30, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.z-modal-content {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  max-width: 480px;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+}
+
+.z-modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--ink-500);
+  cursor: pointer;
+}
+
+.z-input {
+  width: 100%;
+  height: 2.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--sand-200);
+  background-color: var(--sand-50);
+  padding: 0 0.85rem;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.z-input:focus {
+  border-color: var(--brand-700);
+  background: #ffffff;
+}
+
+.z-modal-submit-btn {
+  width: 100%;
+  margin-top: 1.25rem;
+  background: var(--brand-700);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.z-modal-submit-btn:hover {
+  background: var(--brand-800);
+}

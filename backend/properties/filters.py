@@ -14,12 +14,22 @@ class PropertyFilter(django_filters.FilterSet):
     min_bedrooms = django_filters.NumberFilter(field_name='bedrooms', lookup_expr='gte')
     city = django_filters.CharFilter(lookup_expr='icontains')
     state = django_filters.CharFilter(lookup_expr='icontains')
+    listing_type = django_filters.CharFilter(method='filter_listing_type')
+
+    def filter_listing_type(self, queryset, name, value):
+        if not value:
+            return queryset
+        val = str(value).lower()
+        if val in ['buy', 'sale']:
+            return queryset.filter(listing_type='sale')
+        if val == 'rent':
+            return queryset.filter(listing_type='rent')
+        return queryset.filter(listing_type=val)
 
     class Meta:
         model = Property
         fields = [
             'property_type',
-            'listing_type',
             'status',
             'city',
             'state',

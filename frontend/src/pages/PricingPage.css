@@ -1,0 +1,348 @@
+/* ─── PricingPage.css ───────────────────────────────────────── */
+.z-pricing-page {
+  background-color: var(--sand-50);
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.z-pricing-hero {
+  background-color: var(--brand-950);
+  color: #ffffff;
+  padding: 3.5rem 0 5rem 0;
+}
+
+.z-pricing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: #ffffff;
+}
+
+.z-pricing-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  max-width: 42rem;
+  margin: 0 auto;
+  line-height: 1.15;
+}
+
+.z-pricing-hero__sub {
+  margin: 0.85rem auto 0 auto;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 38rem;
+  line-height: 1.6;
+}
+
+.z-billing-toggle {
+  margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+}
+
+.z-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: var(--radius-xs);
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.z-toggle-btn.active {
+  background-color: #ffffff;
+  color: var(--brand-950);
+}
+
+.z-toggle-pill {
+  background-color: var(--gold-500);
+  color: var(--brand-950);
+  border-radius: var(--radius-full);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+/* ─── Cards Grid ─────────────────────────────────────────── */
+.z-pricing-container {
+  margin-top: -2.5rem;
+}
+
+.z-pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .z-pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .z-pricing-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.z-tier-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.z-tier-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+
+.z-tier-card--popular {
+  border-color: var(--brand-700);
+  box-shadow: 0 12px 30px -8px rgba(11, 93, 78, 0.2);
+  outline: 2px solid var(--brand-700);
+}
+
+.z-tier-popular-tag {
+  position: absolute;
+  top: -0.75rem;
+  left: 1.5rem;
+  background-color: var(--brand-700);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.z-tier-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ink-900);
+}
+
+.z-tier-sub {
+  font-size: 0.8rem;
+  color: var(--ink-500);
+  margin-top: 0.35rem;
+  min-height: 2.4rem;
+  line-height: 1.4;
+}
+
+.z-tier-price-wrap {
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.z-tier-price {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--ink-900);
+  letter-spacing: -0.02em;
+}
+
+.z-tier-period {
+  font-size: 0.85rem;
+  color: var(--ink-500);
+  font-weight: 500;
+}
+
+.z-tier-highlight {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--brand-700);
+  margin-top: 0.25rem;
+}
+
+.z-tier-features {
+  margin-top: 1.5rem;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.z-tier-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--ink-700);
+  line-height: 1.45;
+}
+
+.z-tier-check-icon {
+  color: var(--brand-600);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.z-tier-cta {
+  margin-top: 1.75rem;
+  display: block;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.z-tier-cta--primary {
+  background-color: var(--brand-700);
+  color: #ffffff;
+}
+
+.z-tier-cta--primary:hover {
+  background-color: var(--brand-800);
+  color: #ffffff;
+}
+
+.z-tier-cta--outline {
+  border: 1px solid var(--sand-200);
+  color: var(--ink-700);
+  background: #ffffff;
+}
+
+.z-tier-cta--outline:hover {
+  border-color: var(--brand-300);
+  color: var(--brand-700);
+}
+
+.z-pricing-footnote {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ink-500);
+  margin-top: 1.75rem;
+}
+
+/* ─── FAQ Grid ───────────────────────────────────────────── */
+.z-pricing-faq-sec {
+  margin-top: 4.5rem;
+}
+
+.z-pricing-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .z-pricing-faq-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.z-pricing-faq-card {
+  background: #ffffff;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.z-pricing-faq-q {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink-900);
+}
+
+.z-pricing-faq-a {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ink-500);
+}
+
+/* ─── Demo CTA Banner ────────────────────────────────────── */
+.z-pricing-cta-sec {
+  margin-top: 4.5rem;
+}
+
+.z-pricing-demo-box {
+  background: linear-gradient(135deg, var(--brand-800), var(--brand-950));
+  border-radius: var(--radius-xl);
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+@media (min-width: 640px) {
+  .z-pricing-demo-box {
+    padding: 4rem 2rem;
+  }
+}
+
+.z-pricing-demo-title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: #ffffff;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.z-pricing-demo-sub {
+  margin: 0.85rem auto 0 auto;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 32rem;
+}
+
+.z-pricing-demo-btn {
+  display: inline-block;
+  margin-top: 1.75rem;
+  background-color: var(--gold-500);
+  color: var(--brand-950);
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 0.85rem 2rem;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.z-pricing-demo-btn:hover {
+  background-color: var(--gold-400);
+  color: var(--brand-950);
+}
+
+.z-pricing-demo-trust {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}

@@ -18,6 +18,7 @@ import MortgageCalculator from '../components/MortgageCalculator';
 import NeighborhoodMap from '../components/NeighborhoodMap';
 import PriceHistorySection from '../components/PriceHistorySection';
 
+import { PRESTIGE_PROPERTIES } from '../data/propertiesData';
 import './PropertyDetailPage.css';
 
 export default function PropertyDetailPage() {
@@ -50,7 +51,9 @@ export default function PropertyDetailPage() {
       try {
         const res = await propertiesApi.getById(id);
         setProperty(res.data);
-        setIsFav(res.data.is_favorited || false);
+        const stored = JSON.parse(localStorage.getItem('zennor_saved_homes') || '[]');
+        const isStored = stored.some(item => String(item.id) === String(res.data.id));
+        setIsFav(Boolean(res.data.is_favorited || isStored));
         setFavId(res.data.favorite_id || null);
         setInquiry(prev => ({
           ...prev,
@@ -60,8 +63,46 @@ export default function PropertyDetailPage() {
           message: `I am interested in ${res.data.title} (${res.data.city}). Please contact me with more information.`,
         }));
       } catch (err) {
-        toast.error('Could not load property details.');
-        navigate('/properties');
+        const found = PRESTIGE_PROPERTIES.find(p => p.id === id || p.slug === id);
+        if (found) {
+          const adapted = {
+            ...found,
+            id: found.id,
+            property_type_display: found.kind.charAt(0).toUpperCase() + found.kind.slice(1),
+            listing_type: found.listingType === 'buy' ? 'sale' : 'rent',
+            area_sqft: found.sqft,
+            bedrooms: found.beds,
+            bathrooms: found.baths,
+            garage: found.parking,
+            parking_spaces: found.parking,
+            year_built: found.yearBuilt,
+            primary_image: found.images[0],
+            primary_image_url: found.images[0],
+            images: found.images.map((img, i) => ({ id: i, image_url: img, is_primary: i === 0 })),
+            agent: {
+              id: 1,
+              full_name: found.developer || 'Zennor Premier Agent',
+              phone: '+880 9612-345678',
+              email: 'concierge@zennor.com.bd',
+              profile_image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80',
+              rating: '4.95'
+            }
+          };
+          setProperty(adapted);
+          const stored = JSON.parse(localStorage.getItem('zennor_saved_homes') || '[]');
+          const isStored = stored.some(item => String(item.id) === String(found.id));
+          setIsFav(isStored);
+          setInquiry(prev => ({
+            ...prev,
+            name: user?.full_name || prev.name,
+            email: user?.email || prev.email,
+            phone: user?.phone || prev.phone,
+            message: `I am interested in ${found.title} (${found.city}). Please contact me with more information.`
+          }));
+        } else {
+          toast.error('Could not load property details.');
+          navigate('/search?type=rent');
+        }
       } finally {
         setLoading(false);
       }
@@ -70,24 +111,57 @@ export default function PropertyDetailPage() {
   }, [id, navigate, user]);
 
   const handleFavorite = async () => {
-    if (!isAuthenticated) {
-      toast.error('Please log in to save properties.');
-      navigate('/login');
-      return;
-    }
+    if (!property) return;
     setFavLoading(true);
     try {
-      if (isFav && favId) {
-        await favoritesApi.remove(favId);
+      const stored = JSON.parse(localStorage.getItem('zennor_saved_homes') || '[]');
+      const isCurrentlySaved = isFav || stored.some(item => String(item.id) === String(property.id));
+
+      let updated;
+      if (isCurrentlySaved) {
+        updated = stored.filter(item => String(item.id) !== String(property.id));
         setIsFav(false);
-        setFavId(null);
+        if (isAuthenticated && favId) {
+          try {
+            await favoritesApi.remove(favId);
+            setFavId(null);
+          } catch {
+            // fallback gracefully
+          }
+        }
         toast.success('Removed from saved homes.');
       } else {
-        const res = await favoritesApi.add(property.id);
+        const cleanItem = {
+          id: property.id,
+          title: property.title,
+          price: property.price,
+          listing_type: property.listing_type || 'sale',
+          property_type: property.property_type || 'apartment',
+          city: property.city || 'Dhaka',
+          address: property.address || '',
+          bedrooms: property.bedrooms || 0,
+          bathrooms: property.bathrooms || 0,
+          area_sqft: property.area_sqft || 0,
+          garage: property.garage ?? property.parking_spaces ?? 0,
+          primary_image: property.primary_image_url || property.primary_image || property.images?.[0]?.image_url || property.images?.[0]?.image || '',
+          primary_image_url: property.primary_image_url || property.primary_image || property.images?.[0]?.image_url || property.images?.[0]?.image || '',
+        };
+        updated = [cleanItem, ...stored.filter(item => String(item.id) !== String(property.id))];
         setIsFav(true);
-        setFavId(res.data.id);
+        if (isAuthenticated) {
+          try {
+            const res = await favoritesApi.add(property.id);
+            if (res.data?.id) setFavId(res.data.id);
+          } catch {
+            // fallback gracefully
+          }
+        }
         toast.success('Saved to your homes!');
       }
+
+      localStorage.setItem('zennor_saved_homes', JSON.stringify(updated));
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('savedHomesUpdated', { detail: updated }));
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -380,9 +454,9 @@ export default function PropertyDetailPage() {
                   )}
                 </div>
                 <div className="pd-agent-meta">
-                  <strong>{property.agent?.full_name || 'Prestige Realty Agent'}</strong>
+                  <strong>{property.agent?.full_name || 'Zennor Premier Agent'}</strong>
                   <span className="pd-agent-badge">Licensed Broker</span>
-                  <span className="pd-agent-company">Prestige Realty Bangladesh</span>
+                  <span className="pd-agent-company">Zennor Real Estate Bangladesh</span>
                 </div>
               </div>
 

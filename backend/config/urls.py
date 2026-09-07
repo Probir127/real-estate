@@ -10,23 +10,24 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-admin.site.site_header = "PrestigeRealty Control Center"
-admin.site.site_title = "PrestigeRealty Admin"
-admin.site.index_title = "Real Estate Platform Administration"
+admin.site.site_header = "Zennor Control Center"
+admin.site.site_title = "Zennor Admin"
+admin.site.index_title = "Zennor Real Estate Administration"
 
 from django.http import JsonResponse
 
 def root_api_status(request):
     return JsonResponse({
         "status": "online",
-        "name": "PrestigeRealty API",
+        "name": "Zennor API",
         "version": "1.0.0",
         "admin": "/admin/",
         "endpoints": {
             "properties": "/api/properties/",
             "auth": "/api/auth/",
             "favorites": "/api/favorites/",
-            "inquiries": "/api/inquiries/"
+            "inquiries": "/api/inquiries/",
+            "chat": "/api/chat/"
         }
     })
 
@@ -45,6 +46,10 @@ urlpatterns = [
 
     # Inquiries: /api/inquiries/, /api/inquiries/received/, /api/inquiries/<id>/read/
     path('api/inquiries/', include('inquiries.urls')),
+
+    # AI Chatbot: /api/chat/ and /api/chatbot/
+    path('api/chat/', include('chatbot.urls')),
+    path('api/chatbot/', include('chatbot.urls')),
 ]
 
 from django.urls import re_path

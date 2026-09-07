@@ -1,91 +1,125 @@
 import { Link } from 'react-router-dom';
 import {
-  FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube
+  FaPhoneAlt, FaEnvelope, FaMapMarkerAlt,
+  FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube
 } from 'react-icons/fa';
 import './Footer.css';
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
     <footer className="z-footer">
-      <div className="container z-footer__container">
+      <div className="container-page z-footer__top">
+        <div className="z-footer__grid">
+          {/* Brand Info */}
+          <div className="z-footer__brand-col">
+            <Link to="/" className="z-footer__brand">
+              <span className="z-footer-logo-box">
+                <svg viewBox="0 0 24 24" className="z-footer-logo-svg" aria-hidden="true">
+                  <path d="M4 11.2 12 4.5l8 6.7V20a1 1 0 0 1-1 1h-4.6v-5.1H9.6V21H5a1 1 0 0 1-1-1z" fill="#ffffff" />
+                  <path d="M12 4.5 20 11.2V20a1 1 0 0 1-1 1h-4.6v-5.1H12z" fill="#e6b95c" />
+                </svg>
+              </span>
+              <span className="z-footer-brand-text">
+                <span className="z-footer-brand-name">
+                  Zennor<span className="text-gold-500">.</span>
+                </span>
+                <span className="z-footer-brand-sub">BANGLADESH</span>
+              </span>
+            </Link>
 
-        {/* ── Top Navigation Links (Zillow Style) ─── */}
-        <nav className="z-footer__nav">
-          <ul className="z-footer__links-row">
-            <li><Link to="/properties?type=sale">Buy</Link></li>
-            <li><Link to="/properties?type=rent">Rent</Link></li>
-            <li><Link to="/properties">All Homes</Link></li>
-            <li><Link to="/properties/new">List Property</Link></li>
-            <li><Link to="/favorites">Saved Homes</Link></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Research</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Help & Support</a></li>
-            <li><a href="#">Advertise</a></li>
-            <li><a href="#">Fair Housing Guide</a></li>
-            <li><a href="#">Terms of Use</a></li>
-            <li><a href="#">Privacy Notice</a></li>
-            <li><a href="#">Cookie Preference</a></li>
-          </ul>
-        </nav>
+            <p className="z-footer__motto">
+              Bangladesh’s property marketplace, built for how people here actually buy and rent.
+            </p>
 
-        {/* ── Real Estate Brands Row ─────────────── */}
-        <div className="z-footer__brands">
-          <span className="z-footer__brands-title">Prestige Real Estate Network:</span>
-          <div className="z-footer__brands-list">
-            <span>Dhaka Prime</span>
-            <span>Chittagong Bay Living</span>
-            <span>Sylhet Green Estates</span>
-            <span>Cox's Bazar Coastal</span>
-          </div>
-        </div>
+            <div className="z-footer__contacts">
+              <a href="tel:+8809612345678" className="z-footer__contact-item">
+                <FaPhoneAlt className="text-gold-400" />
+                <span>+880 9612-345678</span>
+              </a>
+              <a href="mailto:hello@zennor.com.bd" className="z-footer__contact-item">
+                <FaEnvelope className="text-gold-400" />
+                <span>hello@zennor.com.bd</span>
+              </a>
+              <p className="z-footer__contact-item">
+                <FaMapMarkerAlt className="text-gold-400 mt-0.5 shrink-0" />
+                <span>Level 7, Gulshan Avenue, Gulshan 1, Dhaka 1212</span>
+              </p>
+            </div>
 
-        {/* ── Mission & Accessibility Statement ──── */}
-        <div className="z-footer__disclaimer">
-          <p>
-            Prestige Realty Bangladesh is committed to ensuring digital accessibility for individuals with disabilities. We are continuously working to improve the accessibility of our web experience for everyone, and we welcome feedback and accommodation requests.
-          </p>
-          <p>
-            Prestige Realty, Inc. holds licensed real estate brokerage credentials across all divisions in Bangladesh. Equal Housing Opportunity. All data is deemed reliable but is not guaranteed accurate by Prestige Realty.
-          </p>
-        </div>
-
-        {/* ── App Store Badges ───────────────────── */}
-        <div className="z-footer__app-badges">
-          <img
-            src="https://www.zillowstatic.com/s3/pfs/static/app-store-badge.svg"
-            alt="Download on the App Store"
-            height="32"
-          />
-          <img
-            src="https://www.zillowstatic.com/s3/pfs/static/google-play-badge.svg"
-            alt="Get it on Google Play"
-            height="32"
-          />
-        </div>
-
-        {/* ── Bottom Bar: Copyright & Equal Housing ─ */}
-        <div className="z-footer__bottom">
-          <div className="z-footer__brand-copy">
-            <span className="z-footer__brand-text">
-              Prestige<strong style={{ color: '#006AFF' }}>Realty</strong>
-            </span>
-            <span className="z-footer__copyright">
-              © 2006–{year} Prestige Realty Inc. All rights reserved.
-            </span>
+            <div className="z-footer__socials">
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
+                <FaFacebookF />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
+                <FaInstagram />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <FaLinkedinIn />
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube">
+                <FaYoutube />
+              </a>
+            </div>
           </div>
 
-          <div className="z-footer__socials">
-            <a href="#" aria-label="Facebook"><FaFacebook /></a>
-            <a href="#" aria-label="Instagram"><FaInstagram /></a>
-            <a href="#" aria-label="Twitter"><FaTwitter /></a>
-            <a href="#" aria-label="LinkedIn"><FaLinkedin /></a>
-            <a href="#" aria-label="YouTube"><FaYoutube /></a>
+          {/* Col 1: Buy */}
+          <div className="z-footer__links-col">
+            <h3>Buy</h3>
+            <ul>
+              <li><Link to="/search?type=buy&kind=apartment">Apartments for sale</Link></li>
+              <li><Link to="/search?type=buy&kind=land">Land &amp; plots</Link></li>
+              <li><Link to="/search?type=buy&kind=house">Duplex &amp; houses</Link></li>
+              <li><Link to="/search?type=buy&status=under-construction">New projects</Link></li>
+              <li><Link to="/loan">Home loan calculator</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 2: Rent */}
+          <div className="z-footer__links-col">
+            <h3>Rent</h3>
+            <ul>
+              <li><Link to="/search?type=rent&kind=apartment">Flats for rent</Link></li>
+              <li><Link to="/search?type=rent&kind=office">Office space</Link></li>
+              <li><Link to="/search?type=rent&kind=commercial">Commercial space</Link></li>
+              <li><Link to="/search?type=rent&amenity=furnished">Furnished homes</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 3: Sell & list */}
+          <div className="z-footer__links-col">
+            <h3>Sell &amp; list</h3>
+            <ul>
+              <li><Link to="/sell">Post a property</Link></li>
+              <li><Link to="/valuation">What is my property worth?</Link></li>
+              <li><Link to="/pricing">Plans for agents</Link></li>
+              <li><Link to="/dashboard">Agent dashboard</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 4: Popular areas */}
+          <div className="z-footer__links-col">
+            <h3>Popular areas</h3>
+            <ul>
+              <li><Link to="/search?q=Gulshan">Gulshan</Link></li>
+              <li><Link to="/search?q=Banani">Banani</Link></li>
+              <li><Link to="/search?q=Dhanmondi">Dhanmondi</Link></li>
+              <li><Link to="/search?q=Uttara">Uttara</Link></li>
+              <li><Link to="/search?q=Bashundhara">Bashundhara R/A</Link></li>
+              <li><Link to="/search?q=Mirpur">Mirpur DOHS</Link></li>
+            </ul>
           </div>
         </div>
+      </div>
 
+      {/* Bottom Bar */}
+      <div className="container-page z-footer__bottom">
+        <p>© 2026 Zennor Bangladesh Ltd. All rights reserved.</p>
+        <div className="z-footer__legal">
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Trust &amp; safety</a>
+          <a href="#">Careers</a>
+        </div>
       </div>
     </footer>
   );

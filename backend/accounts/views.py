@@ -139,7 +139,7 @@ class ChangePasswordView(APIView):
 class SetupAdminView(APIView):
     """
     GET /api/auth/setup-admin/
-    Ensures superuser admin@realestate.com and seeds properties on demand.
+    Ensures superuser admin@zennor.com (and admin@realestate.com) and seeds properties on demand.
     """
     permission_classes = [AllowAny]
 
@@ -147,23 +147,38 @@ class SetupAdminView(APIView):
         from .models import User
         from django.core.management import call_command
 
+        # Ensure admin@zennor.com
         user, created = User.objects.get_or_create(
-            email='admin@realestate.com',
+            email='admin@zennor.com',
             defaults={
-                'full_name': 'Prestige Admin',
+                'full_name': 'Zennor Admin',
                 'is_agent': True,
                 'is_staff': True,
                 'is_superuser': True,
                 'is_active': True,
             }
         )
-        user.full_name = 'Prestige Admin'
+        user.full_name = 'Zennor Admin'
         user.is_agent = True
         user.is_staff = True
         user.is_superuser = True
         user.is_active = True
         user.set_password('Admin1234!')
         user.save()
+
+        # Also maintain admin@realestate.com for backwards compatibility
+        legacy_user, _ = User.objects.get_or_create(
+            email='admin@realestate.com',
+            defaults={
+                'full_name': 'Zennor Admin',
+                'is_agent': True,
+                'is_staff': True,
+                'is_superuser': True,
+                'is_active': True,
+            }
+        )
+        legacy_user.set_password('Admin1234!')
+        legacy_user.save()
 
         try:
             call_command('seed_bangladesh_properties')
@@ -173,9 +188,9 @@ class SetupAdminView(APIView):
 
         return Response({
             'success': True,
-            'message': 'Superuser admin@realestate.com set up successfully!',
+            'message': 'Superuser admin@zennor.com set up successfully!',
             'credentials': {
-                'email': 'admin@realestate.com',
+                'email': 'admin@zennor.com',
                 'password': 'Admin1234!'
             },
             'seeded_properties': seeded

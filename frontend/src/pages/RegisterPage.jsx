@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaLock, FaUser, FaPhone, FaEye, FaEyeSlash, FaBuilding, FaHome } from 'react-icons/fa';
@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import './AuthPages.css';
 
 export default function RegisterPage() {
-  const { register } = useAuth();
+  const { register, login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -22,10 +22,20 @@ export default function RegisterPage() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.full_name || !form.email || !form.password) {
       toast.error('Please fill in all required fields.');
+      return;
+    }
+    if (form.password.length < 8) {
+      toast.error('Password must be at least 8 characters.');
       return;
     }
     if (form.password !== form.password2) {
@@ -35,8 +45,13 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(form);
-      toast.success('Account created! Please sign in.');
-      navigate('/login');
+      toast.success('Account created! Welcome to Zennor.');
+      try {
+        await login({ email: form.email, password: form.password });
+        navigate('/', { replace: true });
+      } catch {
+        navigate('/login');
+      }
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -63,9 +78,9 @@ export default function RegisterPage() {
             <div className="z-auth-brand__icon">
               <FaHome />
             </div>
-            <span>Prestige<strong>Realty</strong></span>
+            <span>Zennor<strong>.</strong></span>
           </div>
-          <h1 className="z-auth-title">Welcome to Prestige Realty</h1>
+          <h1 className="z-auth-title">Welcome to Zennor</h1>
         </div>
 
         {/* Tab Switcher: Sign In | New Account */}
@@ -167,7 +182,7 @@ export default function RegisterPage() {
 
         {/* Legal notice */}
         <p className="z-legal-notice">
-          By submitting, I accept Prestige Realty's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+          By submitting, I accept Zennor's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
         </p>
 
       </motion.div>
