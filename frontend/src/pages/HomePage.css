@@ -101,147 +101,209 @@
   margin-bottom: 2rem;
 }
 
-/* Console / Search Box - Floating Glassmorphic Design */
+/* Console / Search Box - Ultra-Floating Glassmorphic Luxury Design */
 .hp-console {
-  background: rgba(255, 255, 255, 0.22);
-  border-radius: 1.5rem;
-  padding: 0.85rem 1rem 1rem;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transition: all 0.3s ease;
+  background: rgba(12, 38, 32, 0.45);
+  border-radius: 1.75rem;
+  padding: 1rem 1.25rem 1.25rem;
+  box-shadow: 
+    0 24px 60px -12px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hp-console:hover {
-  background: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 30px 70px -12px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45);
 }
 
 .hp-console__tabs {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.85rem;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 0.95rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .hp-console__tab {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.45rem 1.15rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 0.45rem 1.2rem;
   border-radius: 999px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
   transition: all 0.2s ease;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
 }
 
 .hp-console__tab:hover {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .hp-console__tab.active {
   background: #0b5d4e;
-  border-color: #0b5d4e;
+  border-color: #1f9779;
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(11, 93, 78, 0.4);
+  box-shadow: 0 4px 14px rgba(11, 93, 78, 0.5);
 }
 
-.hp-console__form {
+/* Floating White Unified Search Capsule */
+.hp-console__bar {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 1.15rem;
+  padding: 0.45rem 0.55rem 0.45rem 1.1rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  transition: all 0.25s ease;
+}
+
+.hp-console__bar:focus-within {
+  box-shadow: 0 12px 36px rgba(11, 93, 78, 0.28), 0 0 0 2px #0b5d4e;
+}
+
+.hp-console__cell {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  flex-wrap: wrap;
+  padding: 0.35rem 0.65rem;
 }
 
-.hp-console__field {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 1rem;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
-}
-
-.hp-console__field:focus-within {
-  background: #ffffff;
-  box-shadow: 0 4px 14px rgba(11, 93, 78, 0.18);
-  border-color: #0b5d4e;
-}
-
-.hp-console__field--grow {
+.hp-console__cell--location {
   flex: 1 1 260px;
 }
 
-.hp-console__field--select {
-  position: relative;
-  min-width: 140px;
+.hp-console__cell--type {
+  flex: 0 1 180px;
 }
 
-.hp-console__icon {
-  width: 18px;
-  height: 18px;
+.hp-console__cell-icon {
+  font-size: 18px;
   color: #0b5d4e;
   flex-shrink: 0;
 }
 
-.hp-console__input {
+.hp-console__cell-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.hp-console__cell-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #788c85;
+  margin-bottom: 2px;
+}
+
+.hp-console__cell-input {
   width: 100%;
   border: none;
   background: transparent;
   font-size: 0.95rem;
-  color: #14231f;
+  font-weight: 600;
+  color: #0c1a16;
   outline: none;
 }
 
-.hp-console__input::placeholder {
-  color: #7b8e87;
+.hp-console__cell-input::placeholder {
+  color: #9eb0aa;
+  font-weight: 400;
 }
 
-.hp-console__select {
+.hp-console__divider {
+  width: 1px;
+  height: 34px;
+  background-color: #e2ebe8;
+  margin: 0 0.4rem;
+  flex-shrink: 0;
+}
+
+.hp-console__select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.hp-console__cell-select {
+  width: 100%;
   border: none;
   background: transparent;
-  font-size: 0.9rem;
+  font-size: 0.925rem;
   font-weight: 600;
-  color: #14231f;
+  color: #0c1a16;
   outline: none;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  padding-right: 1.5rem;
-  width: 100%;
+  padding-right: 1.4rem;
 }
 
-.hp-console__select-arrow {
+.hp-console__cell-arrow {
   position: absolute;
-  right: 0.85rem;
+  right: 0;
   pointer-events: none;
   font-size: 11px;
   color: #556963;
 }
 
-.hp-console__btn {
+.hp-console__submit-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  background: linear-gradient(135deg, #0b5d4e 0%, #084338 100%);
+  justify-content: center;
+  gap: 0.55rem;
+  background: linear-gradient(135deg, #0b5d4e 0%, #074136 100%);
   color: #ffffff;
   border: none;
-  padding: 0.75rem 1.65rem;
-  border-radius: 0.75rem;
+  padding: 0.85rem 1.85rem;
+  border-radius: 0.95rem;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 14px rgba(11, 93, 78, 0.35);
-  margin-left: auto;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(11, 93, 78, 0.4);
+  flex-shrink: 0;
+}
+
+.hp-console__submit-btn:hover {
+  background: linear-gradient(135deg, #0d6d5c 0%, #094d40 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(11, 93, 78, 0.5);
+}
+
+.hp-console__submit-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 680px) {
+  .hp-console__bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.85rem;
+    gap: 0.65rem;
+  }
+  .hp-console__divider {
+    display: none;
+  }
+  .hp-console__submit-btn {
+    width: 100%;
+    margin-top: 0.25rem;
+  }
 }
 
 .hp-console__btn:hover {

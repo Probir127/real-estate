@@ -348,41 +348,51 @@ export default function HomePage() {
                 </button>
               </div>
 
-              <form className="hp-console__form" onSubmit={handleSearch}>
-                {/* Search query input */}
-                <div className="hp-console__field hp-console__field--grow">
-                  <FaMapMarkerAlt className="hp-console__icon" />
-                  <input
-                    type="text"
-                    placeholder="Try “Gulshan”, “Uttara Sector 7” or “Bashundhara”"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="hp-console__input"
-                    aria-label="Location search"
-                  />
+              <form className="hp-console__bar" onSubmit={handleSearch}>
+                {/* Location query input */}
+                <div className="hp-console__cell hp-console__cell--location">
+                  <FaMapMarkerAlt className="hp-console__cell-icon" />
+                  <div className="hp-console__cell-content">
+                    <label className="hp-console__cell-label">Location</label>
+                    <input
+                      type="text"
+                      placeholder="Try “Gulshan”, “Uttara” or “Banani”"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="hp-console__cell-input"
+                      aria-label="Location search"
+                    />
+                  </div>
                 </div>
 
+                <div className="hp-console__divider" />
+
                 {/* Property type dropdown */}
-                <div className="hp-console__field hp-console__field--select">
-                  <select
-                    className="hp-console__select"
-                    value={propType}
-                    onChange={(e) => setPropType(e.target.value)}
-                    aria-label="Property type"
-                  >
-                    <option value="">Any type</option>
-                    <option value="apartment">Apartment</option>
-                    <option value="duplex">Duplex</option>
-                    <option value="house">House</option>
-                    <option value="land">Land / plot</option>
-                    <option value="commercial">Commercial</option>
-                    <option value="office">Office</option>
-                  </select>
-                  <FaChevronDown className="hp-console__select-arrow" />
+                <div className="hp-console__cell hp-console__cell--type">
+                  <div className="hp-console__cell-content">
+                    <label className="hp-console__cell-label">Property Type</label>
+                    <div className="hp-console__select-wrap">
+                      <select
+                        className="hp-console__cell-select"
+                        value={propType}
+                        onChange={(e) => setPropType(e.target.value)}
+                        aria-label="Property type"
+                      >
+                        <option value="">Any type</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="duplex">Duplex</option>
+                        <option value="house">House</option>
+                        <option value="land">Land / plot</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="office">Office</option>
+                      </select>
+                      <FaChevronDown className="hp-console__cell-arrow" />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Submit button */}
-                <button type="submit" className="hp-console__btn">
+                <button type="submit" className="hp-console__submit-btn">
                   <FaSearch />
                   <span>Search</span>
                 </button>
