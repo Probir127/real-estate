@@ -20,13 +20,14 @@
 /* ══════════════════ 1. HERO ══════════════════ */
 .hp-hero {
   position: relative;
-  min-height: 600px;
+  min-height: 560px;
   background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&auto=format&fit=crop&q=85');
   background-size: cover;
   background-position: center 35%;
   display: flex;
-  align-items: center;
-  padding: 5rem 1.5rem 6rem;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 4rem 0 9rem;
 }
 
 .hp-hero__overlay {
@@ -42,6 +43,10 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
+  padding: 0 1.5rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .hp-hero__content {
@@ -101,26 +106,34 @@
   margin-bottom: 2rem;
 }
 
-/* Console / Search Box - Ultra-Floating Glassmorphic Luxury Design */
+/* ── Floating Console Wrapper ────────────────────────────────── */
+.hp-console-float-wrap {
+  position: relative;
+  z-index: 20;
+  margin-top: -5rem;
+  padding: 0 1.5rem 0;
+}
+
+/* Console / Search Box - Dark Glassmorphic Floating Card */
 .hp-console {
-  background: rgba(12, 38, 32, 0.45);
-  border-radius: 1.75rem;
-  padding: 1rem 1.25rem 1.25rem;
-  box-shadow: 
-    0 24px 60px -12px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.22),
-    inset 0 1px 1px rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(10, 33, 27, 0.55);
+  border-radius: 1.5rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow:
+    0 24px 60px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hp-console:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    0 30px 70px -12px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(255, 255, 255, 0.35),
-    inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 30px 80px -12px rgba(4, 35, 30, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(11, 93, 78, 0.12);
 }
 
 .hp-console__tabs {
@@ -128,17 +141,17 @@
   gap: 0.5rem;
   margin-bottom: 0.95rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .hp-console__tab {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0.45rem 1.2rem;
   border-radius: 999px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.88);
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
@@ -147,14 +160,14 @@
 .hp-console__tab:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .hp-console__tab.active {
   background: #0b5d4e;
-  border-color: #1f9779;
+  border-color: #1a8a72;
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(11, 93, 78, 0.5);
+  box-shadow: 0 4px 14px rgba(11, 93, 78, 0.55);
 }
 
 /* Floating White Unified Search Capsule */
@@ -345,11 +358,11 @@
   border-color: #e6b95c;
 }
 
-/* ══════════════════ 2. TRUST STATS ══════════════════ */
+/* ══════════════════ TRUST STATS ══════════════════ */
 .hp-stats {
+  padding: 5rem 0 3rem;
   background: #ffffff;
   border-bottom: 1px solid var(--sand-200, #e3eae7);
-  padding: 2.25rem 0;
 }
 
 .hp-stats__grid {

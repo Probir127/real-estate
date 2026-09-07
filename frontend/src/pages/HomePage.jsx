@@ -315,89 +315,8 @@ export default function HomePage() {
               Verified flats, plots and commercial space across Dhaka, Chattogram and Sylhet — with real prices, real papers and agents who answer.
             </p>
 
-            {/* Search Console */}
-            <div className="hp-console">
-              <div className="hp-console__tabs">
-                <button
-                  type="button"
-                  className={`hp-console__tab ${searchTab === 'buy' ? 'active' : ''}`}
-                  onClick={() => handleTabClick('buy')}
-                >
-                  Buy
-                </button>
-                <button
-                  type="button"
-                  className={`hp-console__tab ${searchTab === 'rent' ? 'active' : ''}`}
-                  onClick={() => handleTabClick('rent')}
-                >
-                  Rent
-                </button>
-                <button
-                  type="button"
-                  className="hp-console__tab"
-                  onClick={() => handleTabClick('sell')}
-                >
-                  Sell
-                </button>
-                <button
-                  type="button"
-                  className="hp-console__tab"
-                  onClick={() => handleTabClick('loan')}
-                >
-                  Home loan
-                </button>
-              </div>
+            {/* Search Console - floated out */}
 
-              <form className="hp-console__bar" onSubmit={handleSearch}>
-                {/* Location query input */}
-                <div className="hp-console__cell hp-console__cell--location">
-                  <FaMapMarkerAlt className="hp-console__cell-icon" />
-                  <div className="hp-console__cell-content">
-                    <label className="hp-console__cell-label">Location</label>
-                    <input
-                      type="text"
-                      placeholder="Try “Gulshan”, “Uttara” or “Banani”"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="hp-console__cell-input"
-                      aria-label="Location search"
-                    />
-                  </div>
-                </div>
-
-                <div className="hp-console__divider" />
-
-                {/* Property type dropdown */}
-                <div className="hp-console__cell hp-console__cell--type">
-                  <div className="hp-console__cell-content">
-                    <label className="hp-console__cell-label">Property Type</label>
-                    <div className="hp-console__select-wrap">
-                      <select
-                        className="hp-console__cell-select"
-                        value={propType}
-                        onChange={(e) => setPropType(e.target.value)}
-                        aria-label="Property type"
-                      >
-                        <option value="">Any type</option>
-                        <option value="apartment">Apartment</option>
-                        <option value="duplex">Duplex</option>
-                        <option value="house">House</option>
-                        <option value="land">Land / plot</option>
-                        <option value="commercial">Commercial</option>
-                        <option value="office">Office</option>
-                      </select>
-                      <FaChevronDown className="hp-console__cell-arrow" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Submit button */}
-                <button type="submit" className="hp-console__submit-btn">
-                  <FaSearch />
-                  <span>Search</span>
-                </button>
-              </form>
-            </div>
 
             {/* Popular quick links */}
             <div className="hp-hero__areas">
@@ -422,6 +341,48 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+
+      {/* ── Floating Search Console ── */}
+      <div className="hp-console-float-wrap">
+        <div className="hp-wrap">
+          <div className="hp-console">
+            <div className="hp-console__tabs">
+              <button type="button" className={`hp-console__tab ${searchTab === 'buy' ? 'active' : ''}`} onClick={() => handleTabClick('buy')}>Buy</button>
+              <button type="button" className={`hp-console__tab ${searchTab === 'rent' ? 'active' : ''}`} onClick={() => handleTabClick('rent')}>Rent</button>
+              <button type="button" className="hp-console__tab" onClick={() => handleTabClick('sell')}>Sell</button>
+              <button type="button" className="hp-console__tab" onClick={() => handleTabClick('loan')}>Home loan</button>
+            </div>
+            <form className="hp-console__bar" onSubmit={handleSearch}>
+              <div className="hp-console__cell hp-console__cell--location">
+                <FaMapMarkerAlt className="hp-console__cell-icon" />
+                <div className="hp-console__cell-content">
+                  <label className="hp-console__cell-label">Location</label>
+                  <input type="text" placeholder='Try “Gulshan”, “Uttara” or “Banani”' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="hp-console__cell-input" aria-label="Location search" />
+                </div>
+              </div>
+              <div className="hp-console__divider" />
+              <div className="hp-console__cell hp-console__cell--type">
+                <div className="hp-console__cell-content">
+                  <label className="hp-console__cell-label">Property Type</label>
+                  <div className="hp-console__select-wrap">
+                    <select className="hp-console__cell-select" value={propType} onChange={(e) => setPropType(e.target.value)} aria-label="Property type">
+                      <option value="">Any type</option>
+                      <option value="apartment">Apartment</option>
+                      <option value="duplex">Duplex</option>
+                      <option value="house">House</option>
+                      <option value="land">Land / plot</option>
+                      <option value="commercial">Commercial</option>
+                      <option value="office">Office</option>
+                    </select>
+                    <FaChevronDown className="hp-console__cell-arrow" />
+                  </div>
+                </div>
+              </div>
+              <button type="submit" className="hp-console__submit-btn"><FaSearch /><span>Search</span></button>
+            </form>
+          </div>
+        </div>
+      </div>
 
       {/* ══════════════════ 2. TRUST STATS BAR ══════════════════ */}
       <section className="hp-stats">
