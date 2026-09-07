@@ -239,6 +239,10 @@
   border-top-right-radius: 4px;
 }
 
+.z-chat-msg.user .z-chat-msg__content p {
+  color: #ffffff !important;
+}
+
 .z-chat-msg__content p {
   margin: 0;
   white-space: pre-wrap;
