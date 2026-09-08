@@ -20,14 +20,13 @@
 /* ══════════════════ 1. HERO ══════════════════ */
 .hp-hero {
   position: relative;
-  min-height: 560px;
+  min-height: 600px;
   background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&auto=format&fit=crop&q=85');
   background-size: cover;
   background-position: center 35%;
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding: 4rem 0 9rem;
+  align-items: center;
+  padding: 5rem 1.5rem 6rem;
 }
 
 .hp-hero__overlay {
@@ -43,10 +42,6 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1.5rem;
-  flex: 1;
-  display: flex;
-  align-items: center;
 }
 
 .hp-hero__content {
@@ -106,34 +101,66 @@
   margin-bottom: 2rem;
 }
 
-/* ── Floating Console Wrapper ────────────────────────────────── */
-.hp-console-float-wrap {
-  position: relative;
-  z-index: 20;
-  margin-top: -5rem;
-  padding: 0 1.5rem 0;
+/* ── Console Slot & Scroll-Floating Search ── */
+.hp-console-slot {
+  width: 100%;
 }
 
-/* Console / Search Box - Dark Glassmorphic Floating Card */
+.hp-console-slot--floating {
+  min-height: 140px;
+}
+
+/* Console / Search Box - Ultra-Floating Glassmorphic Luxury Design */
 .hp-console {
-  background: rgba(10, 33, 27, 0.55);
-  border-radius: 1.5rem;
-  padding: 1.25rem 1.5rem 1.5rem;
-  box-shadow:
-    0 24px 60px -12px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.18),
-    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  background: rgba(12, 38, 32, 0.45);
+  border-radius: 1.75rem;
+  padding: 1rem 1.25rem 1.25rem;
+  box-shadow: 
+    0 24px 60px -12px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* When user scrolls past hero, this exact console floats smoothly at the top */
+.hp-console.hp-console--floating {
+  position: fixed;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2rem);
+  max-width: 960px;
+  z-index: 95;
+  padding: 0.85rem 1.25rem 0.95rem;
+  background: rgba(10, 33, 27, 0.92);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow:
+    0 24px 50px -10px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 0 30px rgba(11, 93, 78, 0.4);
+  animation: hpConsoleFloatIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes hpConsoleFloatIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
 }
 
 .hp-console:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 30px 80px -12px rgba(4, 35, 30, 0.4),
-    0 12px 32px rgba(0, 0, 0, 0.12),
-    0 0 0 1px rgba(11, 93, 78, 0.12);
+  box-shadow: 
+    0 30px 70px -12px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45);
 }
 
 .hp-console__tabs {
@@ -141,17 +168,17 @@
   gap: 0.5rem;
   margin-bottom: 0.95rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .hp-console__tab {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   padding: 0.45rem 1.2rem;
   border-radius: 999px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
@@ -160,14 +187,14 @@
 .hp-console__tab:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .hp-console__tab.active {
   background: #0b5d4e;
-  border-color: #1a8a72;
+  border-color: #1f9779;
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(11, 93, 78, 0.55);
+  box-shadow: 0 4px 14px rgba(11, 93, 78, 0.5);
 }
 
 /* Floating White Unified Search Capsule */
@@ -671,7 +698,7 @@
 .hp-area-card__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(12, 26, 22, 0.1) 0%, rgba(12, 26, 22, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(12, 26, 22, 0.15) 0%, rgba(12, 26, 22, 0.6) 50%, rgba(12, 26, 22, 0.94) 100%);
 }
 
 .hp-area-card__body {
@@ -679,31 +706,60 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1.25rem;
+  padding: 1.15rem;
   z-index: 2;
 }
 
-.hp-area-card__tag {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #e6b95c;
-  margin-bottom: 0.25rem;
+.hp-area-card__header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
 }
 
 .hp-area-card__name {
-  color: #ffffff;
-  font-size: 1.25rem;
+  color: #ffffff !important;
+  font-size: 1.15rem;
   font-weight: 700;
   margin: 0;
+  line-height: 1.25;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-.hp-area-card__count {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.825rem;
+.hp-area-card__location {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 0.775rem;
+  margin: 0.2rem 0 0;
+  font-weight: 500;
+}
+
+.hp-area-card__trend {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.hp-area-card__stats-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.85) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 0.4rem;
   margin-top: 0.25rem;
+}
+
+.hp-area-card__stats-row b {
+  color: #ffffff !important;
+  font-weight: 700;
 }
 
 /* ══════════════════ 5. SMART TOOLS ══════════════════ */
@@ -788,35 +844,46 @@
 }
 
 .hp-step {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid #e1ece7;
   border-radius: 1.25rem;
-  padding: 2rem 1.75rem;
+  padding: 2.25rem 1.75rem;
   position: relative;
+  box-shadow: 0 4px 16px rgba(11, 93, 78, 0.04);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
-.hp-step__num {
+.hp-step:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px -6px rgba(11, 93, 78, 0.12);
+  border-color: #0b5d4e;
+}
+
+.hp-step__num-bg {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  color: #e6b95c;
-  margin-bottom: 0.75rem;
+  color: rgba(11, 93, 78, 0.12);
 }
 
 .hp-step__icon {
-  font-size: 1.8rem;
-  margin-bottom: 0.75rem;
+  font-size: 2rem;
+  color: #0b5d4e;
+  margin-bottom: 0.95rem;
 }
 
 .hp-step__title {
-  color: #ffffff;
+  color: #0c1a16;
   font-size: 1.15rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .hp-step__desc {
-  color: rgba(255, 255, 255, 0.75);
+  color: #556963;
   font-size: 0.9rem;
   line-height: 1.6;
 }
