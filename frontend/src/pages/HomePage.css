@@ -1138,6 +1138,150 @@
 }
 
 /* ══════════════════ 10. CTA BANNER ══════════════════ */
+.hp-banner-dev {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  border-radius: 1.75rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0c1a16 0%, #0a332a 60%, #0b5d4e 100%);
+  box-shadow: 0 24px 60px rgba(11, 45, 38, 0.25);
+  overflow: hidden;
+}
+
+.hp-banner-dev__content {
+  min-width: 0;
+}
+
+.hp-banner-dev__pill {
+  display: inline-flex;
+  color: #e6b95c;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hp-banner-dev__title {
+  margin: 0.65rem 0 1rem;
+  color: #ffffff;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+  line-height: 1.15;
+}
+
+.hp-banner-dev__desc {
+  max-width: 42rem;
+  margin: 0 0 1.25rem;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+}
+
+.hp-banner-dev__list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.9);
+  list-style: none;
+}
+
+.hp-banner-dev__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.hp-banner-dev__list svg {
+  flex: 0 0 auto;
+  margin-top: 0.25rem;
+  color: #34d399;
+}
+
+.hp-banner-dev__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hp-banner-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.75rem 1.15rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.hp-banner-btn:hover {
+  transform: translateY(-2px);
+}
+
+.hp-banner-btn--primary {
+  background: #e6b95c;
+  color: #0c1a16;
+}
+
+.hp-banner-btn--secondary {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.hp-banner-dev__visual {
+  min-width: 0;
+}
+
+.hp-banner-dev__img-wrap {
+  position: relative;
+}
+
+.hp-banner-dev__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.hp-banner-dev__stat-card {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  background: rgba(12, 26, 22, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+.hp-stat-card__label,
+.hp-stat-card__value {
+  margin: 0;
+}
+
+.hp-stat-card__label {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.75rem;
+}
+
+.hp-stat-card__value {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.hp-stat-card__change {
+  color: #34d399;
+  font-size: 0.75rem;
+}
+
 .hp-cta-banner {
   padding: 4rem 0 5rem;
   background-color: var(--sand-50, #f8faf9);
@@ -1270,6 +1414,14 @@
   .hp-cta-banner__fact {
     flex: 1;
   }
+
+  .hp-banner-dev {
+    grid-template-columns: 1fr;
+  }
+
+  .hp-banner-dev__visual {
+    max-width: 44rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1305,6 +1457,17 @@
   }
   .hp-cta-banner__right {
     flex-direction: column;
+  }
+
+  .hp-banner-dev {
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+  }
+
+  .hp-banner-dev__btns,
+  .hp-banner-btn {
+    width: 100%;
   }
 }
 

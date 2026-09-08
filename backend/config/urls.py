@@ -57,6 +57,7 @@ urlpatterns = [
     path('api/chat/', include('chatbot.urls')),
     path('api/chatbot/', include('chatbot.urls')),
     path('api/payments/', include('payments.urls')),
+    path('api/homepage/', include('homepage.urls')),
 ]
 
 from django.views.static import serve

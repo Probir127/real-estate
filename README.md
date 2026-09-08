@@ -85,6 +85,15 @@ python manage.py runserver
 Backend runs at: **http://localhost:8000**
 Admin panel: **http://localhost:8000/admin/**
 
+### Dynamic homepage content
+
+Homepage sections can be managed from **Admin → Homepage content** and are served
+through `GET /api/homepage/`. The React homepage uses the managed JSON content
+when present and keeps its existing design-safe defaults if the endpoint is
+temporarily unavailable. Content arrays support `areas`, `tools`, `steps`,
+`agents`, `testimonials`, and `stats`; icon values use names such as `chart`,
+`calculator`, `search`, `building`, and `handshake`.
+
 ---
 
 ### Frontend Setup

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'inquiries',
     'chatbot',
     'payments',
+    'homepage',
 ]
 
 MIDDLEWARE = [

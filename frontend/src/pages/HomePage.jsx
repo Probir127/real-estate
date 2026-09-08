@@ -6,7 +6,7 @@ import {
   FaShieldAlt, FaStar, FaPhone, FaCheckCircle, FaArrowRight,
   FaCalculator, FaChartLine, FaFileAlt, FaCheck, FaHandshake, FaChevronDown
 } from 'react-icons/fa';
-import { propertiesApi } from '../api/client';
+import { homepageApi, propertiesApi } from '../api/client';
 import { PRESTIGE_PROPERTIES } from '../data/propertiesData';
 import PropertyCard from '../components/PropertyCard';
 import './HomePage.css';
@@ -195,6 +195,25 @@ const STATS = [
   { value: '3,120+', label: 'Deals closed', icon: <FaHandshake /> },
 ];
 
+const ICONS = {
+  search: <FaSearch />,
+  shield: <FaShieldAlt />,
+  phone: <FaPhone />,
+  handshake: <FaHandshake />,
+  chart: <FaChartLine />,
+  calculator: <FaCalculator />,
+  file: <FaFileAlt />,
+  building: <FaBuilding />,
+  users: <FaUsers />,
+  location: <FaMapMarkerAlt />,
+};
+
+function withIcon(item) {
+  return item?.icon && typeof item.icon === 'string'
+    ? { ...item, icon: ICONS[item.icon] || null }
+    : item;
+}
+
 function normalizePropertyCardData(property, index = 0) {
   const listingType = property.listing_type || property.listingType || 'sale';
   const normalized = { ...property };
@@ -228,10 +247,18 @@ export default function HomePage() {
   const [propType, setPropType] = useState('');
   const [cityFilter, setCityFilter] = useState('all'); // 'all' | 'dhaka' | 'chattogram' | 'sylhet'
   const [listTypeFilter, setListTypeFilter] = useState('all'); // 'all' | 'sale' | 'rent'
+  const [homepageContent, setHomepageContent] = useState({});
 
   const [featuredProps, setFeaturedProps] = useState([]);
   const [rentProps, setRentProps] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const areas = homepageContent.areas?.length ? homepageContent.areas : AREAS;
+  const tools = homepageContent.tools?.length ? homepageContent.tools.map(withIcon) : TOOLS;
+  const steps = homepageContent.steps?.length ? homepageContent.steps.map(withIcon) : HOW_STEPS;
+  const agents = homepageContent.agents?.length ? homepageContent.agents : AGENTS;
+  const testimonials = homepageContent.testimonials?.length ? homepageContent.testimonials : TESTIMONIALS;
+  const stats = homepageContent.stats?.length ? homepageContent.stats.map(withIcon) : STATS;
 
   useEffect(() => {
     let isMounted = true;
@@ -241,9 +268,10 @@ export default function HomePage() {
 
     const fetchData = async () => {
       try {
-        const [featRes, rentRes] = await Promise.allSettled([
+        const [featRes, rentRes, contentRes] = await Promise.allSettled([
           propertiesApi.getFeatured(),
           propertiesApi.list({ listing_type: 'rent', page_size: 8 }),
+          homepageApi.getContent(),
         ]);
 
         let featList = [];
@@ -264,6 +292,9 @@ export default function HomePage() {
         }
 
         if (isMounted) {
+          if (contentRes.status === 'fulfilled' && contentRes.value?.data?.content) {
+            setHomepageContent(contentRes.value.data.content);
+          }
           const finalFeatured = featList.length ? featList : fallbackFeatured;
           setFeaturedProps(finalFeatured);
 
@@ -466,7 +497,7 @@ export default function HomePage() {
       <section className="hp-stats">
         <div className="hp-wrap">
           <div className="hp-stats__grid">
-            {STATS.map((s, i) => (
+            {stats.map((s, i) => (
               <div key={i} className="hp-stats__item">
                 <div className="hp-stats__icon-wrap">
                   {s.icon}
@@ -556,7 +587,7 @@ export default function HomePage() {
           </div>
 
           <div className="hp-areas-grid">
-            {AREAS.map((area, i) => (
+            {areas.map((area, i) => (
               <div
                 key={i}
                 className="hp-area-card"
@@ -595,7 +626,7 @@ export default function HomePage() {
         <div className="hp-wrap">
           <h2 className="hp-section__title">Tools that do the maths for you</h2>
           <div className="hp-tools-grid">
-            {TOOLS.map((t, i) => (
+            {tools.map((t, i) => (
               <Link key={i} to={t.link} className={`hp-tool-card hp-tool-card--${t.badgeColor}`}>
                 <span className="hp-tool-card__icon">{t.icon}</span>
                 <h3 className="hp-tool-card__title">{t.title}</h3>
@@ -652,7 +683,7 @@ export default function HomePage() {
         <div className="hp-wrap">
           <h2 className="hp-section__title">How Zennor works</h2>
           <div className="hp-steps-grid">
-            {HOW_STEPS.map((s, i) => (
+            {steps.map((s, i) => (
               <div key={i} className="hp-step">
                 <span className="hp-step__num-bg">{s.num}</span>
                 <div className="hp-step__icon">{s.icon}</div>
@@ -679,7 +710,7 @@ export default function HomePage() {
           </div>
 
           <div className="hp-agents-grid">
-            {AGENTS.map((ag, i) => (
+            {agents.map((ag, i) => (
               <article key={i} className="hp-agent-card">
                 <div className="hp-agent-card__top">
                   <img src={ag.img} alt={ag.name} className="hp-agent-card__avatar" loading="lazy" />
@@ -739,7 +770,7 @@ export default function HomePage() {
         <div className="hp-wrap">
           <h2 className="hp-section__title hp-section__title--white">What buyers say</h2>
           <div className="hp-testimonials-grid">
-            {TESTIMONIALS.map((t, i) => (
+            {testimonials.map((t, i) => (
               <figure key={i} className="hp-testimonial">
                 <span className="hp-testimonial__quote-mark">“</span>
                 <blockquote className="hp-testimonial__quote">

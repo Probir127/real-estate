@@ -137,6 +137,10 @@ export const propertiesApi = {
   deleteImage: (imageId) => api.delete(`/properties/images/${imageId}/`),
 };
 
+export const homepageApi = {
+  getContent: () => api.get('/homepage/'),
+};
+
 export const favoritesApi = {
   list: () => api.get('/favorites/'),
   add: (propertyId) => api.post('/favorites/', { property_id: propertyId }),
