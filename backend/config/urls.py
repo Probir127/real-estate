@@ -6,7 +6,7 @@ Django admin is at /admin/
 Media files are served in development only.
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -15,6 +15,7 @@ admin.site.site_title = "Zennor Admin"
 admin.site.index_title = "Zennor Real Estate Administration"
 
 from django.http import JsonResponse
+from django.shortcuts import redirect
 
 def root_api_status(request):
     return JsonResponse({
@@ -31,9 +32,14 @@ def root_api_status(request):
         }
     })
 
+def frontend_property_redirect(request, property_id):
+    """Keep direct property links usable when opened on the API host."""
+    return redirect(f'{settings.FRONTEND_APP_URL}/property/{property_id}/')
+
 urlpatterns = [
     path('', root_api_status, name='root_status'),
     path('admin/', admin.site.urls),
+    re_path(r'^property/(?P<property_id>[^/]+)/?$', frontend_property_redirect, name='frontend_property_redirect'),
 
     # Auth endpoints: /api/auth/register/, /api/auth/login/, etc.
     path('api/auth/', include('accounts.urls')),
@@ -50,9 +56,9 @@ urlpatterns = [
     # AI Chatbot: /api/chat/ and /api/chatbot/
     path('api/chat/', include('chatbot.urls')),
     path('api/chatbot/', include('chatbot.urls')),
+    path('api/payments/', include('payments.urls')),
 ]
 
-from django.urls import re_path
 from django.views.static import serve
 
 # Serve media files (uploaded images) in both development and production container environments

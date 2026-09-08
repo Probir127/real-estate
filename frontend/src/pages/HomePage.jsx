@@ -7,6 +7,7 @@ import {
   FaCalculator, FaChartLine, FaFileAlt, FaCheck, FaHandshake, FaChevronDown
 } from 'react-icons/fa';
 import { propertiesApi } from '../api/client';
+import { PRESTIGE_PROPERTIES } from '../data/propertiesData';
 import PropertyCard from '../components/PropertyCard';
 import './HomePage.css';
 
@@ -194,6 +195,32 @@ const STATS = [
   { value: '3,120+', label: 'Deals closed', icon: <FaHandshake /> },
 ];
 
+function normalizePropertyCardData(property, index = 0) {
+  const listingType = property.listing_type || property.listingType || 'sale';
+  const normalized = { ...property };
+
+  normalized.id = normalized.id ?? normalized.slug ?? `fallback-${index}`;
+  normalized.title = normalized.title || normalized.name || 'Featured property';
+  normalized.city = normalized.city || normalized.area || 'Dhaka';
+  normalized.price = Number(normalized.price ?? 0);
+  normalized.listing_type = listingType === 'rent' ? 'rent' : 'sale';
+  normalized.property_type = normalized.property_type || normalized.kind || normalized.propertyType || 'apartment';
+  normalized.property_type_display = normalized.property_type_display || normalized.propertyTypeDisplay || normalized.property_type || 'Apartment';
+  normalized.bedrooms = Number(normalized.bedrooms ?? normalized.beds ?? 0);
+  normalized.bathrooms = Number(normalized.bathrooms ?? normalized.baths ?? 0);
+  normalized.area_sqft = Number(normalized.area_sqft ?? normalized.sqft ?? 0);
+  normalized.garage = Number(normalized.garage ?? normalized.parking ?? 0);
+  normalized.primary_image_url = normalized.primary_image_url || normalized.primary_image || normalized.image || normalized.images?.[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80';
+  normalized.images = normalized.images || [normalized.primary_image_url];
+  normalized.is_featured = normalized.is_featured ?? normalized.featured ?? true;
+
+  return normalized;
+}
+
+function getStaticFallbackProperties() {
+  return PRESTIGE_PROPERTIES.map((property, index) => normalizePropertyCardData(property, index));
+}
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [searchTab, setSearchTab] = useState('buy'); // 'buy' | 'rent' | 'sell' | 'loan'
@@ -230,6 +257,10 @@ export default function HomePage() {
 
   useEffect(() => {
     let isMounted = true;
+    const fallbackProperties = getStaticFallbackProperties();
+    const fallbackFeatured = fallbackProperties.filter((property) => property.listing_type === 'sale').slice(0, 6);
+    const fallbackRent = fallbackProperties.filter((property) => property.listing_type === 'rent').slice(0, 4);
+
     const fetchData = async () => {
       try {
         const [featRes, rentRes] = await Promise.allSettled([
@@ -240,7 +271,7 @@ export default function HomePage() {
         let featList = [];
         if (featRes.status === 'fulfilled' && featRes.value?.data) {
           const data = featRes.value.data;
-          featList = data.results || (Array.isArray(data) ? data : []);
+          featList = (data.results || (Array.isArray(data) ? data : [])).map((property, index) => normalizePropertyCardData(property, index));
         }
 
         // If no featured returned from API, fetch initial general properties
@@ -248,24 +279,30 @@ export default function HomePage() {
           try {
             const fallbackRes = await propertiesApi.list({ page_size: 12 });
             const fbData = fallbackRes.data;
-            featList = fbData.results || (Array.isArray(fbData) ? fbData : []);
-          } catch (_) {}
+            featList = (fbData.results || (Array.isArray(fbData) ? fbData : [])).map((property, index) => normalizePropertyCardData(property, index));
+          } catch (_) {
+            featList = fallbackFeatured;
+          }
         }
 
         if (isMounted) {
-          setFeaturedProps(featList);
+          const finalFeatured = featList.length ? featList : fallbackFeatured;
+          setFeaturedProps(finalFeatured);
 
           if (rentRes.status === 'fulfilled' && rentRes.value?.data) {
             const rData = rentRes.value.data;
-            const rList = rData.results || (Array.isArray(rData) ? rData : []);
-            setRentProps(rList.slice(0, 4));
+            const rList = (rData.results || (Array.isArray(rData) ? rData : [])).map((property, index) => normalizePropertyCardData(property, index));
+            setRentProps(rList.length ? rList.slice(0, 4) : fallbackRent);
           } else {
-            // Filter rent from featList if available
-            setRentProps(featList.filter(p => p.listing_type === 'rent').slice(0, 4));
+            const rentList = (featList.filter(p => p.listing_type === 'rent').length ? featList.filter(p => p.listing_type === 'rent') : fallbackRent).slice(0, 4);
+            setRentProps(rentList);
           }
         }
       } catch (_) {
-        /* silent fallback */
+        if (isMounted) {
+          setFeaturedProps(fallbackFeatured);
+          setRentProps(fallbackRent);
+        }
       } finally {
         if (isMounted) setLoading(false);
       }

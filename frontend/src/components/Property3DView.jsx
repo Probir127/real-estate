@@ -58,6 +58,7 @@ export default function Property3DView({ property }) {
   const mountRef = useRef(null);
   const [floor, setFloor] = useState(1);
   const [daylight, setDaylight] = useState(true);
+  const [webglUnavailable, setWebglUnavailable] = useState(false);
   const floorData = FLOOR_LEVELS[floor];
 
   useEffect(() => {
@@ -70,7 +71,13 @@ export default function Property3DView({ property }) {
     const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
     camera.position.set(9, 8, 10);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      setWebglUnavailable(true);
+      return undefined;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -129,6 +136,20 @@ export default function Property3DView({ property }) {
       renderer.domElement.remove();
     };
   }, [property, floorData.height, daylight]);
+
+  if (webglUnavailable) {
+    return (
+      <section className="pd-3d-card pd-3d-card--unsupported" aria-label="Interactive 3D property layout">
+        <div className="pd-3d-card__header">
+          <div>
+            <p className="pd-3d-card__eyebrow"><FaCube /> Space planner</p>
+            <h2 className="pd-3d-card__title">3D layout unavailable</h2>
+            <p className="pd-3d-card__sub">Enable hardware acceleration or open this listing in a modern browser to view the interactive layout.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="pd-3d-card" aria-label="Interactive 3D property layout">

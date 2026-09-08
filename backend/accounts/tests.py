@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -91,6 +92,7 @@ class AccountsAPITests(APITestCase):
         user.refresh_from_db()
         self.assertTrue(user.check_password('NewPassword123!'))
 
+    @override_settings(DEBUG=True, ADMIN_SETUP_PASSWORD='Admin1234!')
     def test_setup_admin_view(self):
         response = self.client.get(self.setup_admin_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -99,7 +101,3 @@ class AccountsAPITests(APITestCase):
         self.assertTrue(admin_user.is_superuser)
         self.assertTrue(admin_user.is_staff)
         self.assertEqual(admin_user.full_name, 'Zennor Admin')
-
-        # Also verify legacy user exists
-        legacy_admin = User.objects.get(email='admin@realestate.com')
-        self.assertTrue(legacy_admin.is_superuser)

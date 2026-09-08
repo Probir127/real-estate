@@ -152,9 +152,9 @@ class ChatbotView(APIView):
         if not bot_reply:
             query = user_message.lower() if user_message else ""
             if "gulshan" in query or "duplex" in query:
-                bot_reply = "We have luxury duplexes and apartments in Gulshan 1 & 2 ranging from ৳ 3.5 Crore to ৳ 9.25 Crore. Each listing is verified against RAJUK papers."
+                bot_reply = "Zennor AI: We have luxury duplexes and apartments in Gulshan 1 & 2 ranging from ৳ 3.5 Crore to ৳ 9.25 Crore. Each listing is verified against RAJUK papers."
             elif "rent" in query:
-                bot_reply = "We have verified rental flats across Dhaka starting from ৳ 28,000/month in Uttara up to ৳ 4.2 Lakh/month for commercial floors in Gulshan."
+                bot_reply = "Zennor AI: We have verified rental flats across Dhaka starting from ৳ 28,000/month in Uttara up to ৳ 4.2 Lakh/month for commercial floors in Gulshan."
             elif "mortgage" in query or "loan" in query or "emi" in query:
                 bot_reply = "Zennor provides an integrated Home Loan & EMI calculator. In Bangladesh, down payments are typically 20-30%, with partner banks (DBH, BRAC Bank, City Bank) offering rates around 9% - 10.5%."
             elif "price" in query or "crore" in query or "lakh" in query:

@@ -17,6 +17,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 
 from .serializers import (
     CustomTokenObtainPairSerializer,
@@ -147,9 +149,26 @@ class SetupAdminView(APIView):
         from .models import User
         from django.core.management import call_command
 
-        # Ensure admin@zennor.com
+        setup_token = request.headers.get('X-Admin-Setup-Token')
+        if not settings.DEBUG:
+            if not settings.ADMIN_SETUP_TOKEN:
+                raise ImproperlyConfigured(
+                    'ADMIN_SETUP_TOKEN must be configured before admin setup is enabled.'
+                )
+            if setup_token != settings.ADMIN_SETUP_TOKEN:
+                return Response(
+                    {'success': False, 'message': 'Admin setup is not authorized.'},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+        if not settings.ADMIN_SETUP_PASSWORD:
+            return Response(
+                {'success': False, 'message': 'ADMIN_SETUP_PASSWORD must be configured.'},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
         user, created = User.objects.get_or_create(
-            email='admin@zennor.com',
+            email=settings.ADMIN_SETUP_EMAIL,
             defaults={
                 'full_name': 'Zennor Admin',
                 'is_agent': True,
@@ -163,36 +182,14 @@ class SetupAdminView(APIView):
         user.is_staff = True
         user.is_superuser = True
         user.is_active = True
-        user.set_password('Admin1234!')
+        if created:
+            user.set_password(settings.ADMIN_SETUP_PASSWORD)
         user.save()
 
-        # Also maintain admin@realestate.com for backwards compatibility
-        legacy_user, _ = User.objects.get_or_create(
-            email='admin@realestate.com',
-            defaults={
-                'full_name': 'Zennor Admin',
-                'is_agent': True,
-                'is_staff': True,
-                'is_superuser': True,
-                'is_active': True,
-            }
-        )
-        legacy_user.set_password('Admin1234!')
-        legacy_user.save()
-
-        try:
-            call_command('seed_bangladesh_properties')
-            seeded = True
-        except Exception as e:
-            seeded = str(e)
+        call_command('seed_bangladesh_properties')
 
         return Response({
             'success': True,
-            'message': 'Superuser admin@zennor.com set up successfully!',
-            'credentials': {
-                'email': 'admin@zennor.com',
-                'password': 'Admin1234!'
-            },
-            'seeded_properties': seeded
+            'message': f'Superuser {settings.ADMIN_SETUP_EMAIL} is ready.',
+            'email': settings.ADMIN_SETUP_EMAIL,
         }, status=status.HTTP_200_OK)
-

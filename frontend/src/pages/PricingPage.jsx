@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaMagic, FaCheck, FaArrowRight } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import { paymentsApi } from '../api/client';
+import toast from 'react-hot-toast';
 import './PricingPage.css';
 
 const TIERS = [
@@ -109,6 +112,29 @@ const FAQS = [
 
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
+  const [checkoutPlan, setCheckoutPlan] = useState(null);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handlePlanClick = async (tier) => {
+    if (tier.id === 'starter') {
+      navigate('/sell');
+      return;
+    }
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: '/pricing' } } });
+      return;
+    }
+    setCheckoutPlan(tier.id);
+    try {
+      const response = await paymentsApi.checkout(tier.id, isYearly ? 'yearly' : 'monthly');
+      window.location.assign(response.data.checkout_url);
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Checkout is temporarily unavailable.');
+    } finally {
+      setCheckoutPlan(null);
+    }
+  };
 
   return (
     <div className="z-pricing-page">
@@ -179,12 +205,14 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Link
-                to={tier.link}
+              <button
+                type="button"
+                onClick={() => handlePlanClick(tier)}
+                disabled={checkoutPlan === tier.id}
                 className={`z-tier-cta ${tier.popular ? 'z-tier-cta--primary' : 'z-tier-cta--outline'}`}
               >
-                {tier.cta}
-              </Link>
+                {checkoutPlan === tier.id ? 'Opening checkout...' : tier.cta}
+              </button>
             </div>
           ))}
         </div>

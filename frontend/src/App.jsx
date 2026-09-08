@@ -1,36 +1,42 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import ChatbotWidget from './components/ChatbotWidget';
 
-// Pages — Public
-import HomePage from './pages/HomePage';
-import PropertiesPage from './pages/PropertiesPage';
-import PropertyDetailPage from './pages/PropertyDetailPage';
-import LoanPage from './pages/LoanPage';
-import ValuationPage from './pages/ValuationPage';
-import PricingPage from './pages/PricingPage';
-import AgentsPage from './pages/AgentsPage';
-import SellPage from './pages/SellPage';
-import SavedPage from './pages/SavedPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import NotFoundPage from './pages/NotFoundPage';
+const HomePage = lazy(() => import('./pages/HomePage'));
+const PropertiesPage = lazy(() => import('./pages/PropertiesPage'));
+const PropertyDetailPage = lazy(() => import('./pages/PropertyDetailPage'));
+const LoanPage = lazy(() => import('./pages/LoanPage'));
+const ValuationPage = lazy(() => import('./pages/ValuationPage'));
+const PricingPage = lazy(() => import('./pages/PricingPage'));
+const AgentsPage = lazy(() => import('./pages/AgentsPage'));
+const SellPage = lazy(() => import('./pages/SellPage'));
+const SavedPage = lazy(() => import('./pages/SavedPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const BillingResultPage = lazy(() => import('./pages/BillingResultPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const PropertyFormPage = lazy(() => import('./pages/PropertyFormPage'));
 
-// Pages — Authenticated
-import ProfilePage from './pages/ProfilePage';
-
-// Pages — Agent only
-import DashboardPage from './pages/DashboardPage';
-import PropertyFormPage from './pages/PropertyFormPage';
+function PageLoading() {
+  return (
+    <div className="loading-wrapper" style={{ minHeight: '60vh' }}>
+      <div className="spinner" aria-label="Loading page" />
+    </div>
+  );
+}
 
 export default function App() {
   return (
     <div className="z-app-layout">
       <Navbar />
       <div className="z-main-content-wrap">
-        <Routes>
+        <Suspense fallback={<PageLoading />}>
+          <Routes>
           {/* ── Public ────────────────────────────────────── */}
           <Route path="/" element={<HomePage />} />
           <Route path="/properties" element={<PropertiesPage />} />
@@ -40,13 +46,18 @@ export default function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/sell" element={<SellPage />} />
-          <Route path="/saved" element={<SavedPage />} />
-          <Route path="/favorites" element={<SavedPage />} />
+          <Route path="/saved" element={
+            <ProtectedRoute><SavedPage /></ProtectedRoute>
+          } />
+          <Route path="/favorites" element={
+            <ProtectedRoute><SavedPage /></ProtectedRoute>
+          } />
 
           <Route path="/properties/:id" element={<PropertyDetailPage />} />
           <Route path="/property/:id" element={<PropertyDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/billing/:result" element={<BillingResultPage />} />
 
           {/* ── Authenticated (any logged-in user) ────────── */}
           <Route path="/profile" element={
@@ -66,11 +77,11 @@ export default function App() {
 
           {/* ── 404 ───────────────────────────────────────── */}
           <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+          </Routes>
+        </Suspense>
         <Footer />
         <ChatbotWidget />
       </div>
     </div>
   );
 }
-

@@ -1,6 +1,6 @@
-# 🏡 Prestige Realty — Luxury Real Estate Platform
+# 🏡 Zennor — Luxury Real Estate Platform
 
-A production-ready, full-stack real estate platform built with **Django REST Framework** (backend) and **React + Vite** (frontend). Features a luxury navy & gold dark UI, Bangladesh BDT currency (Lakh & Crore notation), JWT authentication, property CRUD, sticky sidebar filters, favorites, agent inquiries, rate limiting, and a custom unified Django Admin Panel.
+A production-ready, full-stack real estate platform built with **Django REST Framework** (backend) and **React + Vite** (frontend). Features a luxury navy & gold dark UI, Bangladesh BDT currency (Lakh & Crore notation), JWT authentication, property CRUD, sticky sidebar filters, saved properties, agent inquiries, rate limiting, a Three.js space planner, and a custom unified Django Admin Panel.
 
 ---
 
@@ -117,7 +117,7 @@ Frontend runs at: **http://localhost:5173**
 | POST | `/auth/logout/` | Blacklist refresh token | Yes | — |
 | GET/PATCH | `/auth/profile/` | View/update profile | Yes | — |
 | POST | `/auth/change-password/` | Change password | Yes | — |
-| GET | `/auth/setup-admin/` | Initialize admin user & seed DB | No | — |
+| GET | `/auth/setup-admin/` | Initialize configured admin user & seed DB (local or token-protected) | Setup token | — |
 
 ### Properties — `/api/properties/`
 
@@ -149,6 +149,22 @@ Frontend runs at: **http://localhost:5173**
 | GET | `/inquiries/received/` | Agent's received inquiries | Agent | — |
 | PATCH | `/inquiries/{id}/read/` | Mark inquiry as read | Agent | — |
 
+### Subscription payments — `/api/payments/`
+
+Paid Agent, Agency, and Developer plans use SSLCommerz. The browser never receives
+the store credentials: the backend creates a pending order, starts the gateway
+session, and validates the returned transaction server-to-server before marking
+the order paid.
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/payments/checkout/` | Create an order and return the SSLCommerz checkout URL | Yes |
+| GET | `/payments/orders/` | List the current user's payment orders | Yes |
+| POST | `/payments/success/` | Gateway success callback | SSLCommerz |
+| POST | `/payments/fail/` | Gateway failure callback | SSLCommerz |
+| POST | `/payments/cancel/` | Gateway cancellation callback | SSLCommerz |
+| POST | `/payments/ipn/` | Server-to-server payment notification | SSLCommerz |
+
 ---
 
 ## 🔒 Security Features
@@ -177,7 +193,7 @@ Frontend runs at: **http://localhost:5173**
 | `/properties/:id` | PropertyDetailPage | Public |
 | `/login` | LoginPage | Public |
 | `/register` | RegisterPage | Public |
-| `/favorites` | FavoritesPage | Auth required |
+| `/saved`, `/favorites` | SavedPage | Auth required |
 | `/profile` | ProfilePage | Auth required |
 | `/dashboard` | DashboardPage | Agent only |
 | `/properties/new` | PropertyFormPage | Agent only |
@@ -202,11 +218,24 @@ DB_PORT=5432
 
 CORS_ALLOWED_ORIGINS=http://localhost:5173
 
+ADMIN_SETUP_TOKEN=long-random-bootstrap-token
+ADMIN_SETUP_EMAIL=admin@your-domain.com
+ADMIN_SETUP_PASSWORD=strong-random-admin-password
+
 JWT_ACCESS_TOKEN_LIFETIME_MINUTES=60
 JWT_REFRESH_TOKEN_LIFETIME_DAYS=7
 
 MEDIA_URL=/media/
 MEDIA_ROOT=media/
+
+SSLCOMMERZ_STORE_ID=your-store-id
+SSLCOMMERZ_STORE_PASSWORD=your-store-password
+SSLCOMMERZ_IS_SANDBOX=True
+SSLCOMMERZ_SUCCESS_URL=https://api.example.com/api/payments/success/
+SSLCOMMERZ_FAIL_URL=https://api.example.com/api/payments/fail/
+SSLCOMMERZ_CANCEL_URL=https://api.example.com/api/payments/cancel/
+SSLCOMMERZ_IPN_URL=https://api.example.com/api/payments/ipn/
+FRONTEND_APP_URL=https://www.example.com
 ```
 
 ### Frontend (`.env`)
@@ -228,6 +257,11 @@ VITE_API_BASE_URL=http://localhost:8000/api
 - [ ] Run `python manage.py collectstatic`
 - [ ] Use Gunicorn/uWSGI as WSGI server
 - [ ] Use `npm run build` for frontend static files
+- [ ] Confirm the frontend static service is deployed from `frontend/dist` and
+  that direct SPA routes such as `/property/9` rewrite to `/index.html`.
+- [ ] Verify mobile layouts at 320px, 375px, 768px, and 1024px widths; navigation,
+  forms, pricing checkout, maps, and the Three.js viewer include touch-safe
+  responsive behavior. Devices without WebGL receive an accessible fallback.
 
 ---
 

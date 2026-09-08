@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaBed, FaBath, FaRulerCombined, FaArrowRight } from 'react-icons/fa';
-import { propertiesApi } from '../api/client';
 import './SavedPage.css';
 
 export function formatBDT(amount) {
@@ -25,17 +24,7 @@ export default function SavedPage() {
       setLoading(true);
       try {
         const localSaved = JSON.parse(localStorage.getItem('zennor_saved_homes') || '[]');
-        if (localSaved.length > 0) {
-          setSavedItems(localSaved);
-        } else {
-          // Fetch default sample saved or featured to give user a great experience
-          const res = await propertiesApi.getFeatured().catch(() => null);
-          if (res?.data?.results?.length > 0) {
-            const firstTwo = res.data.results.slice(0, 2);
-            setSavedItems(firstTwo);
-            localStorage.setItem('zennor_saved_homes', JSON.stringify(firstTwo));
-          }
-        }
+        setSavedItems(Array.isArray(localSaved) ? localSaved : []);
       } catch {
         // fallback
       } finally {

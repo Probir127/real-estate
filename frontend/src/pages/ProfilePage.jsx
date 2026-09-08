@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { FaUser, FaEnvelope, FaPhone, FaCamera, FaSave, FaLock } from 'react-icons/fa'
 import { useAuth } from '../context/AuthContext'
 import { authApi, favoritesApi } from '../api/client'

@@ -4,13 +4,17 @@ Django Settings — Real Estate API
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
 SECRET_KEY = config('SECRET_KEY', default='change-me-in-production')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.onrender.com,testserver,*').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.onrender.com,testserver').split(',')
+
+if not DEBUG and SECRET_KEY == 'change-me-in-production':
+    raise ImproperlyConfigured('SECRET_KEY must be configured when DEBUG=False.')
 
 # Application definition
 INSTALLED_APPS = [
@@ -35,6 +39,7 @@ INSTALLED_APPS = [
     'favorites',
     'inquiries',
     'chatbot',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +128,7 @@ USE_TZ = True
 # Static & Media Files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
 MEDIA_URL = config('MEDIA_URL', default='/media/')
 MEDIA_ROOT = BASE_DIR / config('MEDIA_ROOT', default='media')
 
@@ -195,9 +200,6 @@ CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
     default='http://localhost:5173,http://127.0.0.1:5173'
 ).split(',')
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://.*\.onrender\.com$",
-]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']
 CORS_ALLOW_HEADERS = [
@@ -205,12 +207,36 @@ CORS_ALLOW_HEADERS = [
     'dnt', 'origin', 'user-agent', 'x-csrftoken', 'x-requested-with',
 ]
 
+# SSLCommerz subscription checkout. Keep these values server-side.
+SSLCOMMERZ_STORE_ID = config('SSLCOMMERZ_STORE_ID', default='')
+SSLCOMMERZ_STORE_PASSWORD = config('SSLCOMMERZ_STORE_PASSWORD', default='')
+SSLCOMMERZ_IS_SANDBOX = config('SSLCOMMERZ_IS_SANDBOX', default=True, cast=bool)
+SSLCOMMERZ_SUCCESS_URL = config('SSLCOMMERZ_SUCCESS_URL', default='')
+SSLCOMMERZ_FAIL_URL = config('SSLCOMMERZ_FAIL_URL', default='')
+SSLCOMMERZ_CANCEL_URL = config('SSLCOMMERZ_CANCEL_URL', default='')
+SSLCOMMERZ_IPN_URL = config('SSLCOMMERZ_IPN_URL', default='')
+FRONTEND_APP_URL = config('FRONTEND_APP_URL', default='http://localhost:5173').rstrip('/')
+
 # ─────────────────────────────────────────────────────────
 # Security Headers
 # ─────────────────────────────────────────────────────────
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
+
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=not DEBUG, cast=bool)
+SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000 if not DEBUG else 0, cast=int)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = config(
+    'SECURE_HSTS_INCLUDE_SUBDOMAINS', default=not DEBUG, cast=bool
+)
+SECURE_HSTS_PRELOAD = config('SECURE_HSTS_PRELOAD', default=not DEBUG, cast=bool)
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not DEBUG, cast=bool)
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not DEBUG, cast=bool)
+
+# Admin bootstrap is only available locally unless explicitly protected.
+ADMIN_SETUP_TOKEN = config('ADMIN_SETUP_TOKEN', default='')
+ADMIN_SETUP_EMAIL = config('ADMIN_SETUP_EMAIL', default='admin@zennor.com')
+ADMIN_SETUP_PASSWORD = config('ADMIN_SETUP_PASSWORD', default='')
 
 # In production, also set:
 # SECURE_SSL_REDIRECT = True

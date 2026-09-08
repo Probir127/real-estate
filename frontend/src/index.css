@@ -311,6 +311,48 @@ textarea::placeholder {
   padding-right: 1.25rem;
 }
 
+/* Keep the layout usable on narrow phones and safe-area devices. */
+@media (max-width: 639px) {
+  :root {
+    --navbar-height: 60px;
+  }
+
+  .container,
+  .container-page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .btn {
+    min-height: 44px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 16px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  a,
+  button,
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  .btn,
+  a.z-tier-cta {
+    min-height: 44px;
+  }
+}
+
 .shadow-card {
   box-shadow: 0 1px 3px 0 rgba(11, 93, 78, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
 }

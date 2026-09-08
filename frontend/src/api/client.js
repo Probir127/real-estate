@@ -3,8 +3,8 @@
  *
  * - Base URL from environment variable VITE_API_BASE_URL
  * - Attaches JWT access token from localStorage to every request
- * - Intercepts 401 responses → auto-refreshes token → retries original request
- * - On refresh failure → clears auth state and redirects to /login
+ * - Intercepts 401 responses and refreshes the access token once
+ * - Queues concurrent requests while a refresh is in progress
  */
 import axios from 'axios';
 
@@ -21,8 +21,6 @@ const api = axios.create({
   timeout: 15000,
 });
 
-// ─── Request Interceptor ─────────────────────────────────────────────────────
-// Attach the access token to every outgoing request
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('access_token');
@@ -34,8 +32,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ─── Response Interceptor ────────────────────────────────────────────────────
-// Handle 401 Unauthorized → try to refresh token → retry original request
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -54,54 +50,56 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const isAuthRequest = originalRequest?.url?.includes('/auth/');
 
-    // If 401 and not already retrying
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        // Queue this request until the token refresh resolves
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return api(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      const refreshToken = localStorage.getItem('refresh_token');
-
-      if (!refreshToken) {
-        // No refresh token — force logout
-        clearAuth();
-        window.location.href = '/login';
-        return Promise.reject(error);
-      }
-
-      try {
-        const response = await axios.post(`${API_BASE_URL}/auth/refresh/`, {
-          refresh: refreshToken,
-        });
-        const { access } = response.data;
-        localStorage.setItem('access_token', access);
-        api.defaults.headers.common.Authorization = `Bearer ${access}`;
-        processQueue(null, access);
-        originalRequest.headers.Authorization = `Bearer ${access}`;
-        return api(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError, null);
-        clearAuth();
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
+    if (
+      error.response?.status !== 401 ||
+      !originalRequest ||
+      originalRequest._retry ||
+      isAuthRequest
+    ) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      }).then((token) => {
+        originalRequest.headers.Authorization = `Bearer ${token}`;
+        return api(originalRequest);
+      });
+    }
+
+    originalRequest._retry = true;
+    isRefreshing = true;
+    const refreshToken = localStorage.getItem('refresh_token');
+
+    if (!refreshToken) {
+      isRefreshing = false;
+      processQueue(error);
+      clearAuth();
+      window.location.href = '/login';
+      return Promise.reject(error);
+    }
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/refresh/`, {
+        refresh: refreshToken,
+      });
+      const { access } = response.data;
+      localStorage.setItem('access_token', access);
+      api.defaults.headers.common.Authorization = `Bearer ${access}`;
+      processQueue(null, access);
+      originalRequest.headers.Authorization = `Bearer ${access}`;
+      return api(originalRequest);
+    } catch (refreshError) {
+      processQueue(refreshError);
+      clearAuth();
+      window.location.href = '/login';
+      return Promise.reject(refreshError);
+    } finally {
+      isRefreshing = false;
+    }
   }
 );
 
@@ -111,7 +109,6 @@ function clearAuth() {
   localStorage.removeItem('user');
 }
 
-// ─── Auth API ────────────────────────────────────────────────────────────────
 export const authApi = {
   login: (data) => api.post('/auth/login/', data),
   register: (data) => api.post('/auth/register/', data),
@@ -124,7 +121,6 @@ export const authApi = {
   changePassword: (data) => api.post('/auth/change-password/', data),
 };
 
-// ─── Properties API ──────────────────────────────────────────────────────────
 export const propertiesApi = {
   list: (params) => api.get('/properties/', { params }),
   getFeatured: () => api.get('/properties/featured/'),
@@ -141,23 +137,28 @@ export const propertiesApi = {
   deleteImage: (imageId) => api.delete(`/properties/images/${imageId}/`),
 };
 
-// ─── Favorites API ───────────────────────────────────────────────────────────
 export const favoritesApi = {
   list: () => api.get('/favorites/'),
   add: (propertyId) => api.post('/favorites/', { property_id: propertyId }),
   remove: (favoriteId) => api.delete(`/favorites/${favoriteId}/`),
 };
 
-// ─── Inquiries API ───────────────────────────────────────────────────────────
 export const inquiriesApi = {
   send: (data) => api.post('/inquiries/', data),
   getReceived: (params) => api.get('/inquiries/received/', { params }),
   markRead: (id) => api.patch(`/inquiries/${id}/read/`),
 };
 
-// ─── AI Chatbot API ──────────────────────────────────────────────────────────
 export const chatApi = {
   sendMessage: (message, messages = []) => api.post('/chat/', { message, messages }),
+};
+
+export const paymentsApi = {
+  checkout: (plan, billingCycle) => api.post('/payments/checkout/', {
+    plan,
+    billing_cycle: billingCycle,
+  }),
+  orders: () => api.get('/payments/orders/'),
 };
 
 export default api;
