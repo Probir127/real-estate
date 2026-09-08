@@ -512,7 +512,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .hp-console.hp-console--floating {
     position: static;
     width: calc(100% - 0.75rem);
