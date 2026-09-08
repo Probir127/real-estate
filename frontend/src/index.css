@@ -324,10 +324,25 @@ html[data-theme='dark'] .hp-city-tab,
 html[data-theme='dark'] .hp-feature-card,
 html[data-theme='dark'] .hp-testimonial-card,
 html[data-theme='dark'] .hp-news-card,
-html[data-theme='dark'] .hp-cta-card {
+html[data-theme='dark'] .hp-cta-card,
+html[data-theme='dark'] .hp-tool-card--brand,
+html[data-theme='dark'] .hp-tool-card--gold,
+html[data-theme='dark'] .hp-tool-card--ink,
+html[data-theme='dark'] .hp-step,
+html[data-theme='dark'] .hp-agent-card {
   background-color: var(--surface-control);
   border-color: var(--border-default);
   color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .hp-tool-card__title,
+html[data-theme='dark'] .hp-step__title {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .hp-tool-card__desc,
+html[data-theme='dark'] .hp-step__desc {
+  color: var(--text-muted);
 }
 
 html[data-theme='dark'] .hp-stats__item {

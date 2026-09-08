@@ -514,7 +514,12 @@
 
 @media (max-width: 900px) {
   .hp-console.hp-console--floating {
+    position: static;
     width: calc(100% - 0.75rem);
+    max-width: none;
+    transform: none;
+    animation: none;
+    margin: 0 auto;
   }
 
   .hp-console.hp-console--floating .hp-console__cell--type {
@@ -524,6 +529,10 @@
   .hp-console.hp-console--floating .hp-console__submit-btn {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  .hp-console-slot--floating {
+    min-height: 0;
   }
 }
 
