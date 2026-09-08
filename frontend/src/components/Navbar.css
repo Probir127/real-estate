@@ -9,10 +9,10 @@
   top: 0;
   z-index: 100;
   height: 64px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: color-mix(in srgb, var(--z-white) 95%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid #e3eae7;
+  border-bottom: 1px solid var(--z-gray-200);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -21,7 +21,7 @@
 }
 
 .z-nav--scrolled {
-  box-shadow: 0 4px 16px -2px rgba(11, 93, 78, 0.06);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.14);
 }
 
 .z-nav__container {
@@ -79,7 +79,7 @@
   font-family: var(--font-display, 'Outfit', sans-serif);
   font-size: 1.0625rem;
   font-weight: 700;
-  color: #0c1a16;
+  color: var(--z-darker);
   letter-spacing: -0.02em;
 }
 
@@ -92,7 +92,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #5b6b66;
+  color: var(--z-gray-500);
   margin-top: 0.1rem;
 }
 
@@ -114,7 +114,7 @@
   padding: 0.5rem 0.85rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #2b3a35;
+  color: var(--z-dark);
   border-radius: 0.5rem;
   text-decoration: none;
   transition: all 0.15s ease;
@@ -122,13 +122,13 @@
 }
 
 .z-nav-link:hover {
-  background-color: #f1f5f3;
-  color: #0b5d4e;
+  background-color: var(--z-gray-100);
+  color: var(--z-blue);
 }
 
 .z-nav-link.active {
-  background-color: #eefaf5;
-  color: #0b5d4e;
+  background-color: var(--z-blue-light);
+  color: var(--z-blue);
   font-weight: 600;
 }
 
@@ -148,10 +148,10 @@
   padding: 0.45rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  border: 1px solid #e3eae7;
-  background: #ffffff;
+  border: 1px solid var(--z-gray-200);
+  background: var(--z-white);
   border-radius: 0.5rem;
-  color: #2b3a35;
+  color: var(--z-dark);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -166,10 +166,10 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.45rem 0.7rem;
-  border: 1px solid #e3eae7;
-  background: #ffffff;
+  border: 1px solid var(--z-gray-200);
+  background: var(--z-white);
   border-radius: 0.5rem;
-  color: #2b3a35;
+  color: var(--z-dark);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -195,8 +195,8 @@
 }
 
 html[data-theme='dark'] .z-nav {
-  background-color: rgba(17, 26, 24, 0.95);
-  border-color: #263934;
+  background-color: var(--surface-nav);
+  border-color: var(--border-default);
 }
 
 html[data-theme='dark'] .z-nav-brand-name,
@@ -212,25 +212,83 @@ html[data-theme='dark'] .z-nav-lang-btn,
 html[data-theme='dark'] .z-nav-theme-btn,
 html[data-theme='dark'] .z-nav-saved-btn,
 html[data-theme='dark'] .z-nav__user-btn {
-  background: #182622;
-  border-color: #3b514b;
+  background: var(--z-white);
+  border-color: var(--sand-300);
 }
 
 html[data-theme='dark'] .z-nav-link:hover,
 html[data-theme='dark'] .z-nav-link.active {
-  background-color: #1d4d40;
-  color: #d6e5df;
+  background-color: var(--brand-50);
+  color: var(--brand-300);
 }
 
 html[data-theme='dark'] .z-nav__dropdown-menu,
 html[data-theme='dark'] .z-mobile-drawer {
-  background: #182622;
-  border-color: #3b514b;
+  background: var(--z-white);
+  border-color: var(--sand-300);
 }
 
 html[data-theme='dark'] .z-nav__dropdown-divider,
 html[data-theme='dark'] .z-mobile-theme-toggle {
-  border-color: #3b514b;
+  border-color: var(--sand-200);
+}
+
+/* Theme tokens keep every navigation surface in sync. */
+.z-nav,
+.z-nav-lang-btn,
+.z-nav-theme-btn,
+.z-nav-saved-btn,
+.z-nav__user-btn,
+.z-nav__dropdown-menu,
+.z-mobile-drawer {
+  border-color: var(--border-default);
+}
+
+.z-nav-lang-btn,
+.z-nav-theme-btn,
+.z-nav-saved-btn,
+.z-nav__user-btn,
+.z-nav__dropdown-menu,
+.z-mobile-drawer {
+  background-color: var(--surface-control);
+  color: var(--text-secondary);
+}
+
+.z-nav-link,
+.z-nav-signin-link,
+.z-nav__dropdown-item,
+.z-saved-heart-icon,
+.z-lang-icon,
+.z-nav__chevron {
+  color: var(--text-secondary);
+}
+
+.z-nav-link:hover,
+.z-nav-link.active,
+.z-nav__dropdown-item:hover {
+  background-color: var(--brand-50);
+  color: var(--accent);
+}
+
+.z-nav__dropdown-header strong {
+  color: var(--text-primary);
+}
+
+.z-nav__dropdown-header small,
+.z-nav-brand-sub,
+.z-lang-icon,
+.z-nav__chevron {
+  color: var(--text-muted);
+}
+
+.z-nav-post-cta,
+.z-saved-counter,
+.z-nav-logo-box {
+  background-color: var(--accent);
+}
+
+.z-nav-post-cta:hover {
+  background-color: var(--accent-hover);
 }
 
 .z-lang-icon {

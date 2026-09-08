@@ -1,9 +1,14 @@
 /* ─── Footer.css ───────────────────────────────────────────── */
 .z-footer {
   margin-top: 6rem;
-  background-color: var(--brand-950);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--surface-footer);
+  border-top: 1px solid var(--border-default);
   color: rgba(255, 255, 255, 0.8);
+}
+
+html[data-theme='dark'] .z-footer__links-col h3,
+html[data-theme='dark'] .z-footer-brand-name {
+  color: var(--text-primary);
 }
 
 .z-footer__top {

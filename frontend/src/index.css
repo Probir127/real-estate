@@ -58,6 +58,15 @@
   
   /* Focus Ring */
   --focus-ring: 0 0 0 3px rgba(11, 93, 78, 0.2);
+  --surface-nav: rgba(255, 255, 255, 0.95);
+  --surface-control: #ffffff;
+  --surface-footer: var(--brand-950);
+  --border-default: var(--sand-200);
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-700);
+  --text-muted: var(--ink-500);
+  --accent: var(--brand-700);
+  --accent-hover: var(--brand-800);
 
   /* Status Colors */
   --z-green: #10b981;
@@ -91,20 +100,46 @@
 }
 
 html[data-theme='dark'] {
-  --sand-50: #111a18;
-  --sand-100: #172320;
-  --sand-200: #263934;
-  --sand-300: #3b514b;
-  --ink-900: #f3faf7;
-  --ink-700: #d6e5df;
-  --ink-500: #9fb5ad;
-  --ink-300: #718b82;
-  --brand-50: #14382f;
-  --brand-100: #1d4d40;
-  --z-white: #182622;
-  --z-blue-subtle: #172320;
-  --z-green-light: #12352b;
-  --z-red-light: #3a1e22;
+  /* Neutral slate surfaces keep emerald and gold accents readable. */
+  --sand-50: #0b1220;
+  --sand-100: #111a2b;
+  --sand-200: #202d43;
+  --sand-300: #34445e;
+  --ink-900: #f8fafc;
+  --ink-700: #d7e0ee;
+  --ink-500: #a8b5c9;
+  --ink-300: #7788a3;
+  --brand-50: #12352e;
+  --brand-100: #1b5848;
+  --brand-300: #5bd7b0;
+  --brand-400: #35c59a;
+  --brand-500: #20a77e;
+  --brand-600: #168565;
+  --brand-700: #11634f;
+  --brand-800: #0d4d3f;
+  --z-white: #162238;
+  --z-blue-subtle: #111a2b;
+  --z-green-light: #12352e;
+  --z-red-light: #3c2028;
+  --z-dark: var(--ink-700);
+  --z-darker: var(--ink-900);
+  --z-gray-700: var(--ink-700);
+  --z-gray-500: var(--ink-500);
+  --z-gray-400: var(--ink-300);
+  --z-gray-300: var(--sand-300);
+  --z-gray-200: var(--sand-200);
+  --z-gray-100: var(--sand-100);
+  --z-gray-50: var(--sand-50);
+  --focus-ring: 0 0 0 3px rgba(91, 215, 176, 0.3);
+  --surface-nav: rgba(22, 34, 56, 0.94);
+  --surface-control: #162238;
+  --surface-footer: #08101d;
+  --border-default: #2b3b54;
+  --text-primary: #f8fafc;
+  --text-secondary: #d7e0ee;
+  --text-muted: #a8b5c9;
+  --accent: #5bd7b0;
+  --accent-hover: #35c59a;
   color-scheme: dark;
 }
 
@@ -140,6 +175,11 @@ html[data-theme='dark'] select,
 html[data-theme='dark'] textarea {
   background-color: var(--sand-100);
   color: var(--ink-900);
+  border-color: var(--sand-300);
+}
+
+html[data-theme='dark'] button:not(.z-nav-logo-box),
+html[data-theme='dark'] [role='button'] {
   border-color: var(--sand-300);
 }
 
@@ -195,6 +235,31 @@ html[data-theme='dark'] small,
 html[data-theme='dark'] .text-muted,
 html[data-theme='dark'] .z-form-help {
   color: var(--ink-500);
+}
+
+html[data-theme='dark'] a {
+  color: var(--brand-300);
+}
+
+html[data-theme='dark'] hr,
+html[data-theme='dark'] .divider {
+  border-color: var(--sand-200);
+  background-color: var(--sand-200);
+}
+
+html[data-theme='dark'] .btn-outline,
+html[data-theme='dark'] .btn-secondary,
+html[data-theme='dark'] .btn-outline-primary {
+  background-color: var(--z-white);
+  color: var(--ink-900);
+  border-color: var(--sand-300);
+}
+
+html[data-theme='dark'] .btn-outline:hover,
+html[data-theme='dark'] .btn-secondary:hover,
+html[data-theme='dark'] .btn-outline-primary:hover {
+  background-color: var(--sand-200);
+  color: var(--ink-900);
 }
 
 a {
