@@ -203,10 +203,22 @@ export default function HomePage() {
   const [listTypeFilter, setListTypeFilter] = useState('all'); // 'all' | 'sale' | 'rent'
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // When scrolling past hero content (~450px), this exact search console floats
+  // Smooth hysteresis scroll detection for floating search (enters at 480px, exits at 360px)
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 450);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentY = window.scrollY;
+          setIsScrolled((prev) => {
+            if (!prev && currentY > 480) return true;
+            if (prev && currentY < 360) return false;
+            return prev;
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
