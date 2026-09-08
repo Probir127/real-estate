@@ -228,28 +228,6 @@ export default function HomePage() {
   const [propType, setPropType] = useState('');
   const [cityFilter, setCityFilter] = useState('all'); // 'all' | 'dhaka' | 'chattogram' | 'sylhet'
   const [listTypeFilter, setListTypeFilter] = useState('all'); // 'all' | 'sale' | 'rent'
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // Smooth hysteresis scroll detection for floating search (enters at 480px, exits at 360px)
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentY = window.scrollY;
-          setIsScrolled((prev) => {
-            if (!prev && currentY > 480) return true;
-            if (prev && currentY < 360) return false;
-            return prev;
-          });
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const [featuredProps, setFeaturedProps] = useState([]);
   const [rentProps, setRentProps] = useState([]);
@@ -349,7 +327,7 @@ export default function HomePage() {
   }, [featuredProps, cityFilter, listTypeFilter]);
 
   return (
-    <div className={`hp ${isScrolled ? 'hp--console-floating' : ''}`}>
+    <div className="hp">
 
       {/* ══════════════════ 1. HERO ══════════════════ */}
       <section className="hp-hero">
@@ -374,9 +352,8 @@ export default function HomePage() {
               Verified flats, plots and commercial space across Dhaka, Chattogram and Sylhet — with real prices, real papers and agents who answer.
             </p>
 
-            {/* Search Console - original console floats while scrolling */}
-            <div className={`hp-console-slot ${isScrolled ? 'hp-console-slot--floating' : ''}`}>
-              <div className={`hp-console ${isScrolled ? 'hp-console--floating' : ''}`}>
+            <div className="hp-console-slot">
+              <div className="hp-console">
                 <div className="hp-console__tabs">
                   <button
                     type="button"
@@ -505,7 +482,7 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════ 3. FEATURED PROPERTIES ══════════════════ */}
-      <section className={`hp-section hp-section--white hp-section--featured ${isScrolled ? 'hp-section--console-clearance' : ''}`}>
+      <section className="hp-section hp-section--white hp-section--featured">
         <div className="hp-wrap">
           <div className="hp-section__head">
             <div>
@@ -829,4 +806,3 @@ export default function HomePage() {
     </div>
   );
 }
-

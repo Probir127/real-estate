@@ -144,10 +144,7 @@
 /* ── Console Slot & Scroll-Floating Search ── */
 .hp-console-slot {
   width: 100%;
-}
-
-.hp-console-slot--floating {
-  min-height: 140px;
+  container-type: inline-size;
 }
 
 /* Console / Search Box - Ultra-Floating Glassmorphic Luxury Design */
@@ -162,79 +159,6 @@
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* When user scrolls past hero, this exact console floats smoothly at the top with sleek transparent glass effect */
-.hp-console.hp-console--floating {
-  position: static;
-  width: 100%;
-  max-width: none;
-  transform: none;
-  padding: 0.55rem 0.85rem 0.65rem;
-  border-radius: 1.25rem;
-  background: rgba(10, 33, 27, 0.52);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  box-shadow:
-    0 16px 40px -8px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.2),
-    inset 0 1px 1px rgba(255, 255, 255, 0.25);
-  animation: none;
-  transition: background 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hp-console.hp-console--floating .hp-console__tabs {
-  margin-bottom: 0.35rem;
-  padding-bottom: 0.3rem;
-  gap: 0.35rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.hp-console.hp-console--floating .hp-console__tab {
-  padding: 0.22rem 0.8rem;
-  font-size: 0.8rem;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.hp-console.hp-console--floating .hp-console__tab.active {
-  background: #0b5d4e;
-  box-shadow: 0 2px 8px rgba(11, 93, 78, 0.5);
-}
-
-.hp-console.hp-console--floating .hp-console__bar {
-  padding: 0.25rem 0.35rem 0.25rem 0.85rem;
-  border-radius: 0.95rem;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
-}
-
-.hp-console.hp-console--floating .hp-console__cell {
-  padding: 0.15rem 0.45rem;
-}
-
-.hp-console.hp-console--floating .hp-console__cell-label {
-  font-size: 9px;
-  margin-bottom: 0;
-  line-height: 1;
-}
-
-.hp-console.hp-console--floating .hp-console__cell-input {
-  font-size: 0.875rem;
-}
-
-.hp-console.hp-console--floating .hp-console__cell-select {
-  font-size: 0.875rem;
-}
-
-.hp-console.hp-console--floating .hp-console__divider {
-  height: 26px;
-}
-
-.hp-console.hp-console--floating .hp-console__submit-btn {
-  padding: 0.55rem 1.35rem;
-  font-size: 0.875rem;
-  border-radius: 0.8rem;
 }
 
 .hp-console:hover {
@@ -498,30 +422,6 @@
   }
 }
 
-@media (max-width: 1100px) {
-  .hp-console.hp-console--floating {
-    position: static;
-    width: calc(100% - 0.75rem);
-    max-width: none;
-    transform: none;
-    animation: none;
-    margin: 0 auto;
-  }
-
-  .hp-console.hp-console--floating .hp-console__cell--type {
-    flex-basis: 145px;
-  }
-
-  .hp-console.hp-console--floating .hp-console__submit-btn {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .hp-console-slot--floating {
-    min-height: 0;
-  }
-}
-
 .hp-console__btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(11, 93, 78, 0.45);
@@ -623,12 +523,6 @@
 
 .hp-section--white {
   background-color: #ffffff;
-}
-
-.hp-section--console-clearance {
-  padding-top: 12rem;
-  position: relative;
-  z-index: 0;
 }
 
 .hp-section--sand {
@@ -1414,19 +1308,9 @@
   }
 }
 
-/* Final mobile override: do not let desktop flex-basis values create
-   viewport-height gaps when the search controls stack vertically. */
-@media screen and (max-width: 680px) {
-  .hp-console-slot--floating {
-    min-height: 0;
-  }
-
-  .hp-console.hp-console--floating {
-    position: static;
-    width: 100%;
-    max-width: none;
-    transform: none;
-    animation: none;
+/* The search form adapts to its own available width instead of the viewport. */
+@container (max-width: 680px) {
+  .hp-console {
     padding: 0.8rem;
     border-radius: 1.25rem;
   }
@@ -1446,7 +1330,9 @@
     height: auto !important;
     min-height: 0 !important;
   }
+}
 
+@media screen and (max-width: 680px) {
   .hp-hero__assurance {
     margin-top: 0.85rem;
     font-size: 0.78rem;
