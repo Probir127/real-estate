@@ -150,6 +150,53 @@ html[data-theme='dark'] .modal-content {
   border-color: var(--sand-200);
 }
 
+html[data-theme='dark'] .z-auth-page,
+html[data-theme='dark'] .z-pricing-page,
+html[data-theme='dark'] .z-properties-page,
+html[data-theme='dark'] .z-property-detail-page,
+html[data-theme='dark'] .z-agents-page,
+html[data-theme='dark'] .z-loan-page,
+html[data-theme='dark'] .z-sell-page,
+html[data-theme='dark'] .z-valuation-page,
+html[data-theme='dark'] .z-profile-page,
+html[data-theme='dark'] .z-saved-page {
+  background-color: var(--sand-50);
+  color: var(--ink-700);
+}
+
+html[data-theme='dark'] .z-auth-card,
+html[data-theme='dark'] .z-tier-card,
+html[data-theme='dark'] .property-card,
+html[data-theme='dark'] .z-property-card,
+html[data-theme='dark'] .z-filter-bar,
+html[data-theme='dark'] .z-search-panel,
+html[data-theme='dark'] .z-form-card,
+html[data-theme='dark'] .z-profile-card,
+html[data-theme='dark'] .z-modal {
+  background-color: var(--z-white);
+  color: var(--ink-700);
+  border-color: var(--sand-200);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme='dark'] h1,
+html[data-theme='dark'] h2,
+html[data-theme='dark'] h3,
+html[data-theme='dark'] h4,
+html[data-theme='dark'] label,
+html[data-theme='dark'] .z-form-label,
+html[data-theme='dark'] .z-tier-card__name,
+html[data-theme='dark'] .z-tier-card__price {
+  color: var(--ink-900);
+}
+
+html[data-theme='dark'] p,
+html[data-theme='dark'] small,
+html[data-theme='dark'] .text-muted,
+html[data-theme='dark'] .z-form-help {
+  color: var(--ink-500);
+}
+
 a {
   color: var(--z-blue);
   text-decoration: none;

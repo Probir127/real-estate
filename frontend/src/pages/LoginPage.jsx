@@ -51,7 +51,14 @@ export default function LoginPage() {
       toast.success('Welcome back!');
       navigate(from, { replace: true });
     } catch (err) {
-      toast.error(getErrorMessage(err) || 'Invalid email or password.', { id: 'login-error' });
+      const message = err.response?.status === 401
+        ? 'No account found or the password is incorrect. Use New account to register.'
+        : getErrorMessage(err) || 'Unable to sign in right now.';
+      toast.error(message, { id: 'login-error' });
+      if (err.response?.status === 401) {
+        setRegisterForm((current) => ({ ...current, email: loginForm.email }));
+        setActiveTab('register');
+      }
     } finally {
       setLoading(false);
     }
