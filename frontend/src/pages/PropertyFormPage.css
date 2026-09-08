@@ -3,7 +3,7 @@
    ══════════════════════════════════════════ */
 
 .property-form-page {
-  padding-top: var(--navbar-height);
+  padding-top: 0;
   background-color: var(--z-gray-50);
   min-height: calc(100vh - var(--navbar-height));
   padding-bottom: 5rem;

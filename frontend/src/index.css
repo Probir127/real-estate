@@ -59,14 +59,44 @@
   /* Focus Ring */
   --focus-ring: 0 0 0 3px rgba(11, 93, 78, 0.2);
   --surface-nav: rgba(255, 255, 255, 0.95);
+  --surface-page: var(--sand-50);
+  --surface-card: var(--z-white);
+  --surface-elevated: #ffffff;
+  --surface-muted: var(--sand-100);
   --surface-control: #ffffff;
   --surface-footer: var(--brand-950);
   --border-default: var(--sand-200);
+  --border-subtle: var(--sand-100);
   --text-primary: var(--ink-900);
   --text-secondary: var(--ink-700);
   --text-muted: var(--ink-500);
+  --text-on-accent: #ffffff;
   --accent: var(--brand-700);
   --accent-hover: var(--brand-800);
+
+  /* Shared elevation and spacing tokens used by legacy components. */
+  --shadow-card: 0 1px 3px rgba(11, 93, 78, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  --shadow-card-hover: 0 12px 30px -8px rgba(11, 93, 78, 0.16);
+  --space-xs: 0.35rem;
+  --space-sm: 0.65rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 5rem;
+
+  /* Compatibility aliases for older profile/pagination components. */
+  --glass-bg: var(--surface-card);
+  --glass-hover: var(--surface-muted);
+  --glass-border: var(--border-default);
+  --navy-800: var(--brand-800);
+  --navy-950: var(--brand-950);
+  --slate-300: var(--ink-300);
+  --slate-400: var(--ink-500);
+  --slate-500: var(--ink-500);
+  --white: #ffffff;
+  --z-amber-light: #fff7df;
+  --z-amber: #8a5a00;
 
   /* Status Colors */
   --z-green: #10b981;
@@ -119,6 +149,10 @@ html[data-theme='dark'] {
   --brand-800: #0d4d3f;
   --z-white: #162238;
   --z-blue-subtle: #111a2b;
+  --surface-page: #0b1220;
+  --surface-card: #162238;
+  --surface-elevated: #1c2b43;
+  --surface-muted: #111a2b;
   --z-green-light: #12352e;
   --z-red-light: #3c2028;
   --z-dark: var(--ink-700);
@@ -135,11 +169,26 @@ html[data-theme='dark'] {
   --surface-control: #162238;
   --surface-footer: #08101d;
   --border-default: #2b3b54;
+  --border-subtle: #202d43;
   --text-primary: #f8fafc;
   --text-secondary: #d7e0ee;
   --text-muted: #a8b5c9;
+  --text-on-accent: #ffffff;
   --accent: #5bd7b0;
   --accent-hover: #35c59a;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.28), 0 8px 20px -12px rgba(0, 0, 0, 0.6);
+  --shadow-card-hover: 0 14px 32px -12px rgba(0, 0, 0, 0.7);
+  --glass-bg: var(--surface-card);
+  --glass-hover: var(--surface-muted);
+  --glass-border: var(--border-default);
+  --navy-800: #162238;
+  --navy-950: #08101d;
+  --slate-300: var(--ink-300);
+  --slate-400: var(--ink-500);
+  --slate-500: var(--ink-500);
+  --white: #f8fafc;
+  --z-amber-light: #4a3713;
+  --z-amber: #f2d18a;
   color-scheme: dark;
 }
 
@@ -260,6 +309,18 @@ html[data-theme='dark'] .btn-secondary:hover,
 html[data-theme='dark'] .btn-outline-primary:hover {
   background-color: var(--sand-200);
   color: var(--ink-900);
+}
+
+html[data-theme='dark'] .btn-primary,
+html[data-theme='dark'] .btn-primary:hover,
+html[data-theme='dark'] .z-submit-btn,
+html[data-theme='dark'] .z-tour-time-pill.active,
+html[data-theme='dark'] .pr-action-btn--compare.active {
+  color: var(--text-on-accent);
+}
+
+html[data-theme='dark'] .z-auth-brand__icon {
+  color: var(--text-on-accent);
 }
 
 html[data-theme='dark'] .pcard,
@@ -538,7 +599,8 @@ textarea::placeholder {
 }
 
 .page-wrapper {
-  padding-top: var(--navbar-height);
+  /* The navbar is sticky and remains in normal flow; don't reserve it twice. */
+  padding-top: 0;
   min-height: 100vh;
 }
 
@@ -638,6 +700,36 @@ textarea::placeholder {
 .text-red { color: var(--z-red); }
 .font-bold { font-weight: 700; }
 .font-semibold { font-weight: 600; }
+.text-slate { color: var(--text-muted); }
+.text-success { color: var(--z-green); }
+.link-gold { color: var(--gold-500); }
+.link-gold:hover { color: var(--gold-400); }
+.text-emerald-700 { color: var(--brand-700); }
+
+.glass-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.badge-gold {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-full);
+  padding: 0.2rem 0.6rem;
+  background: var(--gold-400);
+  color: #3d2200;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.loading-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
 
 .btn-danger {
   background-color: var(--z-red-light);
@@ -674,4 +766,220 @@ textarea::placeholder {
   .lg-show { display: flex !important; }
   .lg-show-inline { display: inline !important; }
   .mobile-only { display: none !important; }
+}
+
+/* ─── Theme-safe surfaces and responsive controls ─────────────────
+   Page styles intentionally use these selectors as a shared safety
+   net: a component cannot inherit dark text on a dark surface when
+   the theme changes, and cards remain usable at narrow widths. */
+html[data-theme='dark'] .pr-search-page,
+html[data-theme='dark'] .billing-result,
+html[data-theme='dark'] .profile-page,
+html[data-theme='dark'] .notfound,
+html[data-theme='dark'] .dashboard,
+html[data-theme='dark'] .property-form-page,
+html[data-theme='dark'] .pd-page {
+  background-color: var(--surface-page);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pr-top-bar,
+html[data-theme='dark'] .pr-sidebar-card,
+html[data-theme='dark'] .pr-card,
+html[data-theme='dark'] .pr-empty-state,
+html[data-theme='dark'] .pr-drawer-sheet,
+html[data-theme='dark'] .pr-drawer-header,
+html[data-theme='dark'] .pr-drawer-footer,
+html[data-theme='dark'] .pr-modal-content,
+html[data-theme='dark'] .z-sell-card,
+html[data-theme='dark'] .z-sell-preview-card,
+html[data-theme='dark'] .z-loan-card,
+html[data-theme='dark'] .z-val-form-card,
+html[data-theme='dark'] .z-val-sell-banner,
+html[data-theme='dark'] .z-neighborhood-card,
+html[data-theme='dark'] .z-history-card,
+html[data-theme='dark'] .pd-3d-card,
+html[data-theme='dark'] .z-map-popup .leaflet-popup-content-wrapper,
+html[data-theme='dark'] .z-tier-card,
+html[data-theme='dark'] .z-pricing-faq-card,
+html[data-theme='dark'] .z-faq-card,
+html[data-theme='dark'] .z-table-wrap,
+html[data-theme='dark'] .z-agent-card,
+html[data-theme='dark'] .z-saved-empty,
+html[data-theme='dark'] .z-saved-card,
+html[data-theme='dark'] .form-section,
+html[data-theme='dark'] .pd-card,
+html[data-theme='dark'] .pd-agent-card,
+html[data-theme='dark'] .stat-box,
+html[data-theme='dark'] .listing-row,
+html[data-theme='dark'] .inquiry-card,
+html[data-theme='dark'] .z-tour-widget,
+html[data-theme='dark'] .z-mortgage-calc,
+html[data-theme='dark'] .profile-card {
+  background-color: var(--surface-card);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-sidebar-title,
+html[data-theme='dark'] .pr-filter-title,
+html[data-theme='dark'] .pr-results-h1,
+html[data-theme='dark'] .pr-card__title,
+html[data-theme='dark'] .pr-empty-title,
+html[data-theme='dark'] .pr-quickview-title,
+html[data-theme='dark'] .pr-quickview-subtitle,
+html[data-theme='dark'] .pr-calc-title,
+html[data-theme='dark'] .z-tier-name,
+html[data-theme='dark'] .z-tier-price,
+html[data-theme='dark'] .z-agent-name,
+html[data-theme='dark'] .z-agent-rating,
+html[data-theme='dark'] .z-saved-card__title,
+html[data-theme='dark'] .listing-row__price,
+html[data-theme='dark'] .inquiry-row strong,
+html[data-theme='dark'] .pd-card__title,
+html[data-theme='dark'] .pd-price,
+html[data-theme='dark'] .pd-spec-box strong,
+html[data-theme='dark'] .pd-fact-value,
+html[data-theme='dark'] .pd-amenities__title,
+html[data-theme='dark'] .pd-agent-card__title,
+html[data-theme='dark'] .pd-agent-meta strong,
+html[data-theme='dark'] .z-mortgage-calc__title,
+html[data-theme='dark'] .z-legend-val,
+html[data-theme='dark'] .profile-card h3,
+html[data-theme='dark'] .billing-result h1,
+html[data-theme='dark'] .notfound__title {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pr-search-input,
+html[data-theme='dark'] .pr-type-segmented,
+html[data-theme='dark'] .pr-select,
+html[data-theme='dark'] .pr-type-pill,
+html[data-theme='dark'] .pr-bed-btn,
+html[data-theme='dark'] .pr-action-btn,
+html[data-theme='dark'] .pr-empty-alert-btn,
+html[data-theme='dark'] .pr-spec-box,
+html[data-theme='dark'] .pr-amenity-chip,
+html[data-theme='dark'] .pr-modal-close,
+html[data-theme='dark'] .pr-drawer-close,
+html[data-theme='dark'] .z-tier-cta--outline,
+html[data-theme='dark'] .z-agent-listings-btn,
+html[data-theme='dark'] .z-lender-btn,
+html[data-theme='dark'] .z-choice-btn,
+html[data-theme='dark'] .z-val-select,
+html[data-theme='dark'] .z-input,
+html[data-theme='dark'] .billing-result__secondary {
+  background-color: var(--surface-muted);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-search-input::placeholder,
+html[data-theme='dark'] .pr-results-query,
+html[data-theme='dark'] .pr-results-sub,
+html[data-theme='dark'] .pr-quick-areas-label,
+html[data-theme='dark'] .pr-card__location,
+html[data-theme='dark'] .pr-card__specs,
+html[data-theme='dark'] .pr-card__footer,
+html[data-theme='dark'] .listing-row__date,
+html[data-theme='dark'] .inquiry-row__property,
+html[data-theme='dark'] .inquiry-row__message,
+html[data-theme='dark'] .pr-empty-desc,
+html[data-theme='dark'] .z-tier-sub,
+html[data-theme='dark'] .z-tier-period,
+html[data-theme='dark'] .z-agent-agency,
+html[data-theme='dark'] .z-agent-areas,
+html[data-theme='dark'] .z-agent-rev-count,
+html[data-theme='dark'] .z-stat-lbl,
+html[data-theme='dark'] .z-saved-card__address,
+html[data-theme='dark'] .z-saved-card__specs,
+html[data-theme='dark'] .billing-result p {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pr-card__specs,
+html[data-theme='dark'] .pr-card__footer,
+html[data-theme='dark'] .pr-sidebar-header,
+html[data-theme='dark'] .pr-drawer-header,
+html[data-theme='dark'] .pr-drawer-footer,
+html[data-theme='dark'] .z-saved-card__specs {
+  border-color: var(--border-subtle);
+}
+
+html[data-theme='dark'] .z-sell-upgrade-box,
+html[data-theme='dark'] .z-sell-upgrade-box p,
+html[data-theme='dark'] .z-sell-upgrade-box .font-bold,
+html[data-theme='dark'] .z-sell-upgrade-box .text-sm {
+  color: var(--text-on-accent);
+}
+
+html[data-theme='dark'] .z-chatbot-window {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-chatbot-messages,
+html[data-theme='dark'] .z-chatbot-quick-prompts,
+html[data-theme='dark'] .z-chatbot-footer {
+  background: var(--surface-page);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-chat-msg.assistant .z-chat-msg__content,
+html[data-theme='dark'] .z-chatbot-quick-btn,
+html[data-theme='dark'] .z-chat-prop-chip,
+html[data-theme='dark'] .z-chatbot-input {
+  background: var(--surface-muted);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-chat-props__label,
+html[data-theme='dark'] .z-chat-prop-chip__price {
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .z-map-overlay-banner {
+  background-color: var(--surface-card);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-map-pill:hover span,
+html[data-theme='dark'] .z-map-pill--active span,
+html[data-theme='dark'] .z-map-pill--rent:hover span,
+html[data-theme='dark'] .z-map-pill--rent.z-map-pill--active span {
+  color: var(--text-on-accent) !important;
+}
+
+/* Prevent long labels and action groups from forcing horizontal scroll. */
+.z-sell-actions > *,
+.z-agent-actions > *,
+.billing-result__actions > *,
+.pr-quickview-ctas > *,
+.form-actions > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 639px) {
+  .z-sell-actions,
+  .z-agent-actions,
+  .billing-result__actions,
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .z-sell-actions > *,
+  .z-agent-actions > *,
+  .billing-result__actions > *,
+  .form-actions > * {
+    width: 100%;
+  }
+
+  .container-page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

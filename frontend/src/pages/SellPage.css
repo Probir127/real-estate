@@ -135,6 +135,33 @@
   color: var(--ink-700);
 }
 
+.z-choice-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--sand-300);
+  border-radius: var(--radius-sm);
+  background: var(--surface-control);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.z-choice-btn:hover,
+.z-choice-btn.active {
+  border-color: var(--brand-500);
+  background: var(--brand-50);
+  color: var(--brand-800);
+}
+
+.z-choice-btn.active {
+  box-shadow: 0 0 0 2px var(--brand-200);
+}
+
 .z-photo-pick-card {
   position: relative;
   border-radius: var(--radius-sm);
@@ -311,6 +338,16 @@
   border-radius: var(--radius-md);
   padding: 1.25rem;
   color: #ffffff;
+}
+
+.z-sell-upgrade-box p,
+.z-sell-upgrade-box .font-bold,
+.z-sell-upgrade-box .text-sm {
+  color: #ffffff;
+}
+
+.z-sell-upgrade-box p:not(.font-bold) {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .z-upgrade-link {

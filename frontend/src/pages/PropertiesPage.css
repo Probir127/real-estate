@@ -1602,3 +1602,51 @@
 .pr-compare-clear-btn:hover {
   color: #ffffff;
 }
+
+/* Keep the search controls usable on phones instead of squeezing three
+   controls into one row and letting the page overflow horizontally. */
+@media (max-width: 640px) {
+  .pr-top-bar__inner {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .pr-type-segmented {
+    flex: 1 1 auto;
+  }
+
+  .pr-type-tab {
+    flex: 1;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  }
+
+  .pr-mobile-filter-btn {
+    flex: 0 0 auto;
+  }
+
+  .pr-search-field {
+    flex: 1 1 100%;
+    order: 3;
+  }
+
+  .pr-results-header {
+    align-items: stretch;
+  }
+
+  .pr-header-controls {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .pr-card__footer {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .pr-card__actions {
+    margin-left: auto;
+  }
+}

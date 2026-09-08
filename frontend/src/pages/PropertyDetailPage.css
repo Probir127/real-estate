@@ -3,7 +3,7 @@
    ══════════════════════════════════════════ */
 
 .pd-page {
-  padding-top: var(--navbar-height);
+  padding-top: 0;
   background-color: var(--z-gray-50);
 }
 

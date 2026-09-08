@@ -3,7 +3,7 @@
    ══════════════════════════════════════════ */
 
 .dashboard {
-  padding-top: var(--navbar-height);
+  padding-top: 0;
   background-color: var(--z-gray-50);
   min-height: calc(100vh - var(--navbar-height));
   padding-bottom: 4rem;
@@ -181,6 +181,24 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.listing-row__price,
+.listing-row__date {
+  flex-shrink: 0;
+  color: var(--z-gray-700);
+  font-size: 0.85rem;
+}
+
+.listing-row__price {
+  color: var(--z-darker);
+  font-weight: 800;
+}
+
+.listing-row__date {
+  color: var(--z-gray-500);
 }
 
 /* Inquiries List */
@@ -207,4 +225,76 @@
   font-size: 0.9rem;
   color: var(--z-gray-700);
   line-height: 1.5;
+}
+
+/* The API-backed dashboard uses inquiry-row; keep it consistent with
+   listing rows instead of relying on a missing legacy class. */
+.inquiry-row {
+  background-color: var(--z-white);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 0.75rem;
+}
+
+.inquiry-row__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.inquiry-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.inquiry-row__property {
+  margin-top: 0.65rem;
+  font-size: 0.85rem;
+  color: var(--z-gray-700);
+}
+
+.inquiry-row--unread {
+  border-left: 3px solid var(--z-blue);
+}
+
+.inquiry-row__message {
+  margin-top: 0.5rem;
+  color: var(--z-gray-700);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .dashboard__header {
+    align-items: flex-start;
+  }
+
+  .listing-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .listing-row__info {
+    flex-basis: calc(100% - 88px);
+  }
+
+  .listing-row__price,
+  .listing-row__date {
+    margin-left: 88px;
+  }
+
+  .listing-row__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .stat-box {
+    padding: 1.25rem;
+  }
 }

@@ -1,4 +1,8 @@
-.profile-page { padding-bottom: var(--space-3xl); }
+.profile-page {
+  padding-bottom: var(--space-3xl);
+  background: var(--surface-page);
+  color: var(--text-secondary);
+}
 
 .profile-header {
   display: flex;
@@ -7,6 +11,20 @@
   padding: var(--space-2xl) 0 var(--space-xl);
   border-bottom: 1px solid var(--glass-border);
   margin-bottom: var(--space-xl);
+}
+
+.profile-header > div:last-child {
+  min-width: 0;
+}
+
+.profile-header h1 {
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.profile-header .text-slate {
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
 }
 
 /* Avatar */
@@ -74,7 +92,7 @@
   margin-bottom: -1px;
 }
 
-.profile-tab:hover { color: var(--white); }
+.profile-tab:hover { color: var(--accent); }
 
 .profile-tab--active {
   color: var(--gold-400);
@@ -83,6 +101,10 @@
 
 /* Profile / Password cards */
 .profile-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   padding: var(--space-2xl);
   max-width: 680px;
 }
@@ -93,6 +115,29 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+}
+
+.profile-card .form-group {
+  min-width: 0;
+}
+
+.profile-card .input-icon-wrap {
+  position: relative;
+}
+
+.profile-card .input-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.profile-card .form-input,
+.profile-card .form-textarea {
+  width: 100%;
 }
 
 .form-row-2 {
@@ -120,5 +165,24 @@
 @media (max-width: 768px) {
   .form-row-2 { grid-template-columns: 1fr; }
   .favs-grid { grid-template-columns: 1fr; }
-  .profile-header { flex-direction: column; align-items: flex-start; }
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-lg);
+  }
+
+  .profile-tabs {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .profile-tab {
+    flex: 0 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .profile-card {
+    padding: var(--space-lg);
+  }
 }
