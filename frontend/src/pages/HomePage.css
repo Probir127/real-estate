@@ -166,13 +166,10 @@
 
 /* When user scrolls past hero, this exact console floats smoothly at the top with sleek transparent glass effect */
 .hp-console.hp-console--floating {
-  position: fixed;
-  top: 72px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 2rem);
-  max-width: 940px;
-  z-index: 200;
+  position: static;
+  width: 100%;
+  max-width: none;
+  transform: none;
   padding: 0.55rem 0.85rem 0.65rem;
   border-radius: 1.25rem;
   background: rgba(10, 33, 27, 0.52);
@@ -182,7 +179,7 @@
     0 16px 40px -8px rgba(0, 0, 0, 0.45),
     0 0 0 1px rgba(255, 255, 255, 0.2),
     inset 0 1px 1px rgba(255, 255, 255, 0.25);
-  animation: hpConsoleFloatIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: none;
   transition: background 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -238,17 +235,6 @@
   padding: 0.55rem 1.35rem;
   font-size: 0.875rem;
   border-radius: 0.8rem;
-}
-
-@keyframes hpConsoleFloatIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -12px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0) scale(1);
-  }
 }
 
 .hp-console:hover {
