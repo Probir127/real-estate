@@ -69,13 +69,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database — PostgreSQL (supports local dev and Render DATABASE_URL)
+# Database configuration.
+# Prefer Postgres when explicitly configured (Render / production), but fall back to
+# SQLite so local and CI/test environments can run without a local Postgres server.
 import dj_database_url
 
-db_url = config('DATABASE_URL', default=None)
-if db_url:
+DB_URL = config('DATABASE_URL', default='')
+USE_SQLITE = config('USE_SQLITE', default=(not DB_URL), cast=bool)
+
+if DB_URL:
     DATABASES = {
-        'default': dj_database_url.config(default=db_url, conn_max_age=600, conn_health_checks=True)
+        'default': dj_database_url.config(default=DB_URL, conn_max_age=600, conn_health_checks=True)
+    }
+elif USE_SQLITE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
 else:
     DATABASES = {
