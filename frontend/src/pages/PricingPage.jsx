@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaMagic, FaCheck, FaArrowRight } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import useSiteContent from '../hooks/useSiteContent';
 import { paymentsApi } from '../api/client';
 import toast from 'react-hot-toast';
 import './PricingPage.css';
@@ -115,6 +116,21 @@ export default function PricingPage() {
   const [checkoutPlan, setCheckoutPlan] = useState(null);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const content = useSiteContent('pricing', {
+    badge: 'No commission, ever',
+    title: 'Plans priced in taka, for agencies in Bangladesh',
+    subtitle: 'Start free, upgrade when your listings outgrow it. Every plan includes the lead inbox and bKash billing.',
+    tiers: TIERS,
+    faqs: FAQS,
+    faqTitle: 'Questions agents ask us',
+    footnote: 'All prices exclude 15% VAT. Enterprise and multi-city developer packages available on request.',
+    demoTitle: 'See the dashboard before you pay anything',
+    demoText: 'The full agent dashboard is open as a live demo — listings, leads, visits and invoices, with sample data.',
+    demoCta: 'Open the live demo',
+    trust: 'Trusted by 1,340+ agents across Bangladesh',
+  });
+  const tiers = Array.isArray(content.tiers) ? content.tiers : TIERS;
+  const faqs = Array.isArray(content.faqs) ? content.faqs : FAQS;
 
   const handlePlanClick = async (tier) => {
     if (tier.id === 'starter') {
@@ -143,13 +159,13 @@ export default function PricingPage() {
         <div className="container-page text-center">
           <span className="z-pricing-badge">
             <FaMagic className="text-gold-400" />
-            No commission, ever
+            {content.badge}
           </span>
           <h1 className="z-pricing-hero__title">
-            Plans priced in taka, for agencies in Bangladesh
+            {content.title}
           </h1>
           <p className="z-pricing-hero__sub">
-            Start free, upgrade when your listings outgrow it. Every plan includes the lead inbox and bKash billing.
+            {content.subtitle}
           </p>
 
           {/* Billing Switcher */}
@@ -176,7 +192,7 @@ export default function PricingPage() {
       {/* ── 2. Pricing Grid ────────────────────────────────────── */}
       <div className="container-page z-pricing-container">
         <div className="z-pricing-grid">
-          {TIERS.map((tier) => (
+          {tiers.map((tier) => (
             <div
               key={tier.id}
               className={`z-tier-card ${tier.popular ? 'z-tier-card--popular' : ''}`}
@@ -218,15 +234,15 @@ export default function PricingPage() {
         </div>
 
         <p className="z-pricing-footnote">
-          All prices exclude 15% VAT. Enterprise and multi-city developer packages available on request.
+          {content.footnote}
         </p>
       </div>
 
       {/* ── 3. Questions FAQ ───────────────────────────────────── */}
       <section className="container-page z-pricing-faq-sec">
-        <h2 className="text-center z-sec-title">Questions agents ask us</h2>
+        <h2 className="text-center z-sec-title">{content.faqTitle}</h2>
         <div className="z-pricing-faq-grid">
-          {FAQS.map((faq, idx) => (
+          {faqs.map((faq, idx) => (
             <div key={idx} className="z-pricing-faq-card">
               <h3 className="z-pricing-faq-q">{faq.q}</h3>
               <p className="z-pricing-faq-a">{faq.a}</p>
@@ -238,14 +254,14 @@ export default function PricingPage() {
       {/* ── 4. Live Demo Banner ────────────────────────────────── */}
       <section className="container-page z-pricing-cta-sec">
         <div className="z-pricing-demo-box">
-          <h2 className="z-pricing-demo-title">See the dashboard before you pay anything</h2>
+          <h2 className="z-pricing-demo-title">{content.demoTitle}</h2>
           <p className="z-pricing-demo-sub">
-            The full agent dashboard is open as a live demo — listings, leads, visits and invoices, with sample data.
+            {content.demoText}
           </p>
           <Link to="/dashboard" className="z-pricing-demo-btn">
-            Open the live demo
+            {content.demoCta}
           </Link>
-          <p className="z-pricing-demo-trust">Trusted by 1,340+ agents across Bangladesh</p>
+          <p className="z-pricing-demo-trust">{content.trust}</p>
         </div>
       </section>
     </div>

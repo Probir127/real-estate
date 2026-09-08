@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { FaUser, FaEnvelope, FaPhone, FaCamera, FaSave, FaLock } from 'react-icons/fa'
 import { useAuth } from '../context/AuthContext'
 import { authApi, favoritesApi } from '../api/client'
+import useSiteContent from '../hooks/useSiteContent'
 import PropertyCard from '../components/PropertyCard'
 import { getErrorMessage } from '../utils/helpers'
 import toast from 'react-hot-toast'
@@ -11,6 +12,12 @@ import './ProfilePage.css'
 
 export default function ProfilePage() {
   const { user, updateUser } = useAuth()
+  const content = useSiteContent('profile', {
+    tabs: { profile: 'Profile', password: 'Password', favorites: 'Saved Properties' },
+    personalInformation: 'Personal Information',
+    changePassword: 'Change Password',
+    saveChanges: 'Save Changes',
+  })
   const [activeTab, setActiveTab] = useState('profile')
   const [profileForm, setProfileForm] = useState({
     full_name: '', phone: '', bio: '',
@@ -99,9 +106,9 @@ export default function ProfilePage() {
   }
 
   const TABS = [
-    { id: 'profile', label: 'Profile' },
-    { id: 'password', label: 'Password' },
-    { id: 'favorites', label: 'Saved Properties' },
+    { id: 'profile', label: content.tabs?.profile || 'Profile' },
+    { id: 'password', label: content.tabs?.password || 'Password' },
+    { id: 'favorites', label: content.tabs?.favorites || 'Saved Properties' },
   ]
 
   return (
@@ -147,7 +154,7 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h3>Personal Information</h3>
+            <h3>{content.personalInformation}</h3>
             <form onSubmit={handleProfileSave}>
               <div className="form-row-2">
                 <div className="form-group">
@@ -184,7 +191,7 @@ export default function ProfilePage() {
                   onChange={e => setProfileForm({...profileForm, bio: e.target.value})} />
               </div>
               <button type="submit" className="btn btn-primary" disabled={profileLoading}>
-                <FaSave /> {profileLoading ? 'Saving…' : 'Save Changes'}
+                <FaSave /> {profileLoading ? 'Saving…' : content.saveChanges}
               </button>
             </form>
           </motion.div>
@@ -197,7 +204,7 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h3>Change Password</h3>
+            <h3>{content.changePassword}</h3>
             <form onSubmit={handlePasswordChange}>
               {['old_password', 'new_password', 'new_password2'].map((field, i) => (
                 <div key={field} className="form-group">
@@ -216,7 +223,7 @@ export default function ProfilePage() {
                 </div>
               ))}
               <button type="submit" className="btn btn-primary" disabled={passLoading}>
-                {passLoading ? 'Updating…' : 'Update Password'}
+                {passLoading ? 'Updating…' : (content.updatePassword || 'Update Password')}
               </button>
             </form>
           </motion.div>

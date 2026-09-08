@@ -94,6 +94,18 @@ temporarily unavailable. Content arrays support `areas`, `tools`, `steps`,
 `agents`, `testimonials`, and `stats`; icon values use names such as `chart`,
 `calculator`, `search`, `building`, and `handshake`.
 
+### Dynamic site content
+
+All shared and major page copy is also managed from **Admin → Site content**.
+Create a record with a stable key (`navigation`, `footer`, `agents`, `pricing`,
+`loan`, `valuation`, `sell`, `dashboard`, or `profile`) and paste the page's
+JSON document into `content`. It is published when **Is active** is enabled.
+The public API is `GET /api/content/<key>/` (the legacy
+`/api/homepage/<key>/` route is also available); inactive or missing records return
+an empty document and the React client keeps its design-safe defaults. This
+allows an admin to update copy, navigation links, pricing tiers, lender data,
+agent profiles, valuation areas, and form options without a frontend release.
+
 ---
 
 ### Frontend Setup
@@ -141,6 +153,12 @@ Frontend runs at: **http://localhost:5173**
 | GET | `/properties/my-listings/` | Agent's own listings | Agent |
 | POST | `/properties/{id}/images/` | Upload image | Owner |
 | DELETE | `/properties/images/{id}/` | Delete image | Owner |
+
+### Site content — `/api/content/`
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/content/{key}/` | Return the active admin-managed JSON document | No |
 
 ### Favorites — `/api/favorites/`
 

@@ -141,6 +141,10 @@ export const homepageApi = {
   getContent: () => api.get('/homepage/'),
 };
 
+export const siteContentApi = {
+  get: (key) => api.get(`/content/${encodeURIComponent(key)}/`),
+};
+
 export const favoritesApi = {
   list: () => api.get('/favorites/'),
   add: (propertyId) => api.post('/favorites/', { property_id: propertyId }),

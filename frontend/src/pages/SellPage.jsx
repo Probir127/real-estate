@@ -5,6 +5,7 @@ import {
   FaBuilding, FaCheck, FaInfoCircle
 } from 'react-icons/fa';
 import { propertiesApi } from '../api/client';
+import useSiteContent from '../hooks/useSiteContent';
 import './SellPage.css';
 
 const PROPERTY_TYPES = ['Apartment', 'Duplex', 'House', 'Land', 'Commercial', 'Office'];
@@ -43,6 +44,17 @@ export function formatBDT(amount) {
 
 export default function SellPage() {
   const navigate = useNavigate();
+  const content = useSiteContent('sell', {
+    title: 'Post your property',
+    subtitle: 'Free for your first listing. Takes about four minutes, and we verify the papers before it goes live.',
+    propertyTypes: PROPERTY_TYPES,
+    areas: AREAS,
+    samplePhotos: SAMPLE_PHOTOS,
+    defaultDescription: 'Stunning corner apartment with unobstructed open views, imported marble floors, high ceilings, and dedicated double parking.',
+  });
+  const propertyTypes = Array.isArray(content.propertyTypes) && content.propertyTypes.length ? content.propertyTypes : PROPERTY_TYPES;
+  const areas = Array.isArray(content.areas) && content.areas.length ? content.areas : AREAS;
+  const samplePhotos = Array.isArray(content.samplePhotos) && content.samplePhotos.length ? content.samplePhotos : SAMPLE_PHOTOS;
   const [step, setStep] = useState(1);
   const [listingType, setListingType] = useState('sale'); // 'sale' | 'rent'
   const [propertyType, setPropertyType] = useState('Apartment');
@@ -55,9 +67,7 @@ export default function SellPage() {
   const [floor, setFloor] = useState(4);
   const [totalFloors, setTotalFloors] = useState(9);
   const [completionStatus, setCompletionStatus] = useState('ready');
-  const [description, setDescription] = useState(
-    'Stunning corner apartment with unobstructed open views, imported marble floors, high ceilings, and dedicated double parking.'
-  );
+  const [description, setDescription] = useState(content.defaultDescription);
   const [selectedPhotos, setSelectedPhotos] = useState([1, 2]);
   const [contactName, setContactName] = useState('');
   const [contactPhone, setContactPhone] = useState('');
@@ -118,9 +128,9 @@ export default function SellPage() {
       {/* ── 1. Hero ────────────────────────────────────────────── */}
       <section className="z-sell-hero">
         <div className="container-page">
-          <h1 className="z-sell-hero__title">Post your property</h1>
+          <h1 className="z-sell-hero__title">{content.title}</h1>
           <p className="z-sell-hero__sub">
-            Free for your first listing. Takes about four minutes, and we verify the papers before it goes live.
+            {content.subtitle}
           </p>
         </div>
       </section>
@@ -202,7 +212,7 @@ export default function SellPage() {
                       <div>
                         <span className="z-form-label">Property type</span>
                         <div className="mt-2 flex flex-wrap gap-2">
-                          {PROPERTY_TYPES.map((type) => (
+                          {propertyTypes.map((type) => (
                             <button
                               key={type}
                               type="button"
@@ -223,7 +233,7 @@ export default function SellPage() {
                             onChange={(e) => setArea(e.target.value)}
                             className="z-input mt-2"
                           >
-                            {AREAS.map((a) => (
+                            {areas.map((a) => (
                               <option key={a} value={a}>
                                 {a}
                               </option>
@@ -368,7 +378,7 @@ export default function SellPage() {
                         </p>
 
                         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                          {SAMPLE_PHOTOS.map((photo) => {
+                          {samplePhotos.map((photo) => {
                             const isSelected = selectedPhotos.includes(photo.id);
                             return (
                               <div

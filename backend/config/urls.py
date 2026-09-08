@@ -16,6 +16,7 @@ admin.site.index_title = "Zennor Real Estate Administration"
 
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from homepage.views import SiteContentView
 
 def root_api_status(request):
     return JsonResponse({
@@ -28,7 +29,8 @@ def root_api_status(request):
             "auth": "/api/auth/",
             "favorites": "/api/favorites/",
             "inquiries": "/api/inquiries/",
-            "chat": "/api/chat/"
+            "chat": "/api/chat/",
+            "content": "/api/content/<key>/",
         }
     })
 
@@ -58,6 +60,7 @@ urlpatterns = [
     path('api/chatbot/', include('chatbot.urls')),
     path('api/payments/', include('payments.urls')),
     path('api/homepage/', include('homepage.urls')),
+    path('api/content/<str:key>/', SiteContentView.as_view(), name='site-content'),
 ]
 
 from django.views.static import serve

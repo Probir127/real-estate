@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import useSiteContent from '../hooks/useSiteContent';
 import {
   FaBars, FaTimes, FaUser, FaHeart,
   FaPlus, FaSignOutAlt, FaChevronDown, FaMoon, FaSun
@@ -18,6 +19,20 @@ export default function Navbar() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('zennor_theme') === 'dark');
   const [savedCount, setSavedCount] = useState(0);
   const dropRef = useRef(null);
+  const navigation = useSiteContent('navigation', {
+    brand: { name: 'Zennor', subtitle: 'BANGLADESH' },
+    links: [
+      { label: 'Buy', bn: 'কিনুন', path: '/search?type=buy' },
+      { label: 'Rent', bn: 'ভাড়া', path: '/search?type=rent' },
+      { label: 'Sell', bn: 'বিক্রয়', path: '/sell' },
+      { label: 'Find an agent', bn: 'এজেন্ট খুঁজুন', path: '/agents' },
+      { label: 'Home loan', bn: 'গৃহঋণ', path: '/loan' },
+      { label: 'Property value', bn: 'প্রপার্টির দাম', path: '/valuation' },
+      { label: 'For agents', bn: 'এজেন্টদের জন্য', path: '/pricing' },
+    ],
+    postCta: 'Post a property',
+  });
+  const navLinks = Array.isArray(navigation.links) ? navigation.links : [];
 
   // Sync saved count
   useEffect(() => {
@@ -96,56 +111,23 @@ export default function Navbar() {
             </span>
             <span className="z-nav-brand-text">
               <span className="z-nav-brand-name">
-                Zennor<span className="z-nav-brand-gold">.</span>
+                {navigation.brand?.name || 'Zennor'}<span className="z-nav-brand-gold">.</span>
               </span>
-              <span className="z-nav-brand-sub">BANGLADESH</span>
+              <span className="z-nav-brand-sub">{navigation.brand?.subtitle || 'BANGLADESH'}</span>
             </span>
           </Link>
 
           {/* ── 2. Center Nav Links (Matches Screenshot) ────────────────── */}
           <nav className="z-nav__center-menu" aria-label="Main Navigation">
-            <Link
-              to="/search?type=buy"
-              className={`z-nav-link ${isPathActive('/search?type=buy') ? 'active' : ''}`}
-            >
-              {lang === 'BN' ? 'কিনুন' : 'Buy'}
-            </Link>
-            <Link
-              to="/search?type=rent"
-              className={`z-nav-link ${isPathActive('/search?type=rent') ? 'active' : ''}`}
-            >
-              {lang === 'BN' ? 'ভাড়া' : 'Rent'}
-            </Link>
-            <Link
-              to="/sell"
-              className={`z-nav-link ${isPathActive('/sell') ? 'active' : ''}`}
-            >
-              {lang === 'BN' ? 'বিক্রয়' : 'Sell'}
-            </Link>
-            <Link
-              to="/agents"
-              className={`z-nav-link ${isPathActive('/agents') ? 'active' : ''}`}
-            >
-              {lang === 'BN' ? 'এজেন্ট খুঁজুন' : 'Find an agent'}
-            </Link>
-            <Link
-              to="/loan"
-              className={`z-nav-link ${isPathActive('/loan') ? 'active' : ''}`}
-            >
-              {lang === 'BN' ? 'গৃহঋণ' : 'Home loan'}
-            </Link>
-            <Link
-              to="/valuation"
-              className={`z-nav-link ${isPathActive('/valuation') ? 'active' : ''}`}
-            >
-              {lang === 'BN' ? 'প্রপার্টির দাম' : 'Property value'}
-            </Link>
-            <Link
-              to="/pricing"
-              className={`z-nav-link ${isPathActive('/pricing') ? 'active' : ''}`}
-            >
-              {lang === 'BN' ? 'এজেন্টদের জন্য' : 'For agents'}
-            </Link>
+            {navLinks.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`z-nav-link ${isPathActive(item.path) ? 'active' : ''}`}
+              >
+                {lang === 'BN' ? (item.bn || item.label) : item.label}
+              </Link>
+            ))}
           </nav>
 
           {/* ── 3. Right Action Tools (Matches Screenshot) ──────────────── */}
@@ -248,7 +230,7 @@ export default function Navbar() {
                 <path d="M5 12h14" />
                 <path d="M12 5v14" />
               </svg>
-              <span className="z-post-text-full">Post a property</span>
+              <span className="z-post-text-full">{navigation.postCta || 'Post a property'}</span>
               <span className="z-post-text-mobile">Post</span>
             </Link>
 
@@ -270,13 +252,11 @@ export default function Navbar() {
       {menuOpen && (
         <div className="z-mobile-drawer">
           <div className="z-mobile-drawer__links">
-            <Link to="/search?type=buy" onClick={() => setMenuOpen(false)}>Buy</Link>
-            <Link to="/search?type=rent" onClick={() => setMenuOpen(false)}>Rent</Link>
-            <Link to="/sell" onClick={() => setMenuOpen(false)}>Sell</Link>
-            <Link to="/agents" onClick={() => setMenuOpen(false)}>Find an agent</Link>
-            <Link to="/loan" onClick={() => setMenuOpen(false)}>Home loan</Link>
-            <Link to="/valuation" onClick={() => setMenuOpen(false)}>Property value</Link>
-            <Link to="/pricing" onClick={() => setMenuOpen(false)}>For agents</Link>
+            {navLinks.map((item) => (
+              <Link key={item.path} to={item.path} onClick={() => setMenuOpen(false)}>
+                {lang === 'BN' ? (item.bn || item.label) : item.label}
+              </Link>
+            ))}
             <Link to="/saved" onClick={() => setMenuOpen(false)}>Saved properties</Link>
             <button
               type="button"

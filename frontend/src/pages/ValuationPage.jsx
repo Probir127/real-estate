@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import useSiteContent from '../hooks/useSiteContent';
 import {
   FaMagic, FaChartLine, FaInfoCircle, FaArrowRight,
   FaChevronDown, FaCheckCircle, FaTimes
@@ -47,6 +48,19 @@ export function formatBDT(amount) {
 }
 
 export default function ValuationPage() {
+  const content = useSiteContent('valuation', {
+    badge: 'ZennorValue estimate',
+    title: 'What is my property worth?',
+    subtitle: 'We start from the going rate per sqft in your area, then adjust for floor, building age, condition, facing and parking — the same factors a bank’s valuer weighs.',
+    areas: AREAS,
+    conditions: CONDITIONS,
+    facings: FACINGS,
+    formTitle: 'Tell us about the property',
+    resultTitle: 'Estimated market value',
+  });
+  const areas = Array.isArray(content.areas) && content.areas.length ? content.areas : AREAS;
+  const conditions = Array.isArray(content.conditions) && content.conditions.length ? content.conditions : CONDITIONS;
+  const facings = Array.isArray(content.facings) && content.facings.length ? content.facings : FACINGS;
   const [selectedAreaId, setSelectedAreaId] = useState('gulshan');
   const [sizeSqft, setSizeSqft] = useState(1600);
   const [floor, setFloor] = useState(4);
@@ -58,8 +72,8 @@ export default function ValuationPage() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
   const selectedArea = useMemo(
-    () => AREAS.find((a) => a.id === selectedAreaId) || AREAS[0],
-    [selectedAreaId]
+    () => areas.find((a) => a.id === selectedAreaId) || areas[0],
+    [areas, selectedAreaId]
   );
 
   const valuation = useMemo(() => {
@@ -75,11 +89,11 @@ export default function ValuationPage() {
     rate *= ageDeprec;
 
     // Condition
-    const condObj = CONDITIONS.find((c) => c.id === condition) || CONDITIONS[1];
+    const condObj = conditions.find((c) => c.id === condition) || conditions[1] || CONDITIONS[1];
     rate *= condObj.factor;
 
     // Facing
-    const facingObj = FACINGS.find((f) => f.id === facing) || FACINGS[0];
+    const facingObj = facings.find((f) => f.id === facing) || facings[0] || FACINGS[0];
     rate *= facingObj.factor;
 
     // Parking added value (~৳ 5-8 Lakh per slot)
@@ -103,7 +117,7 @@ export default function ValuationPage() {
       monthlyRent,
       trend: selectedArea.trend,
     };
-  }, [selectedArea, sizeSqft, floor, buildingAge, parkingSpaces, condition, facing]);
+  }, [selectedArea, conditions, facings, sizeSqft, floor, buildingAge, parkingSpaces, condition, facing]);
 
   const handleBookSubmit = (e) => {
     e.preventDefault();
@@ -121,11 +135,11 @@ export default function ValuationPage() {
         <div className="container-page">
           <span className="z-val-badge">
             <FaMagic className="text-gold-400" />
-            ZennorValue estimate
+            {content.badge}
           </span>
-          <h1 className="z-val-hero__title">What is my property worth?</h1>
+          <h1 className="z-val-hero__title">{content.title}</h1>
           <p className="z-val-hero__sub">
-            We start from the going rate per sqft in your area, then adjust for floor, building age, condition, facing and parking — the same factors a bank’s valuer weighs.
+            {content.subtitle}
           </p>
         </div>
       </section>
@@ -135,7 +149,7 @@ export default function ValuationPage() {
         <div className="z-val-grid">
           {/* Left Form */}
           <div className="z-val-form-card">
-            <h2 className="z-val-card-title">Tell us about the property</h2>
+            <h2 className="z-val-card-title">{content.formTitle}</h2>
 
             <div className="z-val-fields">
               {/* Area Select */}
@@ -147,7 +161,7 @@ export default function ValuationPage() {
                     onChange={(e) => setSelectedAreaId(e.target.value)}
                     className="z-val-select"
                   >
-                    {AREAS.map((a) => (
+                    {areas.map((a) => (
                       <option key={a.id} value={a.id}>
                         {a.name}
                       </option>
@@ -248,7 +262,7 @@ export default function ValuationPage() {
               <div className="z-val-group">
                 <span className="z-val-label">Condition</span>
                 <div className="z-pill-grid sm-cols-2">
-                  {CONDITIONS.map((c) => (
+                  {conditions.map((c) => (
                     <button
                       key={c.id}
                       type="button"
@@ -265,7 +279,7 @@ export default function ValuationPage() {
               <div className="z-val-group">
                 <span className="z-val-label">Facing</span>
                 <div className="z-pill-wrap">
-                  {FACINGS.map((f) => (
+                  {facings.map((f) => (
                     <button
                       key={f.id}
                       type="button"
@@ -285,7 +299,7 @@ export default function ValuationPage() {
             <div className="z-val-result-card">
               <p className="z-val-result-header">
                 <FaChartLine className="text-gold-400 mr-2" />
-                Estimated market value
+                {content.resultTitle}
               </p>
               <p className="z-val-result-amount">{formatBDT(valuation.total)}</p>
               <p className="z-val-result-range">

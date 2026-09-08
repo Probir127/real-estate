@@ -6,6 +6,7 @@ import {
   FaCheckCircle, FaTimesCircle, FaChartBar, FaBell
 } from 'react-icons/fa'
 import { propertiesApi, inquiriesApi } from '../api/client'
+import useSiteContent from '../hooks/useSiteContent'
 import { useAuth } from '../context/AuthContext'
 import { formatPrice, timeAgo, getErrorMessage } from '../utils/helpers'
 import toast from 'react-hot-toast'
@@ -13,6 +14,13 @@ import './DashboardPage.css'
 
 export default function DashboardPage() {
   const { user } = useAuth()
+  const content = useSiteContent('dashboard', {
+    title: 'Dashboard',
+    welcome: 'Welcome back',
+    newListing: 'New Listing',
+    tabs: { listings: 'My Listings', inquiries: 'Inquiries' },
+    stats: ['Total Listings', 'Published', 'Featured', 'Unread Inquiries'],
+  })
   const [activeTab, setActiveTab] = useState('listings')
   const [listings, setListings] = useState([])
   const [inquiries, setInquiries] = useState([])
@@ -74,8 +82,8 @@ export default function DashboardPage() {
   }
 
   const TABS = [
-    { id: 'listings', label: 'My Listings', icon: <FaHome /> },
-    { id: 'inquiries', label: 'Inquiries', icon: <FaEnvelope /> },
+    { id: 'listings', label: content.tabs?.listings || 'My Listings', icon: <FaHome /> },
+    { id: 'inquiries', label: content.tabs?.inquiries || 'Inquiries', icon: <FaEnvelope /> },
   ]
 
   return (
@@ -83,21 +91,21 @@ export default function DashboardPage() {
       <div className="container">
         <div className="dashboard__header">
           <div>
-            <h1>Dashboard</h1>
-            <p className="text-slate">Welcome back, {user?.full_name?.split(' ')[0]}</p>
+            <h1>{content.title}</h1>
+            <p className="text-slate">{content.welcome}, {user?.full_name?.split(' ')[0]}</p>
           </div>
           <Link to="/properties/new" className="btn btn-primary">
-            <FaPlus /> New Listing
+            <FaPlus /> {content.newListing}
           </Link>
         </div>
 
         {/* Stats */}
         <div className="dashboard__stats">
           {[
-            { icon: <FaHome />, value: stats.total, label: 'Total Listings' },
-            { icon: <FaChartBar />, value: stats.published, label: 'Published' },
-            { icon: <FaCheckCircle />, value: stats.featured, label: 'Featured' },
-            { icon: <FaBell />, value: stats.unreadInquiries, label: 'Unread Inquiries' },
+            { icon: <FaHome />, value: stats.total, label: content.stats?.[0] || 'Total Listings' },
+            { icon: <FaChartBar />, value: stats.published, label: content.stats?.[1] || 'Published' },
+            { icon: <FaCheckCircle />, value: stats.featured, label: content.stats?.[2] || 'Featured' },
+            { icon: <FaBell />, value: stats.unreadInquiries, label: content.stats?.[3] || 'Unread Inquiries' },
           ].map((s, i) => (
             <motion.div
               key={s.label}

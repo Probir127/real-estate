@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import useSiteContent from '../hooks/useSiteContent';
 import {
   FaSearch, FaCheckCircle, FaStar, FaMapMarkerAlt, FaPhoneAlt
 } from 'react-icons/fa';
@@ -117,9 +118,19 @@ const CITIES = ['All cities', 'Dhaka', 'Chattogram', 'Sylhet'];
 export default function AgentsPage() {
   const [selectedCity, setSelectedCity] = useState('All cities');
   const [searchQuery, setSearchQuery] = useState('');
+  const content = useSiteContent('agents', {
+    title: 'Find a verified agent near you',
+    subtitle: 'We check every agent’s trade licence and past deals before they can list. Ratings come from clients who actually closed.',
+    agents: AGENTS,
+    cities: CITIES,
+    labels: { found: 'agents found', deals: 'Deals', years: 'Years', reviews: 'Reviews', call: 'Call', listings: 'Listings' },
+  });
+  const agents = Array.isArray(content.agents) ? content.agents : AGENTS;
+  const cities = Array.isArray(content.cities) ? content.cities : CITIES;
+  const labels = content.labels || {};
 
   const filteredAgents = useMemo(() => {
-    return AGENTS.filter((agent) => {
+    return agents.filter((agent) => {
       const matchCity = selectedCity === 'All cities' || agent.city.toLowerCase() === selectedCity.toLowerCase();
       const q = searchQuery.toLowerCase().trim();
       const matchQuery =
@@ -129,16 +140,16 @@ export default function AgentsPage() {
         agent.areas.toLowerCase().includes(q);
       return matchCity && matchQuery;
     });
-  }, [selectedCity, searchQuery]);
+  }, [agents, selectedCity, searchQuery]);
 
   return (
     <div className="z-agents-page">
       {/* ── 1. Hero ────────────────────────────────────────────── */}
       <section className="z-agents-hero">
         <div className="container-page">
-          <h1 className="z-agents-hero__title">Find a verified agent near you</h1>
+          <h1 className="z-agents-hero__title">{content.title}</h1>
           <p className="z-agents-hero__sub">
-            We check every agent’s trade licence and past deals before they can list. Ratings come from clients who actually closed.
+            {content.subtitle}
           </p>
 
           <div className="z-agents-search-bar">
@@ -154,7 +165,7 @@ export default function AgentsPage() {
             </div>
 
             <div className="z-agents-cities">
-              {CITIES.map((city) => (
+              {cities.map((city) => (
                 <button
                   key={city}
                   type="button"
@@ -171,7 +182,7 @@ export default function AgentsPage() {
 
       {/* ── 2. Agents Grid ─────────────────────────────────────── */}
       <div className="container-page z-agents-container">
-        <p className="z-agents-count">{filteredAgents.length} agents found</p>
+        <p className="z-agents-count">{filteredAgents.length} {labels.found || 'agents found'}</p>
 
         <div className="z-agents-grid">
           {filteredAgents.map((agent) => (
@@ -207,25 +218,25 @@ export default function AgentsPage() {
               <div className="z-agent-stats">
                 <div className="z-stat-item">
                   <p className="z-stat-num">{agent.deals}</p>
-                  <p className="z-stat-lbl">Deals</p>
+                  <p className="z-stat-lbl">{labels.deals || 'Deals'}</p>
                 </div>
                 <div className="z-stat-item border-x">
                   <p className="z-stat-num">{agent.years}</p>
-                  <p className="z-stat-lbl">Years</p>
+                  <p className="z-stat-lbl">{labels.years || 'Years'}</p>
                 </div>
                 <div className="z-stat-item">
                   <p className="z-stat-num">{agent.reviews}</p>
-                  <p className="z-stat-lbl">Reviews</p>
+                  <p className="z-stat-lbl">{labels.reviews || 'Reviews'}</p>
                 </div>
               </div>
 
               <div className="z-agent-actions">
                 <a href={`tel:${agent.phone}`} className="z-agent-call-btn">
                   <FaPhoneAlt className="mr-1.5 text-xs" />
-                  Call
+                  {labels.call || 'Call'}
                 </a>
                 <Link to={`/search?q=${encodeURIComponent(agent.name)}`} className="z-agent-listings-btn">
-                  Listings
+                  {labels.listings || 'Listings'}
                 </Link>
               </div>
             </article>

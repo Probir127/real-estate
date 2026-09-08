@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaChevronDown, FaCheck, FaInfoCircle, FaCalculator } from 'react-icons/fa';
 import './LoanPage.css';
+import useSiteContent from '../hooks/useSiteContent';
 
 const LENDERS = [
   {
@@ -86,11 +87,27 @@ export function formatBDT(amount) {
 }
 
 export default function LoanPage() {
+  const content = useSiteContent('loan', {
+    title: 'Home loan & EMI calculator',
+    subtitle: 'Set the price, your down payment and tenure, then compare what six Bangladeshi lenders would charge you each month.',
+    lenders: LENDERS,
+    faqs: FAQS,
+    tableTitle: 'Lenders compared',
+    faqTitle: 'Common questions',
+    disclaimer: 'Indicative only. Rates move with Bangladesh Bank policy and your final offer depends on income assessment.',
+    tableFootnote: 'Indicative rates for illustration. Confirm current terms directly with the lender.',
+    browseCta: 'Browse verified homes in this budget',
+  });
+  const lenders = Array.isArray(content.lenders) && content.lenders.length ? content.lenders : LENDERS;
+  const faqs = Array.isArray(content.faqs) ? content.faqs : FAQS;
   const [price, setPrice] = useState(15000000); // 1.5 Crore
   const [downPercent, setDownPercent] = useState(30); // 30%
   const [tenure, setTenure] = useState(20); // 20 years
-  const [selectedLender, setSelectedLender] = useState(LENDERS[0]);
+  const [selectedLender, setSelectedLender] = useState(lenders[0]);
   const [openFaq, setOpenFaq] = useState(null);
+  useEffect(() => {
+    setSelectedLender((current) => lenders.find((lender) => lender.id === current.id) || lenders[0]);
+  }, [lenders]);
 
   const calculations = useMemo(() => {
     const downPayment = (price * downPercent) / 100;
@@ -123,9 +140,9 @@ export default function LoanPage() {
       {/* ── 1. Hero ────────────────────────────────────────────── */}
       <section className="z-loan-hero">
         <div className="container-page">
-          <h1 className="z-loan-hero__title">Home loan &amp; EMI calculator</h1>
+          <h1 className="z-loan-hero__title">{content.title}</h1>
           <p className="z-loan-hero__sub">
-            Set the price, your down payment and tenure, then compare what six Bangladeshi lenders would charge you each month.
+            {content.subtitle}
           </p>
         </div>
       </section>
@@ -205,7 +222,7 @@ export default function LoanPage() {
               <div className="z-calc-group">
                 <span className="z-calc-label">Lender</span>
                 <div className="z-lenders-grid">
-                  {LENDERS.map((lender) => {
+                  {lenders.map((lender) => {
                     const isSelected = selectedLender.id === lender.id;
                     return (
                       <button
@@ -254,11 +271,11 @@ export default function LoanPage() {
 
               <p className="z-loan-disclaimer">
                 <FaInfoCircle className="inline mr-1" />
-                Indicative only. Rates move with Bangladesh Bank policy and your final offer depends on income assessment.
+                {content.disclaimer}
               </p>
 
               <Link to="/search?type=buy" className="z-loan-cta-btn">
-                Browse verified homes in this budget
+                {content.browseCta}
               </Link>
             </div>
           </div>
@@ -267,7 +284,7 @@ export default function LoanPage() {
 
       {/* ── 3. Lenders Compared Table ─────────────────────────── */}
       <section className="container-page z-loan-table-sec">
-        <h2 className="z-sec-title">Lenders compared</h2>
+        <h2 className="z-sec-title">{content.tableTitle}</h2>
         <div className="z-table-wrap">
           <table className="z-loan-table">
             <thead>
@@ -280,7 +297,7 @@ export default function LoanPage() {
               </tr>
             </thead>
             <tbody>
-              {LENDERS.map((l) => (
+              {lenders.map((l) => (
                 <tr key={l.id}>
                   <td className="font-semibold text-ink-900">{l.name}</td>
                   <td className="text-right font-semibold text-brand-700">{l.rate}%</td>
@@ -293,15 +310,15 @@ export default function LoanPage() {
           </table>
         </div>
         <p className="z-table-footnote">
-          Indicative rates for illustration. Confirm current terms directly with the lender.
+          {content.tableFootnote}
         </p>
       </section>
 
       {/* ── 4. Common Questions Accordion ───────────────────────── */}
       <section className="container-page z-loan-faq-sec">
-        <h2 className="z-sec-title">Common questions</h2>
+        <h2 className="z-sec-title">{content.faqTitle}</h2>
         <div className="z-faq-grid">
-          {FAQS.map((faq, idx) => (
+          {faqs.map((faq, idx) => (
             <details
               key={idx}
               className="z-faq-card group"

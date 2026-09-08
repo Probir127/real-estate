@@ -3,9 +3,36 @@ import {
   FaPhoneAlt, FaEnvelope, FaMapMarkerAlt,
   FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube
 } from 'react-icons/fa';
+import useSiteContent from '../hooks/useSiteContent';
 import './Footer.css';
 
 export default function Footer() {
+  const footer = useSiteContent('footer', {
+    brand: { name: 'Zennor', subtitle: 'BANGLADESH' },
+    motto: 'Bangladesh’s property marketplace, built for how people here actually buy and rent.',
+    contact: {
+      phone: '+880 9612-345678',
+      email: 'hello@zennor.com.bd',
+      address: 'Level 7, Gulshan Avenue, Gulshan 1, Dhaka 1212',
+    },
+    socials: [
+      { label: 'Facebook', url: 'https://facebook.com' },
+      { label: 'Instagram', url: 'https://instagram.com' },
+      { label: 'LinkedIn', url: 'https://linkedin.com' },
+      { label: 'YouTube', url: 'https://youtube.com' },
+    ],
+    columns: [
+      { title: 'Buy', links: [['Apartments for sale', '/search?type=buy&kind=apartment'], ['Land & plots', '/search?type=buy&kind=land'], ['Duplex & houses', '/search?type=buy&kind=house'], ['New projects', '/search?type=buy&status=under-construction'], ['Home loan calculator', '/loan']] },
+      { title: 'Rent', links: [['Flats for rent', '/search?type=rent&kind=apartment'], ['Office space', '/search?type=rent&kind=office'], ['Commercial space', '/search?type=rent&kind=commercial'], ['Furnished homes', '/search?type=rent&amenity=furnished']] },
+      { title: 'Sell & list', links: [['Post a property', '/sell'], ['What is my property worth?', '/valuation'], ['Plans for agents', '/pricing'], ['Agent dashboard', '/dashboard']] },
+      { title: 'Popular areas', links: [['Gulshan', '/search?q=Gulshan'], ['Banani', '/search?q=Banani'], ['Dhanmondi', '/search?q=Dhanmondi'], ['Uttara', '/search?q=Uttara'], ['Bashundhara R/A', '/search?q=Bashundhara'], ['Mirpur DOHS', '/search?q=Mirpur']] },
+    ],
+    legal: [['Terms', '#'], ['Privacy', '#'], ['Trust & safety', '#'], ['Careers', '#']],
+    copyright: '© 2026 Zennor Bangladesh Ltd. All rights reserved.',
+  });
+  const socials = footer.socials || [];
+  const socialIcons = [FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube];
+
   return (
     <footer className="z-footer">
       <div className="container-page z-footer__top">
@@ -21,104 +48,61 @@ export default function Footer() {
               </span>
               <span className="z-footer-brand-text">
                 <span className="z-footer-brand-name">
-                  Zennor<span className="text-gold-500">.</span>
+                  {footer.brand?.name || 'Zennor'}<span className="text-gold-500">.</span>
                 </span>
-                <span className="z-footer-brand-sub">BANGLADESH</span>
+                  <span className="z-footer-brand-sub">{footer.brand?.subtitle || 'BANGLADESH'}</span>
               </span>
             </Link>
 
             <p className="z-footer__motto">
-              Bangladesh’s property marketplace, built for how people here actually buy and rent.
+              {footer.motto}
             </p>
 
             <div className="z-footer__contacts">
-              <a href="tel:+8809612345678" className="z-footer__contact-item">
+              <a href={`tel:${footer.contact?.phone || ''}`} className="z-footer__contact-item">
                 <FaPhoneAlt className="text-gold-400" />
-                <span>+880 9612-345678</span>
+                <span>{footer.contact?.phone}</span>
               </a>
-              <a href="mailto:hello@zennor.com.bd" className="z-footer__contact-item">
+              <a href={`mailto:${footer.contact?.email || ''}`} className="z-footer__contact-item">
                 <FaEnvelope className="text-gold-400" />
-                <span>hello@zennor.com.bd</span>
+                <span>{footer.contact?.email}</span>
               </a>
               <p className="z-footer__contact-item">
                 <FaMapMarkerAlt className="text-gold-400 mt-0.5 shrink-0" />
-                <span>Level 7, Gulshan Avenue, Gulshan 1, Dhaka 1212</span>
+                <span>{footer.contact?.address}</span>
               </p>
             </div>
 
             <div className="z-footer__socials">
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
-                <FaFacebookF />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
-                <FaInstagram />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-                <FaLinkedinIn />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube">
-                <FaYoutube />
-              </a>
+              {socials.map((social, index) => {
+                const Icon = socialIcons[index % socialIcons.length];
+                return (
+                  <a key={social.label || index} href={social.url || '#'} target="_blank" rel="noreferrer" aria-label={social.label}>
+                    <Icon />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
-          {/* Col 1: Buy */}
-          <div className="z-footer__links-col">
-            <h3>Buy</h3>
-            <ul>
-              <li><Link to="/search?type=buy&kind=apartment">Apartments for sale</Link></li>
-              <li><Link to="/search?type=buy&kind=land">Land &amp; plots</Link></li>
-              <li><Link to="/search?type=buy&kind=house">Duplex &amp; houses</Link></li>
-              <li><Link to="/search?type=buy&status=under-construction">New projects</Link></li>
-              <li><Link to="/loan">Home loan calculator</Link></li>
-            </ul>
-          </div>
-
-          {/* Col 2: Rent */}
-          <div className="z-footer__links-col">
-            <h3>Rent</h3>
-            <ul>
-              <li><Link to="/search?type=rent&kind=apartment">Flats for rent</Link></li>
-              <li><Link to="/search?type=rent&kind=office">Office space</Link></li>
-              <li><Link to="/search?type=rent&kind=commercial">Commercial space</Link></li>
-              <li><Link to="/search?type=rent&amenity=furnished">Furnished homes</Link></li>
-            </ul>
-          </div>
-
-          {/* Col 3: Sell & list */}
-          <div className="z-footer__links-col">
-            <h3>Sell &amp; list</h3>
-            <ul>
-              <li><Link to="/sell">Post a property</Link></li>
-              <li><Link to="/valuation">What is my property worth?</Link></li>
-              <li><Link to="/pricing">Plans for agents</Link></li>
-              <li><Link to="/dashboard">Agent dashboard</Link></li>
-            </ul>
-          </div>
-
-          {/* Col 4: Popular areas */}
-          <div className="z-footer__links-col">
-            <h3>Popular areas</h3>
-            <ul>
-              <li><Link to="/search?q=Gulshan">Gulshan</Link></li>
-              <li><Link to="/search?q=Banani">Banani</Link></li>
-              <li><Link to="/search?q=Dhanmondi">Dhanmondi</Link></li>
-              <li><Link to="/search?q=Uttara">Uttara</Link></li>
-              <li><Link to="/search?q=Bashundhara">Bashundhara R/A</Link></li>
-              <li><Link to="/search?q=Mirpur">Mirpur DOHS</Link></li>
-            </ul>
-          </div>
+          {(footer.columns || []).map((column) => (
+            <div className="z-footer__links-col" key={column.title}>
+              <h3>{column.title}</h3>
+              <ul>
+                {(column.links || []).map(([label, path]) => (
+                  <li key={`${label}-${path}`}><Link to={path}>{label}</Link></li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Bottom Bar */}
       <div className="container-page z-footer__bottom">
-        <p>© 2026 Zennor Bangladesh Ltd. All rights reserved.</p>
+        <p>{footer.copyright}</p>
         <div className="z-footer__legal">
-          <a href="#">Terms</a>
-          <a href="#">Privacy</a>
-          <a href="#">Trust &amp; safety</a>
-          <a href="#">Careers</a>
+          {(footer.legal || []).map(([label, path]) => <a key={label} href={path}>{label}</a>)}
         </div>
       </div>
     </footer>
