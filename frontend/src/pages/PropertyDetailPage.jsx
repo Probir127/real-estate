@@ -5,7 +5,7 @@ import {
   FaHeart, FaShareAlt, FaMapMarkerAlt, FaBed, FaBath,
   FaRulerCombined, FaCalendarAlt, FaCar, FaBuilding,
   FaPhone, FaEnvelope, FaUser, FaStar, FaEdit, FaTrash,
-  FaCheckCircle, FaArrowLeft, FaShieldAlt, FaChartLine
+  FaCheckCircle, FaArrowLeft, FaShieldAlt, FaChartLine, FaMap, FaCube
 } from 'react-icons/fa';
 import { propertiesApi, inquiriesApi, favoritesApi } from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -30,6 +30,7 @@ export default function PropertyDetailPage() {
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
+  const [show3DLayout, setShow3DLayout] = useState(false);
 
   // Favorite state
   const [isFav, setIsFav] = useState(false);
@@ -430,8 +431,27 @@ export default function PropertyDetailPage() {
 
             {/* 5. Neighborhood Map & Scores */}
             <div className="pd-location-tools">
-              <NeighborhoodMap property={property} />
-              <Property3DView property={property} />
+              <div className="pd-location-switcher" role="tablist" aria-label="Property location view">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={!show3DLayout}
+                  className={!show3DLayout ? 'active' : ''}
+                  onClick={() => setShow3DLayout(false)}
+                >
+                  <FaMap /> Map &amp; nearby places
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={show3DLayout}
+                  className={show3DLayout ? 'active' : ''}
+                  onClick={() => setShow3DLayout(true)}
+                >
+                  <FaCube /> 3D layout
+                </button>
+              </div>
+              {show3DLayout ? <Property3DView property={property} /> : <NeighborhoodMap property={property} />}
             </div>
 
             {/* 6. Price History & Public Records Table */}

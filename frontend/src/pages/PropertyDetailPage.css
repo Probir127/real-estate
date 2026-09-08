@@ -175,14 +175,45 @@
 }
 
 .pd-location-tools {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1.5rem;
-  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
 }
 
 .pd-location-tools > * {
   min-width: 0;
+}
+
+.pd-location-switcher {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--z-gray-100);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-full);
+}
+
+.pd-location-switcher button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0.55rem 0.85rem;
+  background: transparent;
+  color: var(--z-gray-500);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pd-location-switcher button:hover,
+.pd-location-switcher button.active {
+  background: var(--z-white);
+  color: var(--z-blue);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .pd-card {
@@ -445,7 +476,12 @@
     position: static;
   }
 
-  .pd-location-tools {
-    grid-template-columns: 1fr;
+  .pd-location-switcher {
+    width: 100%;
+  }
+
+  .pd-location-switcher button {
+    flex: 1;
+    justify-content: center;
   }
 }
