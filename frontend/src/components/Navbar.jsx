@@ -149,7 +149,7 @@ export default function Navbar() {
                 <path d="m22 22-5-10-5 10" />
                 <path d="M14 18h6" />
               </svg>
-              <span>{lang === 'EN' ? 'বাংলা' : 'English'}</span>
+              <span className="z-lang-label">{lang === 'EN' ? 'বাংলা' : 'English'}</span>
             </button>
 
             <button
