@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import ScheduleTourWidget from '../components/ScheduleTourWidget';
 import MortgageCalculator from '../components/MortgageCalculator';
 import NeighborhoodMap from '../components/NeighborhoodMap';
+import Property3DView from '../components/Property3DView';
 import PriceHistorySection from '../components/PriceHistorySection';
 
 import { PRESTIGE_PROPERTIES } from '../data/propertiesData';
@@ -428,7 +429,10 @@ export default function PropertyDetailPage() {
             {!isRent && <MortgageCalculator propertyPrice={property.price} />}
 
             {/* 5. Neighborhood Map & Scores */}
-            <NeighborhoodMap property={property} />
+            <div className="pd-location-tools">
+              <NeighborhoodMap property={property} />
+              <Property3DView property={property} />
+            </div>
 
             {/* 6. Price History & Public Records Table */}
             <PriceHistorySection property={property} />

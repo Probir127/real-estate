@@ -132,7 +132,7 @@
   transform: translateX(-50%);
   width: calc(100% - 2rem);
   max-width: 940px;
-  z-index: 95;
+  z-index: 200;
   padding: 0.55rem 0.85rem 0.65rem;
   border-radius: 1.25rem;
   background: rgba(10, 33, 27, 0.52);
@@ -273,6 +273,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.35rem 0.65rem;
+  min-width: 0;
 }
 
 .hp-console__cell--location {
@@ -293,6 +294,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-width: 0;
 }
 
 .hp-console__cell-label {
@@ -306,6 +308,7 @@
 
 .hp-console__cell-input {
   width: 100%;
+  min-width: 0;
   border: none;
   background: transparent;
   font-size: 0.95rem;
@@ -402,6 +405,21 @@
   }
 }
 
+@media (max-width: 900px) {
+  .hp-console.hp-console--floating {
+    width: calc(100% - 0.75rem);
+  }
+
+  .hp-console.hp-console--floating .hp-console__cell--type {
+    flex-basis: 145px;
+  }
+
+  .hp-console.hp-console--floating .hp-console__submit-btn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 .hp-console__btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(11, 93, 78, 0.45);
@@ -488,6 +506,12 @@
 
 .hp-section--white {
   background-color: #ffffff;
+}
+
+.hp-section--console-clearance {
+  padding-top: 12rem;
+  position: relative;
+  z-index: 0;
 }
 
 .hp-section--sand {

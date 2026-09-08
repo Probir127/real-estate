@@ -1,0 +1,140 @@
+.pd-3d-card {
+  background: var(--z-white);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  min-width: 0;
+}
+
+.pd-3d-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pd-3d-card__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--z-blue);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.pd-3d-card__title {
+  color: var(--z-darker);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.pd-3d-card__sub {
+  color: var(--z-gray-500);
+  font-size: 0.82rem;
+  margin-top: 0.25rem;
+}
+
+.pd-3d-icon-btn {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--z-gray-200);
+  border-radius: 50%;
+  background: var(--z-gray-50);
+  color: var(--z-gray-700);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.pd-3d-icon-btn:hover {
+  color: var(--z-blue);
+  border-color: var(--z-blue);
+  transform: rotate(-25deg);
+}
+
+.pd-3d-canvas {
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-sm);
+  background: #f4f8f6;
+  cursor: grab;
+}
+
+.pd-3d-canvas:active {
+  cursor: grabbing;
+}
+
+.pd-3d-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pd-3d-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.pd-3d-floor-tabs {
+  display: flex;
+  gap: 0.35rem;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.pd-3d-floor-tabs button,
+.pd-3d-light-toggle {
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-full);
+  background: var(--z-white);
+  color: var(--z-gray-500);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.42rem 0.65rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pd-3d-floor-tabs button:hover,
+.pd-3d-floor-tabs button.active,
+.pd-3d-light-toggle:hover,
+.pd-3d-light-toggle.active {
+  background: var(--z-blue-light);
+  border-color: var(--z-blue);
+  color: var(--z-blue-hover);
+}
+
+.pd-3d-light-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .pd-3d-card {
+    padding: 1rem;
+  }
+
+  .pd-3d-canvas {
+    height: 260px;
+  }
+
+  .pd-3d-controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

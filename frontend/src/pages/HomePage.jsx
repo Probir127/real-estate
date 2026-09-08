@@ -312,7 +312,7 @@ export default function HomePage() {
   }, [featuredProps, cityFilter, listTypeFilter]);
 
   return (
-    <div className="hp">
+    <div className={`hp ${isScrolled ? 'hp--console-floating' : ''}`}>
 
       {/* ══════════════════ 1. HERO ══════════════════ */}
       <section className="hp-hero">
@@ -468,7 +468,7 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════ 3. FEATURED PROPERTIES ══════════════════ */}
-      <section className="hp-section hp-section--white">
+      <section className={`hp-section hp-section--white hp-section--featured ${isScrolled ? 'hp-section--console-clearance' : ''}`}>
         <div className="hp-wrap">
           <div className="hp-section__head">
             <div>
