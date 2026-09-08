@@ -90,6 +90,24 @@
   --transition-normal: 250ms ease;
 }
 
+html[data-theme='dark'] {
+  --sand-50: #111a18;
+  --sand-100: #172320;
+  --sand-200: #263934;
+  --sand-300: #3b514b;
+  --ink-900: #f3faf7;
+  --ink-700: #d6e5df;
+  --ink-500: #9fb5ad;
+  --ink-300: #718b82;
+  --brand-50: #14382f;
+  --brand-100: #1d4d40;
+  --z-white: #182622;
+  --z-blue-subtle: #172320;
+  --z-green-light: #12352b;
+  --z-red-light: #3a1e22;
+  color-scheme: dark;
+}
+
 /* ─── Reset & Base ───────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -111,6 +129,25 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+html[data-theme='dark'] body {
+  background-color: var(--sand-50);
+}
+
+html[data-theme='dark'] input,
+html[data-theme='dark'] select,
+html[data-theme='dark'] textarea {
+  background-color: var(--sand-100);
+  color: var(--ink-900);
+  border-color: var(--sand-300);
+}
+
+html[data-theme='dark'] .card,
+html[data-theme='dark'] .z-card,
+html[data-theme='dark'] .modal-content {
+  background-color: var(--z-white);
+  border-color: var(--sand-200);
 }
 
 a {

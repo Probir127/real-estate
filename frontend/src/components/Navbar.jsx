@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   FaBars, FaTimes, FaUser, FaHeart,
-  FaPlus, FaSignOutAlt, FaChevronDown
+  FaPlus, FaSignOutAlt, FaChevronDown, FaMoon, FaSun
 } from 'react-icons/fa';
 import './Navbar.css';
 
@@ -15,6 +15,7 @@ export default function Navbar() {
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [lang, setLang] = useState('EN'); // 'EN' | 'BN'
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('zennor_theme') === 'dark');
   const [savedCount, setSavedCount] = useState(0);
   const dropRef = useRef(null);
 
@@ -65,6 +66,11 @@ export default function Navbar() {
   const toggleLanguage = () => {
     setLang((prev) => (prev === 'EN' ? 'BN' : 'EN'));
   };
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = darkMode ? 'dark' : 'light';
+    localStorage.setItem('zennor_theme', darkMode ? 'dark' : 'light');
+  }, [darkMode]);
 
   // Helper to check active status with query parameters (e.g. ?type=buy or ?type=rent)
   const isPathActive = (path) => {
@@ -164,6 +170,18 @@ export default function Navbar() {
               <span>{lang === 'EN' ? 'বাংলা' : 'English'}</span>
             </button>
 
+            <button
+              type="button"
+              onClick={() => setDarkMode((prev) => !prev)}
+              className="z-nav-theme-btn"
+              title={darkMode ? 'Switch to light theme' : 'Switch to dark theme'}
+              aria-label={darkMode ? 'Switch to light theme' : 'Switch to dark theme'}
+              aria-pressed={darkMode}
+            >
+              {darkMode ? <FaSun aria-hidden="true" /> : <FaMoon aria-hidden="true" />}
+              <span className="z-theme-label">{darkMode ? 'Light' : 'Dark'}</span>
+            </button>
+
             {/* Saved Button with Heart Icon */}
             <Link to="/saved" className="z-nav-saved-btn" title="Saved properties" aria-label="Saved properties">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="z-saved-heart-icon" aria-hidden="true">
@@ -260,6 +278,14 @@ export default function Navbar() {
             <Link to="/valuation" onClick={() => setMenuOpen(false)}>Property value</Link>
             <Link to="/pricing" onClick={() => setMenuOpen(false)}>For agents</Link>
             <Link to="/saved" onClick={() => setMenuOpen(false)}>Saved properties</Link>
+            <button
+              type="button"
+              onClick={() => setDarkMode((prev) => !prev)}
+              className="z-mobile-theme-toggle"
+            >
+              {darkMode ? <FaSun /> : <FaMoon />}
+              {darkMode ? 'Light theme' : 'Dark theme'}
+            </button>
             {isAuthenticated ? (
               <>
                 <Link to="/profile" onClick={() => setMenuOpen(false)}>My Profile</Link>
