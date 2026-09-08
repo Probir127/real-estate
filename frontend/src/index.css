@@ -262,6 +262,83 @@ html[data-theme='dark'] .btn-outline-primary:hover {
   color: var(--ink-900);
 }
 
+html[data-theme='dark'] .pcard,
+html[data-theme='dark'] .pr-top-bar,
+html[data-theme='dark'] .pr-mobile-filter-btn,
+html[data-theme='dark'] .hp-console__bar,
+html[data-theme='dark'] .hp-console__cell-input,
+html[data-theme='dark'] .hp-console__cell-select,
+html[data-theme='dark'] .z-billing-toggle,
+html[data-theme='dark'] .z-toggle-btn {
+  background-color: var(--surface-control);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pcard__body,
+html[data-theme='dark'] .pcard__title,
+html[data-theme='dark'] .pcard__spec,
+html[data-theme='dark'] .pcard__spec b,
+html[data-theme='dark'] .pr-type-tab,
+html[data-theme='dark'] .pr-search-input,
+html[data-theme='dark'] .pr-mobile-filter-btn {
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pcard__address,
+html[data-theme='dark'] .pcard__spec span,
+html[data-theme='dark'] .pcard__time,
+html[data-theme='dark'] .pr-search-icon,
+html[data-theme='dark'] .pr-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pcard__badge--type,
+html[data-theme='dark'] .pcard__save {
+  background-color: color-mix(in srgb, var(--surface-control) 92%, transparent);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-type-segmented,
+html[data-theme='dark'] .pr-search-input:focus,
+html[data-theme='dark'] .pr-search-input {
+  background-color: var(--sand-100);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pcard__skeleton {
+  background: linear-gradient(105deg, var(--sand-100) 30%, var(--sand-200) 50%, var(--sand-100) 70%);
+}
+
+html[data-theme='dark'] .hp,
+html[data-theme='dark'] .hp-stats,
+html[data-theme='dark'] .hp-section--white,
+html[data-theme='dark'] .hp-section--sand {
+  background-color: var(--surface-page);
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .hp-console__bar,
+html[data-theme='dark'] .hp-city-tab,
+html[data-theme='dark'] .hp-feature-card,
+html[data-theme='dark'] .hp-testimonial-card,
+html[data-theme='dark'] .hp-news-card,
+html[data-theme='dark'] .hp-cta-card {
+  background-color: var(--surface-control);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .hp-stats__item {
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .hp-stats__label,
+html[data-theme='dark'] .hp-city-tab {
+  color: var(--text-muted);
+}
+
 a {
   color: var(--z-blue);
   text-decoration: none;
