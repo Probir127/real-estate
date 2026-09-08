@@ -9,6 +9,23 @@
   padding: 1.75rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   margin-bottom: 1.5rem;
+  min-width: 0;
+}
+
+@media (max-width: 420px) {
+  .z-tour-widget {
+    padding: 1.25rem;
+  }
+
+  .z-tour-times-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .z-tour-type-btn {
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 }
 
 .z-tour-widget__header {

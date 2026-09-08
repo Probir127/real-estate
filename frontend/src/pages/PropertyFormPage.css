@@ -173,4 +173,12 @@
   .form-grid-2, .form-grid-3, .form-grid-4 {
     grid-template-columns: 1fr;
   }
+
+  .form-section {
+    padding: 1.25rem;
+  }
+
+  .property-form-page__header {
+    padding-top: 1.5rem;
+  }
 }

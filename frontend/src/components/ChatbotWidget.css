@@ -457,4 +457,39 @@
     width: calc(100vw - 32px);
     height: 500px;
   }
+
+  .z-chatbot-launcher {
+    width: 3.5rem;
+    height: 3.5rem;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .z-chatbot-launcher__tooltip {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .z-chatbot-root,
+  .z-chatbot-window {
+    right: 8px;
+  }
+
+  .z-chatbot-window {
+    width: calc(100vw - 16px);
+    max-width: none;
+  }
+
+  .z-chatbot-messages {
+    padding: 12px 10px;
+  }
+
+  .z-chat-msg {
+    max-width: 96%;
+  }
+
+  .z-chat-msg__content {
+    max-width: min(240px, calc(100vw - 90px));
+  }
 }

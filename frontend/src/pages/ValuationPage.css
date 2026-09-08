@@ -357,6 +357,32 @@
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
 }
 
+@media (max-width: 639px) {
+  .z-val-hero {
+    padding: 2.5rem 0 3.5rem;
+  }
+
+  .z-val-container {
+    margin-top: -1.5rem;
+  }
+
+  .z-val-form-card,
+  .z-val-result-card {
+    padding: 1.25rem;
+  }
+
+  .z-val-result-amount {
+    font-size: clamp(1.8rem, 9vw, 2.5rem);
+    overflow-wrap: anywhere;
+  }
+
+  .z-modal-content {
+    padding: 1.25rem;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+  }
+}
+
 .z-modal-close {
   position: absolute;
   top: 1.25rem;

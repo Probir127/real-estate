@@ -199,6 +199,21 @@ html[data-theme='dark'] {
   padding: 0;
 }
 
+/* Flex and grid items otherwise keep their min-content width, which can
+   make long addresses, labels, and controls push the viewport sideways. */
+img, svg, video, canvas {
+  max-width: 100%;
+}
+
+:where(.container-page, .container, main, section, article, form) > *,
+:where([class*='grid'], [class*='flex']) > * {
+  min-width: 0;
+}
+
+button, a, h1, h2, h3, h4, p, label, td, th {
+  overflow-wrap: anywhere;
+}
+
 html {
   scroll-behavior: smooth;
   font-size: 16px;
@@ -1053,5 +1068,11 @@ html[data-theme='dark'] .z-map-pill--rent.z-map-pill--active span {
   .container-page {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  .z-modal-content,
+  .pr-modal-content {
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
   }
 }

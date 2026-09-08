@@ -226,4 +226,12 @@
     align-items: flex-end;
     gap: 0.35rem;
   }
+
+  .z-nearby-item__left {
+    min-width: 0;
+  }
+
+  .z-nearby-item__left strong {
+    overflow-wrap: anywhere;
+  }
 }

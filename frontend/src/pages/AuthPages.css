@@ -269,3 +269,20 @@
   color: var(--z-blue);
   text-decoration: underline;
 }
+
+@media (max-width: 480px) {
+  .z-auth-page {
+    align-items: flex-start;
+    padding: 1rem 0.75rem 2rem;
+  }
+
+  .z-auth-card {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .z-quick-logins__grid {
+    grid-template-columns: 1fr;
+  }
+}

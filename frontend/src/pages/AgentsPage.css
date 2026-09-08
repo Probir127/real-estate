@@ -278,6 +278,21 @@
   gap: 0.5rem;
 }
 
+@media (max-width: 380px) {
+  .z-agent-card {
+    padding: 1.15rem;
+  }
+
+  .z-agent-actions {
+    flex-direction: column;
+  }
+
+  .z-agent-call-btn,
+  .z-agent-listings-btn {
+    width: 100%;
+  }
+}
+
 .z-agent-call-btn {
   flex: 1;
   display: inline-flex;

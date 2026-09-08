@@ -186,3 +186,16 @@
     padding: var(--space-lg);
   }
 }
+
+@media (max-width: 420px) {
+  .profile-avatar {
+    width: 76px;
+    height: 76px;
+  }
+
+  .profile-tab {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 0.85rem;
+  }
+}

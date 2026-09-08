@@ -1649,4 +1649,61 @@
   .pr-card__actions {
     margin-left: auto;
   }
+
+  .pr-main-container,
+  .pr-top-bar__container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .pr-quick-areas-bar {
+    align-items: flex-start;
+  }
+
+  .pr-quick-areas-label {
+    padding-top: 0.35rem;
+  }
+
+  .pr-modal-content {
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .pr-quickview-title {
+    padding-right: 2rem;
+    font-size: 1.15rem;
+  }
+
+  .pr-quickview-ctas {
+    flex-direction: column;
+  }
+
+  .pr-cta-btn {
+    width: 100%;
+  }
+
+  .pr-calc-row {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .pr-compare-tray {
+    bottom: 0.75rem;
+    width: calc(100% - 1rem);
+    padding: 0.65rem 0.75rem;
+  }
+
+  .pr-compare-tray__inner {
+    align-items: stretch;
+  }
+
+  .pr-compare-tray__left,
+  .pr-compare-tray__actions {
+    width: 100%;
+  }
+
+  .pr-compare-tray__actions {
+    justify-content: flex-end;
+  }
 }

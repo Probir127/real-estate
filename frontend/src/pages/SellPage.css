@@ -366,3 +366,30 @@
   text-align: center;
   padding: 3rem 1rem;
 }
+
+@media (max-width: 639px) {
+  .z-sell-hero {
+    padding: 2.5rem 0 3.5rem;
+  }
+
+  .z-sell-container {
+    margin-top: -1.5rem;
+  }
+
+  .z-sell-card {
+    padding: 1.25rem;
+  }
+
+  .z-sell-stepper {
+    gap: 0.25rem;
+  }
+
+  .z-step-item {
+    gap: 0.25rem;
+  }
+
+  .z-step-num {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
