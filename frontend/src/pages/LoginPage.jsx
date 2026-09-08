@@ -30,7 +30,6 @@ export default function LoginPage() {
     phone: '',
     password: '',
     password2: '',
-    is_agent: false,
   });
 
   const [showPass, setShowPass] = useState(false);
@@ -52,7 +51,7 @@ export default function LoginPage() {
       toast.success('Welcome back!');
       navigate(from, { replace: true });
     } catch (err) {
-      toast.error(getErrorMessage(err) || 'Invalid email or password.');
+      toast.error(getErrorMessage(err) || 'Invalid email or password.', { id: 'login-error' });
     } finally {
       setLoading(false);
     }
@@ -93,7 +92,9 @@ export default function LoginPage() {
       toast.success('Signed in successfully!');
       navigate(from, { replace: true });
     } catch (err) {
-      toast.error(getErrorMessage(err) || 'Could not sign in with demo credentials.');
+      toast.error(getErrorMessage(err) || 'Could not sign in with demo credentials.', {
+        id: 'quick-login-error',
+      });
     } finally {
       setLoading(false);
     }
@@ -197,7 +198,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     className="z-quick-btn"
-                    onClick={() => handleQuickLogin('agent@zennor.com.bd', 'Password123!')}
+                    onClick={() => handleQuickLogin('agent@zennor.bd', 'Password123!')}
                     disabled={loading}
                   >
                     <FaUserTie className="text-blue" />
@@ -206,7 +207,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     className="z-quick-btn"
-                    onClick={() => handleQuickLogin('admin@realestate.com', 'admin1234')}
+                    onClick={() => handleQuickLogin('admin@zennor.com', 'Admin1234!')}
                     disabled={loading}
                   >
                     <FaUser className="text-navy" />
