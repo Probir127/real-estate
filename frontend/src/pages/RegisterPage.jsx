@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaEye, FaEyeSlash, FaBuilding, FaHome } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaHome } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../utils/helpers';
 import toast from 'react-hot-toast';

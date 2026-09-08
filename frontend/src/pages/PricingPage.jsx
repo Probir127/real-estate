@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaMagic, FaCheck, FaArrowRight } from 'react-icons/fa';
+import { FaMagic, FaCheck } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import useSiteContent from '../hooks/useSiteContent';
 import { paymentsApi } from '../api/client';

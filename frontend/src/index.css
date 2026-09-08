@@ -148,7 +148,10 @@ html[data-theme='dark'] {
   --brand-700: #11634f;
   --brand-800: #0d4d3f;
   --z-white: #162238;
-  --z-blue-subtle: #111a2b;
+  --z-blue: #5bd7b0;
+  --z-blue-hover: #9bdcff;
+  --z-blue-light: #1d3552;
+  --z-blue-subtle: #17283f;
   --surface-page: #0b1220;
   --surface-card: #162238;
   --surface-elevated: #1c2b43;
@@ -959,6 +962,65 @@ html[data-theme='dark'] input::placeholder,
 html[data-theme='dark'] textarea::placeholder {
   color: var(--text-muted);
   opacity: 1;
+}
+
+/* Normalize legacy light-theme components that still use literal colors. */
+html[data-theme='dark'] .pcard,
+html[data-theme='dark'] .pr-search-panel,
+html[data-theme='dark'] .pr-filter-panel,
+html[data-theme='dark'] .pr-results-panel,
+html[data-theme='dark'] .pr-card,
+html[data-theme='dark'] .pr-sidebar-card,
+html[data-theme='dark'] .pr-top-bar,
+html[data-theme='dark'] .z-pricing-faq-card,
+html[data-theme='dark'] .z-faq-card,
+html[data-theme='dark'] .z-loan-table,
+html[data-theme='dark'] .z-loan-faq-card,
+html[data-theme='dark'] .z-val-result-card,
+html[data-theme='dark'] .z-history-card,
+html[data-theme='dark'] .z-saved-card,
+html[data-theme='dark'] .z-agent-card,
+html[data-theme='dark'] .z-form-card {
+  background-color: var(--surface-card);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pcard h1,
+html[data-theme='dark'] .pcard h2,
+html[data-theme='dark'] .pcard h3,
+html[data-theme='dark'] .pr-card h1,
+html[data-theme='dark'] .pr-card h2,
+html[data-theme='dark'] .pr-card h3,
+html[data-theme='dark'] .z-loan-table th,
+html[data-theme='dark'] .z-loan-table td,
+html[data-theme='dark'] .z-val-result-card strong,
+html[data-theme='dark'] .z-history-card strong {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pcard a,
+html[data-theme='dark'] .pr-card a,
+html[data-theme='dark'] .pr-filter-chip,
+html[data-theme='dark'] .pr-filter-btn,
+html[data-theme='dark'] .z-loan-table a,
+html[data-theme='dark'] .z-val-result-card a,
+html[data-theme='dark'] .z-history-card a {
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .pr-search-panel input,
+html[data-theme='dark'] .pr-search-panel select,
+html[data-theme='dark'] .pr-filter-panel input,
+html[data-theme='dark'] .pr-filter-panel select,
+html[data-theme='dark'] .z-loan-card input,
+html[data-theme='dark'] .z-val-result-card input,
+html[data-theme='dark'] .z-form-card input,
+html[data-theme='dark'] .z-form-card select,
+html[data-theme='dark'] .z-form-card textarea {
+  background-color: var(--surface-control);
+  color: var(--text-primary);
+  border-color: var(--border-default);
 }
 
 html[data-theme='dark'] .pr-search-input::placeholder,

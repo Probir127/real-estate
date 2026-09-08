@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { FaUpload, FaTimes, FaTrash, FaStar } from 'react-icons/fa'
+import { FaUpload, FaTimes, FaStar } from 'react-icons/fa'
 import { propertiesApi } from '../api/client'
 import { getErrorMessage } from '../utils/helpers'
 import toast from 'react-hot-toast'

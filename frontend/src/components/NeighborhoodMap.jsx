@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   FaMapMarkerAlt, FaWalking, FaBus, FaGraduationCap,
-  FaUtensils, FaShoppingCart, FaShieldAlt
+  FaUtensils
 } from 'react-icons/fa';
 import './NeighborhoodMap.css';
 

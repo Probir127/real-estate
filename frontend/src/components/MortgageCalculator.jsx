@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { FaCalculator, FaHome, FaShieldAlt, FaFileInvoiceDollar } from 'react-icons/fa';
+import { useState, useMemo, useEffect } from 'react';
+import { FaCalculator } from 'react-icons/fa';
 import { formatPrice } from '../utils/helpers';
 import './MortgageCalculator.css';
 
@@ -8,14 +8,16 @@ export default function MortgageCalculator({ propertyPrice = 10000000 }) {
   const [downPaymentPercent, setDownPaymentPercent] = useState(20);
   const [loanTermYears, setLoanTermYears] = useState(30);
   const [interestRate, setInterestRate] = useState(7.5);
-  const [propertyTaxRate, setPropertyTaxRate] = useState(0.8);
-  const [homeInsurance, setHomeInsurance] = useState(3500);
-  const [hoaFee, setHoaFee] = useState(4000);
+  const [propertyTaxRate] = useState(0.8);
+  const [homeInsurance] = useState(3500);
+  const [hoaFee] = useState(4000);
 
   // Sync if prop changes
-  useMemo(() => {
-    if (propertyPrice && propertyPrice !== homePrice) {
-      setHomePrice(propertyPrice);
+  useEffect(() => {
+    if (propertyPrice) {
+      setHomePrice((currentPrice) => (
+        currentPrice === propertyPrice ? currentPrice : propertyPrice
+      ));
     }
   }, [propertyPrice]);
 
