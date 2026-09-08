@@ -810,9 +810,6 @@ export default function HomePage() {
                   <span>See plans from ৳ 2,500/mo</span>
                   <FaArrowRight />
                 </Link>
-                <Link to="/dashboard" className="hp-banner-btn hp-banner-btn--secondary">
-                  Try the live demo
-                </Link>
               </div>
             </div>
 

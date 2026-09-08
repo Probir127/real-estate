@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaMagic, FaCheck, FaArrowRight } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import useSiteContent from '../hooks/useSiteContent';
@@ -124,10 +124,6 @@ export default function PricingPage() {
     faqs: FAQS,
     faqTitle: 'Questions agents ask us',
     footnote: 'All prices exclude 15% VAT. Enterprise and multi-city developer packages available on request.',
-    demoTitle: 'See the dashboard before you pay anything',
-    demoText: 'The full agent dashboard is open as a live demo — listings, leads, visits and invoices, with sample data.',
-    demoCta: 'Open the live demo',
-    trust: 'Trusted by 1,340+ agents across Bangladesh',
   });
   const tiers = Array.isArray(content.tiers) ? content.tiers : TIERS;
   const faqs = Array.isArray(content.faqs) ? content.faqs : FAQS;
@@ -251,19 +247,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ── 4. Live Demo Banner ────────────────────────────────── */}
-      <section className="container-page z-pricing-cta-sec">
-        <div className="z-pricing-demo-box">
-          <h2 className="z-pricing-demo-title">{content.demoTitle}</h2>
-          <p className="z-pricing-demo-sub">
-            {content.demoText}
-          </p>
-          <Link to="/dashboard" className="z-pricing-demo-btn">
-            {content.demoCta}
-          </Link>
-          <p className="z-pricing-demo-trust">{content.trust}</p>
-        </div>
-      </section>
     </div>
   );
 }

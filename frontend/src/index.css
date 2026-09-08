@@ -874,6 +874,78 @@ html[data-theme='dark'] .billing-result__secondary {
   border-color: var(--border-default);
 }
 
+/* Legacy page styles still contain literal light surfaces. Keep those
+   components aligned with the semantic theme without changing hero banners. */
+html[data-theme='dark'] .z-loan-page,
+html[data-theme='dark'] .z-agents-page,
+html[data-theme='dark'] .z-pricing-page,
+html[data-theme='dark'] .z-sell-page,
+html[data-theme='dark'] .z-val-page,
+html[data-theme='dark'] .z-saved-page,
+html[data-theme='dark'] .z-auth-page {
+  background-color: var(--surface-page);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .z-loan-card,
+html[data-theme='dark'] .z-loan-table,
+html[data-theme='dark'] .z-loan-faq-card,
+html[data-theme='dark'] .z-agent-card,
+html[data-theme='dark'] .z-tier-card,
+html[data-theme='dark'] .z-pricing-faq-card,
+html[data-theme='dark'] .z-sell-card,
+html[data-theme='dark'] .z-sell-preview-card,
+html[data-theme='dark'] .z-val-form-card,
+html[data-theme='dark'] .z-val-result-card,
+html[data-theme='dark'] .z-saved-card,
+html[data-theme='dark'] .z-auth-card {
+  background-color: var(--surface-card);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-loan-card h2,
+html[data-theme='dark'] .z-loan-card h3,
+html[data-theme='dark'] .z-loan-card strong,
+html[data-theme='dark'] .z-agent-card h2,
+html[data-theme='dark'] .z-agent-card h3,
+html[data-theme='dark'] .z-tier-card h2,
+html[data-theme='dark'] .z-tier-card h3,
+html[data-theme='dark'] .z-pricing-faq-card h3,
+html[data-theme='dark'] .z-sell-card h2,
+html[data-theme='dark'] .z-sell-card h3,
+html[data-theme='dark'] .z-val-form-card h2,
+html[data-theme='dark'] .z-val-form-card h3,
+html[data-theme='dark'] .z-saved-card h2,
+html[data-theme='dark'] .z-saved-card h3 {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-loan-card p,
+html[data-theme='dark'] .z-loan-card label,
+html[data-theme='dark'] .z-agent-card p,
+html[data-theme='dark'] .z-pricing-faq-card p,
+html[data-theme='dark'] .z-sell-card p,
+html[data-theme='dark'] .z-val-form-card p,
+html[data-theme='dark'] .z-saved-card p,
+html[data-theme='dark'] .z-auth-card p {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] input,
+html[data-theme='dark'] textarea,
+html[data-theme='dark'] select {
+  background-color: var(--surface-control);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
 html[data-theme='dark'] .pr-search-input::placeholder,
 html[data-theme='dark'] .pr-results-query,
 html[data-theme='dark'] .pr-results-sub,

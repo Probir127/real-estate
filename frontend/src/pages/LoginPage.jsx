@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaHome, FaEye, FaEyeSlash, FaUserTie, FaUser } from 'react-icons/fa';
+import { FaHome, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../utils/helpers';
 import toast from 'react-hot-toast';
@@ -86,22 +86,6 @@ export default function LoginPage() {
       navigate(from, { replace: true });
     } catch (err) {
       toast.error(getErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Quick One-Click Demo Logins
-  const handleQuickLogin = async (email, password) => {
-    setLoading(true);
-    try {
-      await login({ email, password });
-      toast.success('Signed in successfully!');
-      navigate(from, { replace: true });
-    } catch (err) {
-      toast.error(getErrorMessage(err) || 'Could not sign in with demo credentials.', {
-        id: 'quick-login-error',
-      });
     } finally {
       setLoading(false);
     }
@@ -196,32 +180,6 @@ export default function LoginPage() {
                 {loading ? <span className="spinner-sm" /> : 'Sign In'}
               </button>
 
-              {/* 1-Click Quick Demo Sign-Ins */}
-              <div className="z-quick-logins">
-                <div className="z-quick-logins__divider">
-                  <span>or quick sign in with</span>
-                </div>
-                <div className="z-quick-logins__grid">
-                  <button
-                    type="button"
-                    className="z-quick-btn"
-                    onClick={() => handleQuickLogin('agent@zennor.bd', 'Password123!')}
-                    disabled={loading}
-                  >
-                    <FaUserTie className="text-blue" />
-                    <span>Demo Agent</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="z-quick-btn"
-                    onClick={() => handleQuickLogin('admin@zennor.com', 'Admin1234!')}
-                    disabled={loading}
-                  >
-                    <FaUser className="text-navy" />
-                    <span>Admin</span>
-                  </button>
-                </div>
-              </div>
             </motion.form>
           ) : (
             <motion.form
