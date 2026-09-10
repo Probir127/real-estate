@@ -129,7 +129,7 @@ export const propertiesApi = {
   create: (data) => api.post('/properties/', data),
   update: (id, data) => api.patch(`/properties/${id}/`, data),
   delete: (id) => api.delete(`/properties/${id}/`),
-  getMyListings: () => api.get('/properties/my-listings/'),
+  getMyListings: () => api.get('/properties/my_listings/'),
   uploadImage: (propertyId, formData) =>
     api.post(`/properties/${propertyId}/images/`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },

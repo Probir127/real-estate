@@ -6,15 +6,15 @@
 
 .pr-search-page {
   min-height: 100vh;
-  background-color: #f8faf9;
-  color: #0c1a16;
+  background-color: var(--surface-page);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
 }
 
 /* ════════════ TOP SUB-HEADER SEARCH BAR ════════════ */
 .pr-top-bar {
-  background: #ffffff;
+  background: var(--surface-card);
   border-bottom: 1px solid #e3eae7;
   position: sticky;
   top: 0;
@@ -88,17 +88,17 @@
   width: 100%;
   height: 2.75rem;
   padding: 0 2.5rem 0 2.6rem;
-  background: #f8faf9;
-  border: 1px solid #e3eae7;
+  background: var(--surface-muted);
+  border: 1px solid var(--border-default);
   border-radius: 0.65rem;
   font-size: 0.925rem;
-  color: #0c1a16;
+  color: var(--text-primary);
   outline: none;
   transition: all 0.2s ease;
 }
 
 .pr-search-input:focus {
-  background: #ffffff;
+  background: var(--surface-card);
   border-color: #0b5d4e;
   box-shadow: 0 0 0 3px rgba(11, 93, 78, 0.12);
 }
@@ -133,7 +133,7 @@
   padding: 0 1rem;
   border: 1px solid #e3eae7;
   border-radius: 0.65rem;
-  background: #ffffff;
+  background: var(--surface-card);
   font-size: 0.875rem;
   font-weight: 600;
   color: #2b3a35;
@@ -203,7 +203,7 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.35rem 0.85rem;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid #e3eae7;
   border-radius: 999px;
   font-size: 0.825rem;
@@ -268,7 +268,7 @@
 .pr-sidebar-card {
   position: sticky;
   top: 5rem;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid #e3eae7;
   border-radius: 0.85rem;
   padding: 1.35rem;
@@ -358,7 +358,7 @@
   padding: 0.35rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 500;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid #e3eae7;
   border-radius: 0.5rem;
   color: #2b3a35;
@@ -393,7 +393,7 @@
   width: 100%;
   height: 2.5rem;
   padding: 0 2rem 0 0.75rem;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid #e3eae7;
   border-radius: 0.5rem;
   font-size: 0.8125rem;
@@ -434,7 +434,7 @@
   flex: 1;
   height: 2.25rem;
   border: 1px solid #e3eae7;
-  background: #ffffff;
+  background: var(--surface-card);
   border-radius: 0.5rem;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -532,7 +532,7 @@
   gap: 0.4rem;
   height: 2.35rem;
   padding: 0 0.85rem;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid #e3eae7;
   border-radius: 0.5rem;
   font-size: 0.8125rem;
@@ -573,7 +573,7 @@
 }
 
 .pr-view-btn.active {
-  background: #ffffff;
+  background: var(--surface-card);
   color: #0b5d4e;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
@@ -607,7 +607,7 @@
   gap: 0.5rem;
   margin-bottom: 1.25rem;
   padding: 0.65rem 0.85rem;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid #e3eae7;
   border-radius: 0.65rem;
 }
@@ -710,7 +710,7 @@
 .pr-card {
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid #e3eae7;
   border-radius: 0.85rem;
   overflow: hidden;
@@ -810,7 +810,7 @@
 
 .pr-card__save-btn:hover {
   transform: scale(1.1);
-  background: #ffffff;
+  background: var(--surface-card);
 }
 
 .pr-card__save-btn:active {
@@ -968,7 +968,7 @@
   padding: 0.25rem 0.55rem;
   border: 1px solid #e3eae7;
   border-radius: 0.35rem;
-  background: #ffffff;
+  background: var(--surface-card);
   font-size: 0.725rem;
   font-weight: 600;
   color: #2b3a35;
@@ -990,7 +990,7 @@
 
 /* ════════════ EMPTY STATE ════════════ */
 .pr-empty-state {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px dashed #cbd5d1;
   border-radius: 1rem;
   padding: 3.5rem 1.5rem;
@@ -1061,7 +1061,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.65rem 1.25rem;
-  background: #ffffff;
+  background: var(--surface-card);
   color: #2b3a35;
   border: 1px solid #e3eae7;
   border-radius: 0.5rem;
@@ -1093,7 +1093,7 @@
   inset-x: 0;
   bottom: 0;
   max-height: 88vh;
-  background: #ffffff;
+  background: var(--surface-card);
   border-radius: 1.25rem 1.25rem 0 0;
   display: flex;
   flex-direction: column;
@@ -1107,7 +1107,7 @@
   justify-content: space-between;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid #e3eae7;
-  background: #ffffff;
+  background: var(--surface-card);
 }
 
 .pr-drawer-title {
@@ -1140,13 +1140,13 @@
   gap: 0.75rem;
   padding: 1rem 1.25rem;
   border-top: 1px solid #e3eae7;
-  background: #ffffff;
+  background: var(--surface-card);
 }
 
 .pr-drawer-reset-btn {
   padding: 0.75rem 1.25rem;
   border: 1px solid #e3eae7;
-  background: #ffffff;
+  background: var(--surface-card);
   border-radius: 0.65rem;
   font-size: 0.9rem;
   font-weight: 600;
@@ -1188,11 +1188,13 @@
   position: relative;
   width: 100%;
   max-width: 900px;
-  max-height: 90vh;
-  background: #ffffff;
+  max-height: 92vh;
+  background: var(--surface-card);
   border-radius: 1rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   z-index: 2;
   padding: 1.5rem;
 }
@@ -1223,11 +1225,31 @@
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 1.75rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pr-quickview-right {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.pr-quickview-left {
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
   .pr-quickview-grid {
     grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+  .pr-quickview-right {
+    overflow-y: visible;
   }
 }
 
@@ -1277,7 +1299,7 @@
 .pr-quickview-title {
   font-size: 1.35rem;
   font-weight: 700;
-  color: #0c1a16;
+  color: var(--text-primary);
   margin: 0.4rem 0 0.35rem;
   line-height: 1.3;
 }
@@ -1285,7 +1307,7 @@
 .pr-quickview-price {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #0b5d4e;
+  color: var(--accent);
   margin: 0.5rem 0 1rem;
 }
 
@@ -1297,8 +1319,8 @@
 }
 
 .pr-spec-box {
-  background: #f8faf9;
-  border: 1px solid #e3eae7;
+  background: var(--surface-muted);
+  border: 1px solid var(--border-default);
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   display: flex;
@@ -1307,14 +1329,14 @@
 
 .pr-spec-box__label {
   font-size: 0.7rem;
-  color: #5b6b66;
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
 .pr-spec-box__val {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #0c1a16;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -1324,14 +1346,14 @@
 .pr-quickview-desc {
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #2b3a35;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
 }
 
 .pr-quickview-subtitle {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #0c1a16;
+  color: var(--text-primary);
   margin: 0 0 0.5rem;
 }
 
@@ -1339,7 +1361,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .pr-amenity-chip {
@@ -1347,16 +1369,23 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.25rem 0.65rem;
-  background: #f1f5f3;
+  background: var(--surface-muted);
+  border: 1px solid var(--border-subtle);
   border-radius: 999px;
   font-size: 0.775rem;
-  color: #2b3a35;
+  color: var(--text-secondary);
 }
 
 .pr-quickview-ctas {
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  position: sticky;
+  bottom: 0;
+  background: var(--surface-card);
+  padding-bottom: 0.25rem;
 }
 
 .pr-cta-btn {
@@ -1371,18 +1400,22 @@
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
+/* WhatsApp — always green, always white text */
 .pr-cta-btn--wa {
-  background: #25d366;
-  color: #ffffff;
+  background: #25d366 !important;
+  color: #ffffff !important;
   border: none;
 }
 
 .pr-cta-btn--wa:hover {
-  background: #1ebc59;
+  background: #1ebc59 !important;
+  color: #ffffff !important;
 }
 
+/* Call Now — dark brand teal, always readable */
 .pr-cta-btn--phone {
   background: #0b5d4e;
   color: #ffffff;
@@ -1390,17 +1423,20 @@
 }
 
 .pr-cta-btn--phone:hover {
-  background: #0a4a3f;
+  background: #093d35;
+  color: #ffffff;
 }
 
+/* View Full Details — outline style adapts to theme */
 .pr-cta-btn--detail {
-  background: #ffffff;
-  color: #0b5d4e;
-  border: 1px solid #0b5d4e;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
 }
 
 .pr-cta-btn--detail:hover {
-  background: #eefaf5;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent);
 }
 
 /* ════════════ AFFORDABILITY MODAL ════════════ */

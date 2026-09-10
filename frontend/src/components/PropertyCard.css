@@ -1,6 +1,6 @@
-﻿/* --- PropertyCard Premium Luxury --- */
+/* --- PropertyCard Premium Luxury --- */
 .pcard {
-  background: #ffffff;
+  background: var(--surface-card);
   border-radius: 1rem;
   border: 1px solid var(--sand-200, #e3eae7);
   overflow: hidden;
@@ -114,8 +114,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-.pcard__save:hover { color: #ef4444; transform: scale(1.12); background: #fff5f5; }
-.pcard__save--active { color: #ef4444; background: #fff0f0; }
+.pcard__save:hover { color: #ef4444; transform: scale(1.12); background: var(--z-red-light); }
+.pcard__save--active { color: #ef4444; background: var(--z-red-light); }
 .pcard__save svg { width: 0.95rem; height: 0.95rem; }
 
 .pcard__price-overlay {

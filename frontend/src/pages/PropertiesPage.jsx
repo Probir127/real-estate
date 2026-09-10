@@ -1142,7 +1142,7 @@ export default function PropertiesPage() {
 
               <div className="pr-quickview-grid">
                 {/* Image Gallery Column */}
-                <div className="pr-quickview-gallery">
+                <div className="pr-quickview-left pr-quickview-gallery">
                   <div className="pr-quickview-main-img-wrap">
                     <img
                       src={quickViewProperty.images[0]}
@@ -1166,7 +1166,7 @@ export default function PropertiesPage() {
                 </div>
 
                 {/* Details Column */}
-                <div className="pr-quickview-info">
+                <div className="pr-quickview-right pr-quickview-info">
                   <div className="pr-quickview-header">
                     <div className="pr-card__cat-row">
                       <span className="pr-card__cat">{quickViewProperty.kind}</span>

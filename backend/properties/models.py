@@ -64,6 +64,11 @@ class Property(models.Model):
 
     # Features (stored as comma-separated for simplicity)
     features = models.TextField(blank=True, help_text="Comma-separated: 'Pool, Garden, Gym'")
+    layout_data = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Optional 3D layout configuration with room names and dimensions.",
+    )
 
     # Relationships
     agent = models.ForeignKey(

@@ -70,7 +70,7 @@
 }
 
 .z-toggle-btn.active {
-  background-color: #ffffff;
+  background-color: var(--surface-card);
   color: var(--brand-950);
 }
 
@@ -110,7 +110,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--sand-200);
   border-radius: var(--radius-lg);
   padding: 1.75rem;
@@ -233,7 +233,7 @@
 .z-tier-cta--outline {
   border: 1px solid var(--sand-200);
   color: var(--ink-700);
-  background: #ffffff;
+  background: var(--surface-card);
 }
 
 .z-tier-cta--outline:hover {
@@ -270,7 +270,7 @@
 }
 
 .z-pricing-faq-card {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--sand-200);
   border-radius: var(--radius-md);
   padding: 1.5rem;

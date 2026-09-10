@@ -143,7 +143,8 @@
   background: var(--z-red);
 }
 
-.file-dropzone {
+.file-dropzone,
+.image-upload-area {
   border: 2px dashed var(--z-gray-300);
   border-radius: var(--radius-md);
   padding: 2.5rem 1.5rem;
@@ -151,15 +152,141 @@
   cursor: pointer;
   background-color: var(--z-gray-50);
   transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--z-gray-600);
 }
 
-.file-dropzone:hover {
+.file-dropzone:hover,
+.image-upload-area:hover {
   border-color: var(--z-blue);
   background-color: var(--z-blue-light);
+  color: var(--z-blue);
 }
 
-.file-dropzone input {
+.file-dropzone input,
+.image-upload-area input {
   display: none;
+}
+
+/* 3D Layout Room Builder */
+.layout-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.layout-room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.layout-room-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: var(--z-gray-50);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast);
+}
+
+.layout-room-row:hover {
+  border-color: var(--z-gray-300);
+}
+
+.layout-room-row__num {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--z-blue-light);
+  color: var(--z-blue);
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.layout-room-row__fields {
+  display: grid;
+  grid-template-columns: 180px 180px 1fr;
+  gap: 0.75rem;
+  flex: 1;
+  align-items: end;
+}
+
+.layout-room-row__fields .form-group {
+  margin-bottom: 0;
+}
+
+.layout-room-row__fields .form-label {
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  color: var(--z-gray-600);
+}
+
+.layout-room-row__fields .form-input,
+.layout-room-row__fields .form-select {
+  padding: 0.45rem 0.65rem;
+  font-size: 0.875rem;
+}
+
+.layout-room-row__remove {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--z-gray-400);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: all var(--transition-fast);
+}
+
+.layout-room-row__remove:hover {
+  color: var(--z-red);
+  background: #fee2e2;
+}
+
+.layout-add-room-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  background: var(--z-white);
+  border: 1px dashed var(--z-blue);
+  color: var(--z-blue);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: 1.25rem;
+  align-self: flex-start;
+}
+
+.layout-add-room-btn:hover {
+  background: var(--z-blue-light);
+}
+
+.property-form-page__submit {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--z-gray-200);
 }
 
 .form-actions {
@@ -180,5 +307,18 @@
 
   .property-form-page__header {
     padding-top: 1.5rem;
+  }
+
+  .layout-room-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .layout-room-row__fields {
+    grid-template-columns: 1fr;
+  }
+
+  .layout-room-row__remove {
+    align-self: flex-end;
   }
 }

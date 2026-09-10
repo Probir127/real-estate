@@ -156,8 +156,8 @@
 }
 
 .pd-gallery__thumb.active {
-  border-color: var(--z-blue);
-  box-shadow: 0 0 0 2px rgba(0, 106, 255, 0.25);
+  border-color: var(--accent, var(--z-blue));
+  box-shadow: 0 0 0 2px var(--accent-subtle, rgba(0, 106, 255, 0.25));
 }
 
 /* ── Two-Column Body Layout ──────────────── */

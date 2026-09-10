@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { FaUpload, FaTimes, FaStar } from 'react-icons/fa'
+import { FaUpload, FaTimes, FaStar, FaPlus, FaCube, FaTrash } from 'react-icons/fa'
 import { propertiesApi } from '../api/client'
 import { getErrorMessage } from '../utils/helpers'
 import toast from 'react-hot-toast'
@@ -23,7 +23,11 @@ const EMPTY_FORM = {
   latitude: '', longitude: '',
   bedrooms: 1, bathrooms: 1, area_sqft: 0, garage: 0, year_built: '',
   features: '', is_featured: false, is_published: true,
+  layout_data: {},
 }
+
+const ROOM_PRESETS = ['Living Room','Dining Room','Master Bedroom','Bedroom','Kitchen','Bathroom','Study / Office','Hallway','Storage','Garage']
+const ROOM_SIZES  = [{value:'small',label:'Small (~200 sqft)'},{value:'medium',label:'Medium (~350 sqft)'},{value:'large',label:'Large (~500+ sqft)'}]
 
 export default function PropertyFormPage() {
   const { id } = useParams() // if editing existing property
@@ -37,6 +41,22 @@ export default function PropertyFormPage() {
   // Image upload state
   const [newImages, setNewImages] = useState([]) // { file, preview }
   const [existingImages, setExistingImages] = useState([])
+
+  // Floor plan image upload state
+  const [floorPlanFile, setFloorPlanFile] = useState(null)
+  const [floorPlanPreview, setFloorPlanPreview] = useState(null)
+  const existingFloorPlan = existingImages.find(img =>
+    img.alt_text?.toLowerCase().includes('floor') ||
+    img.alt_text?.toLowerCase().includes('plan') ||
+    img.alt_text?.toLowerCase().includes('layout')
+  ) || null
+
+  // 3D layout rooms
+  const [rooms, setRooms] = useState([])
+
+  const addRoom = () => setRooms(prev => [...prev, { name: 'Living Room', size: 'medium', description: '' }])
+  const removeRoom = (i) => setRooms(prev => prev.filter((_, idx) => idx !== i))
+  const updateRoom = (i, key, val) => setRooms(prev => prev.map((r, idx) => idx === i ? { ...r, [key]: val } : r))
 
   // Fetch property data if editing
   useEffect(() => {
@@ -66,8 +86,13 @@ export default function PropertyFormPage() {
           features: p.features || '',
           is_featured: p.is_featured || false,
           is_published: p.is_published !== false,
+          layout_data: p.layout_data || {},
         })
         setExistingImages(p.images || [])
+        // Pre-populate rooms from layout_data
+        if (p.layout_data?.rooms?.length) {
+          setRooms(p.layout_data.rooms)
+        }
       } catch {
         toast.error('Could not load property.')
         navigate('/dashboard')
@@ -105,6 +130,14 @@ export default function PropertyFormPage() {
     }
   }
 
+  const handleFloorPlanAdd = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    if (file.size > 8 * 1024 * 1024) { toast.error('Floor plan image must be under 8 MB.'); return }
+    setFloorPlanFile(file)
+    setFloorPlanPreview(URL.createObjectURL(file))
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.title || !form.price || !form.city || !form.address) {
@@ -113,8 +146,10 @@ export default function PropertyFormPage() {
     }
     setLoading(true)
     try {
+      const layout_data = rooms.length > 0 ? { rooms } : {}
       const payload = {
         ...form,
+        layout_data,
         price: Number(form.price),
         bedrooms: form.bedrooms ? Number(form.bedrooms) : 1,
         bathrooms: form.bathrooms ? Number(form.bathrooms) : 1,
@@ -135,7 +170,7 @@ export default function PropertyFormPage() {
         toast.success('Listing created!')
       }
 
-      // Upload new images
+      // Upload property photos
       for (const img of newImages) {
         const fd = new FormData()
         fd.append('image', img.file)
@@ -143,6 +178,18 @@ export default function PropertyFormPage() {
           await propertiesApi.uploadImage(propertyId, fd)
         } catch {
           toast.error(`Failed to upload ${img.file.name}`)
+        }
+      }
+
+      // Upload floor plan image
+      if (floorPlanFile) {
+        const fd = new FormData()
+        fd.append('image', floorPlanFile)
+        fd.append('alt_text', 'floor_plan')
+        try {
+          await propertiesApi.uploadImage(propertyId, fd)
+        } catch {
+          toast.error('Failed to upload floor plan image')
         }
       }
 
@@ -391,7 +438,7 @@ export default function PropertyFormPage() {
               )}
 
               {/* Upload button */}
-              <label className="image-upload-area">
+              <label className="file-dropzone">
                 <FaUpload />
                 <span>Click to add photos</span>
                 <input
@@ -402,6 +449,135 @@ export default function PropertyFormPage() {
                   hidden
                 />
               </label>
+            </motion.section>
+
+            {/* 3D Layout Builder */}
+            <motion.section
+              className="form-section glass-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="layout-section-header">
+                <div>
+                  <h3><FaCube style={{ color: 'var(--z-blue)', marginRight: '0.5rem' }} />3D Layout</h3>
+                  <p className="text-slate" style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>
+                    Describe the rooms so buyers can explore a 3D floor plan. Upload a 2D floor plan image too.
+                  </p>
+                </div>
+              </div>
+
+              {/* Room list */}
+              {rooms.length > 0 && (
+                <div className="layout-room-list">
+                  {rooms.map((room, i) => (
+                    <div key={i} className="layout-room-row">
+                      <div className="layout-room-row__num">{i + 1}</div>
+
+                      <div className="layout-room-row__fields">
+                        <div className="form-group">
+                          <label className="form-label">Room Name</label>
+                          <select
+                            className="form-select"
+                            value={room.name}
+                            onChange={e => updateRoom(i, 'name', e.target.value)}
+                          >
+                            {ROOM_PRESETS.map(p => <option key={p} value={p}>{p}</option>)}
+                          </select>
+                        </div>
+
+                        <div className="form-group">
+                          <label className="form-label">Size</label>
+                          <select
+                            className="form-select"
+                            value={room.size || 'medium'}
+                            onChange={e => updateRoom(i, 'size', e.target.value)}
+                          >
+                            {ROOM_SIZES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                          </select>
+                        </div>
+
+                        <div className="form-group layout-room-row__desc">
+                          <label className="form-label">Description (optional)</label>
+                          <input
+                            type="text"
+                            className="form-input"
+                            placeholder="e.g. Spacious with balcony access"
+                            value={room.description || ''}
+                            onChange={e => updateRoom(i, 'description', e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="layout-room-row__remove"
+                        onClick={() => removeRoom(i)}
+                        aria-label="Remove room"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button
+                type="button"
+                className="layout-add-room-btn"
+                onClick={addRoom}
+              >
+                <FaPlus /> Add Room
+              </button>
+
+              {/* Floor Plan Image Upload */}
+              <div style={{ borderTop: '1px solid var(--z-gray-100)', paddingTop: '1.25rem' }}>
+                <p className="form-label" style={{ marginBottom: '0.5rem' }}>Floor Plan Image (2D — optional)</p>
+                <p className="text-slate" style={{ fontSize: '0.8rem', marginBottom: '0.75rem' }}>
+                  Upload an architect drawing or plan sketch. Shown alongside the 3D view.
+                </p>
+
+                {/* Existing floor plan */}
+                {existingFloorPlan && !floorPlanPreview && (
+                  <div className="image-thumb" style={{ width: 180, height: 130, marginBottom: '0.75rem' }}>
+                    <img src={existingFloorPlan.image_url} alt="Current floor plan" />
+                    <button
+                      type="button"
+                      className="image-thumb__delete"
+                      onClick={() => handleDeleteExisting(existingFloorPlan.id)}
+                      title="Remove floor plan"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                )}
+
+                {/* New floor plan preview */}
+                {floorPlanPreview && (
+                  <div className="image-thumb" style={{ width: 180, height: 130, marginBottom: '0.75rem' }}>
+                    <img src={floorPlanPreview} alt="Floor plan preview" />
+                    <button
+                      type="button"
+                      className="image-thumb__delete"
+                      onClick={() => { setFloorPlanFile(null); setFloorPlanPreview(null) }}
+                      title="Remove"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                )}
+
+                <label className="file-dropzone" style={{ maxWidth: 320 }}>
+                  <FaUpload />
+                  <span>Upload floor plan image</span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                    onChange={handleFloorPlanAdd}
+                    hidden
+                  />
+                </label>
+              </div>
             </motion.section>
           </div>
 

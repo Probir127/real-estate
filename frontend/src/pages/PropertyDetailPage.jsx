@@ -5,7 +5,7 @@ import {
   FaHeart, FaShareAlt, FaMapMarkerAlt, FaBed, FaBath,
   FaRulerCombined, FaCalendarAlt, FaCar, FaBuilding,
   FaPhone, FaEnvelope, FaUser, FaStar, FaEdit, FaTrash,
-  FaCheckCircle, FaArrowLeft, FaShieldAlt, FaChartLine, FaMap, FaCube
+  FaCheckCircle, FaArrowLeft, FaShieldAlt, FaChartLine, FaMap, FaCube, FaImage
 } from 'react-icons/fa';
 import { propertiesApi, inquiriesApi, favoritesApi } from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -30,7 +30,7 @@ export default function PropertyDetailPage() {
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
-  const [show3DLayout, setShow3DLayout] = useState(false);
+  const [locationTab, setLocationTab] = useState('map'); // 'map' | '3d' | 'floorplan'
 
   // Favorite state
   const [isFav, setIsFav] = useState(false);
@@ -429,30 +429,52 @@ export default function PropertyDetailPage() {
             {/* 4. Mortgage Calculator (Zillow Standard) */}
             {!isRent && <MortgageCalculator propertyPrice={property.price} />}
 
-            {/* 5. Neighborhood Map & Scores */}
-            <div className="pd-location-tools">
-              <div className="pd-location-switcher" role="tablist" aria-label="Property location view">
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={!show3DLayout}
-                  className={!show3DLayout ? 'active' : ''}
-                  onClick={() => setShow3DLayout(false)}
-                >
-                  <FaMap /> Map &amp; nearby places
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={show3DLayout}
-                  className={show3DLayout ? 'active' : ''}
-                  onClick={() => setShow3DLayout(true)}
-                >
-                  <FaCube /> 3D layout
-                </button>
-              </div>
-              {show3DLayout ? <Property3DView property={property} /> : <NeighborhoodMap property={property} />}
-            </div>
+            {/* 5. Neighborhood Map, 3D Layout & Floor Plan */}
+            {(() => {
+              const floorPlanImage = property?.images?.find(img => {
+                const alt = (img.alt_text || '').toLowerCase();
+                return alt.includes('floor') || alt.includes('plan') || alt.includes('layout');
+              });
+
+              return (
+                <div className="pd-location-tools">
+                  <div className="pd-location-switcher" role="tablist" aria-label="Property views">
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={locationTab === 'map'}
+                      className={locationTab === 'map' ? 'active' : ''}
+                      onClick={() => setLocationTab('map')}
+                    >
+                      <FaMap /> Map &amp; nearby places
+                    </button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={locationTab === '3d'}
+                      className={locationTab === '3d' ? 'active' : ''}
+                      onClick={() => setLocationTab('3d')}
+                    >
+                      <FaCube /> 3D layout
+                    </button>
+                    {floorPlanImage && (
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={locationTab === 'floorplan'}
+                        className={locationTab === 'floorplan' ? 'active' : ''}
+                        onClick={() => setLocationTab('floorplan')}
+                      >
+                        <FaImage /> Floor plan
+                      </button>
+                    )}
+                  </div>
+                  {locationTab === 'map' && <NeighborhoodMap property={property} />}
+                  {locationTab === '3d' && <Property3DView property={property} initialViewMode="3d" />}
+                  {locationTab === 'floorplan' && <Property3DView property={property} initialViewMode="2d" />}
+                </div>
+              );
+            })()}
 
             {/* 6. Price History & Public Records Table */}
             <PriceHistorySection property={property} />

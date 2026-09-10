@@ -152,6 +152,7 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             'latitude', 'longitude',
             'bedrooms', 'bathrooms', 'area_sqft', 'garage', 'year_built',
             'features', 'features_list',
+            'layout_data',
             'is_featured', 'is_published',
             'primary_image_url', 'agent', 'images',
             'is_favorited', 'favorite_id',

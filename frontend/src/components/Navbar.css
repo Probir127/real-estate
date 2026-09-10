@@ -685,3 +685,126 @@ html[data-theme='dark'] .z-mobile-theme-toggle {
     padding: 0;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   DARK MODE OVERRIDES — Navbar
+   ═══════════════════════════════════════════════════════════ */
+html[data-theme='dark'] .z-nav {
+  background-color: color-mix(in srgb, var(--surface-card) 96%, transparent);
+  border-color: var(--border-default);
+}
+
+/* Nav links: always light text on dark background */
+html[data-theme='dark'] .z-nav-link {
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .z-nav-link:hover {
+  background-color: var(--surface-muted);
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .z-nav-link.active {
+  background-color: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+}
+
+/* Brand text */
+html[data-theme='dark'] .z-nav-brand-name {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-nav-brand-sub {
+  color: var(--text-muted);
+}
+
+/* Lang / theme / saved buttons */
+html[data-theme='dark'] .z-nav-lang-btn,
+html[data-theme='dark'] .z-nav-theme-btn,
+html[data-theme='dark'] .z-nav-saved-btn {
+  border-color: var(--border-default);
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .z-nav-lang-btn:hover,
+html[data-theme='dark'] .z-nav-theme-btn:hover,
+html[data-theme='dark'] .z-nav-saved-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface-elevated);
+}
+
+/* User button */
+html[data-theme='dark'] .z-nav__user-btn {
+  border-color: var(--border-default);
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .z-nav__user-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-nav__user-name {
+  color: var(--text-secondary);
+}
+
+/* Post CTA button — keep brand color in dark */
+html[data-theme='dark'] .z-nav-post-cta {
+  background: var(--accent);
+  color: #fff;
+}
+
+html[data-theme='dark'] .z-nav-post-cta:hover {
+  background: var(--accent-hover);
+}
+
+/* Dropdown */
+html[data-theme='dark'] .z-nav__dropdown {
+  background: var(--surface-elevated);
+  border-color: var(--border-default);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+html[data-theme='dark'] .z-nav__dropdown-item {
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .z-nav__dropdown-item:hover {
+  background: var(--surface-muted);
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-nav__dropdown-divider {
+  border-color: var(--border-subtle);
+}
+
+/* Mobile drawer */
+html[data-theme='dark'] .z-mobile-drawer {
+  background: var(--surface-elevated);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-mobile-link {
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .z-mobile-link:hover,
+html[data-theme='dark'] .z-mobile-link.active {
+  background: var(--surface-muted);
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .z-mobile-drawer__divider {
+  border-color: var(--border-subtle);
+}
+
+/* Mobile toggle button */
+html[data-theme='dark'] .z-nav-mobile-toggle {
+  border-color: var(--border-default);
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}

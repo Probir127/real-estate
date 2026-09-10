@@ -46,7 +46,7 @@
 }
 
 .z-sell-card {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--sand-200);
   border-radius: var(--radius-lg);
   padding: 1.75rem;
@@ -279,7 +279,7 @@
 }
 
 .z-sell-preview-card {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--sand-200);
   border-radius: var(--radius-md);
   padding: 1.5rem;

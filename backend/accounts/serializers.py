@@ -18,7 +18,16 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     Returns: access, refresh, user_id, email, full_name, is_agent.
     """
     def validate(self, attrs):
-        data = super().validate(attrs)
+        username_val = attrs.get(self.username_field)
+        if isinstance(username_val, str):
+            attrs[self.username_field] = username_val.strip()
+
+        try:
+            data = super().validate(attrs)
+        except Exception as exc:
+            print(f"[Auth] Login failed for username/email: {repr(username_val)}")
+            raise exc
+
         # Append extra user info alongside the tokens
         data['user_id'] = self.user.id
         data['email'] = self.user.email
@@ -26,6 +35,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['is_agent'] = self.user.is_agent
         data['is_staff'] = self.user.is_staff
         data['is_superuser'] = self.user.is_superuser
+        print(f"[Auth] Login successful for: {self.user.email} (agent={self.user.is_agent})")
         return data
 
 

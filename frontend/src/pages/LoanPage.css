@@ -34,7 +34,7 @@
 }
 
 .z-loan-card {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--sand-200);
   border-radius: var(--radius-lg);
   padding: 1.75rem;
@@ -148,7 +148,7 @@
   align-items: flex-start;
   padding: 0.75rem 1rem;
   border: 1px solid var(--sand-200);
-  background: #ffffff;
+  background: var(--surface-card);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -273,7 +273,7 @@
 .z-table-wrap {
   margin-top: 1.25rem;
   overflow-x: auto;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--sand-200);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
@@ -343,7 +343,7 @@
 }
 
 .z-faq-card {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--sand-200);
   border-radius: var(--radius-md);
   padding: 1.25rem;

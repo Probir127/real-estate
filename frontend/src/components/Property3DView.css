@@ -1,3 +1,7 @@
+/* ══════════════════════════════════════════════════════════════
+   PROPERTY 3D VIEW — React Three Fiber Edition
+   ══════════════════════════════════════════════════════════════ */
+
 .pd-3d-card {
   background: var(--z-white);
   border: 1px solid var(--z-gray-200);
@@ -5,60 +9,26 @@
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   min-width: 0;
-  display: block;
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   touch-action: none;
 }
 
-.pd-3d-card--unsupported {
-  min-height: 240px;
-  display: flex;
-  align-items: center;
-}
-
-@media (max-width: 639px) {
-  .pd-3d-card {
-    border-radius: 12px;
-  }
-
-  .pd-3d-card__header {
-    padding: 1rem;
-  }
-
-  .pd-3d-card__title {
-    font-size: 1.35rem;
-  }
-
-  .pd-3d-canvas {
-    height: min(62vw, 360px);
-    min-height: 240px;
-  }
-
-  .pd-3d-controls {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem 1rem;
-  }
-
-  .pd-3d-floor-tabs {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .pd-3d-floor-tabs button,
-  .pd-3d-light-toggle {
-    min-height: 44px;
-  }
-}
-
+/* ── Header ─────────────────────────────── */
 .pd-3d-card__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+}
+
+.pd-3d-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .pd-3d-card__eyebrow {
@@ -66,25 +36,27 @@
   align-items: center;
   gap: 0.4rem;
   color: var(--z-blue);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
 }
 
 .pd-3d-card__title {
   color: var(--z-darker);
   font-size: 1.25rem;
   font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .pd-3d-card__sub {
   color: var(--z-gray-500);
-  font-size: 0.82rem;
-  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
 }
 
+/* ── Icon buttons ───────────────────────── */
 .pd-3d-icon-btn {
   width: 2.2rem;
   height: 2.2rem;
@@ -96,7 +68,7 @@
   background: var(--z-gray-50);
   color: var(--z-gray-700);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .pd-3d-icon-btn:hover {
@@ -105,13 +77,38 @@
   transform: rotate(-25deg);
 }
 
+.pd-3d-view-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-full);
+  background: var(--z-white);
+  color: var(--z-gray-500);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.pd-3d-view-pill:hover,
+.pd-3d-view-pill.active {
+  background: var(--z-blue-light);
+  border-color: var(--z-blue);
+  color: var(--z-blue);
+}
+
+/* ── 3D Canvas ──────────────────────────── */
 .pd-3d-canvas {
+  position: relative;
   width: 100%;
-  height: 320px;
+  height: 400px;
   overflow: hidden;
   border: 1px solid var(--z-gray-200);
   border-radius: var(--radius-sm);
-  background: #f4f8f6;
+  background: #f0f5f2;
   cursor: grab;
 }
 
@@ -121,16 +118,120 @@
 
 .pd-3d-canvas canvas {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
 }
 
+.pd-3d-default-notice {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--z-gray-500);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ── 2D Floor Plan Image ────────────────── */
+.pd-3d-floorplan-img-wrap {
+  width: 100%;
+  min-height: 280px;
+  max-height: 520px;
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--z-gray-50);
+}
+
+.pd-3d-floorplan-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  max-height: 520px;
+}
+
+/* ── Room Info Panel ────────────────────── */
+.pd-3d-room-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--z-blue-light);
+  border: 1px solid var(--z-gray-200);
+  border-radius: var(--radius-sm);
+  animation: fadeSlideIn 0.2s ease;
+  position: relative;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pd-3d-room-info__pill {
+  flex-shrink: 0;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--z-darker);
+  border: 1px solid rgba(0,0,0,0.07);
+}
+
+.pd-3d-room-info__desc {
+  font-size: 0.875rem;
+  color: var(--z-gray-700);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.pd-3d-room-info__desc--empty {
+  color: var(--z-gray-500);
+  font-style: italic;
+}
+
+.pd-3d-room-info__close {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--z-gray-200);
+  background: var(--z-white);
+  color: var(--z-gray-500);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.pd-3d-room-info__close:hover {
+  background: var(--z-red-light);
+  border-color: var(--z-red);
+  color: var(--z-red);
+}
+
+/* ── Controls Row ───────────────────────── */
 .pd-3d-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-top: 0.85rem;
 }
 
 .pd-3d-floor-tabs {
@@ -148,10 +249,10 @@
   color: var(--z-gray-500);
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.42rem 0.65rem;
+  padding: 0.42rem 0.75rem;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
 }
 
 .pd-3d-floor-tabs button:hover,
@@ -170,17 +271,80 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 600px) {
+/* ── Dark mode ──────────────────────────── */
+html[data-theme='dark'] .pd-3d-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pd-3d-card__title { color: var(--text-primary); }
+html[data-theme='dark'] .pd-3d-card__sub   { color: var(--text-muted); }
+
+html[data-theme='dark'] .pd-3d-canvas {
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pd-3d-default-notice {
+  background: rgba(22, 34, 56, 0.88);
+  border-color: var(--border-default);
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pd-3d-room-info {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pd-3d-room-info__desc { color: var(--text-secondary); }
+
+html[data-theme='dark'] .pd-3d-floor-tabs button,
+html[data-theme='dark'] .pd-3d-light-toggle {
+  background: var(--surface-control);
+  border-color: var(--border-default);
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pd-3d-floor-tabs button.active,
+html[data-theme='dark'] .pd-3d-light-toggle.active {
+  background: var(--brand-50);
+  border-color: var(--z-blue);
+  color: var(--z-blue);
+}
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 639px) {
   .pd-3d-card {
     padding: 1rem;
+    border-radius: var(--radius-sm);
   }
 
   .pd-3d-canvas {
-    height: 260px;
+    height: min(65vw, 320px);
+    min-height: 240px;
   }
 
   .pd-3d-controls {
-    align-items: flex-start;
     flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .pd-3d-floor-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .pd-3d-floor-tabs button,
+  .pd-3d-light-toggle {
+    min-height: 42px;
+    justify-content: center;
+  }
+
+  .pd-3d-light-toggle {
+    display: flex;
+  }
+
+  .pd-3d-room-info {
+    flex-wrap: wrap;
   }
 }

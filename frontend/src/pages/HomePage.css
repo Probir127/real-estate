@@ -244,7 +244,7 @@
 .hp-console__bar {
   display: flex;
   align-items: center;
-  background: #ffffff;
+  background: var(--surface-card);
   border-radius: 1.15rem;
   padding: 0.45rem 0.55rem 0.45rem 1.1rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
@@ -300,7 +300,7 @@
   background: transparent;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #0c1a16;
+  color: var(--text-primary);
   outline: none;
 }
 
@@ -330,7 +330,7 @@
   background: transparent;
   font-size: 0.925rem;
   font-weight: 600;
-  color: #0c1a16;
+  color: var(--text-primary);
   outline: none;
   cursor: pointer;
   appearance: none;
@@ -614,7 +614,7 @@
 }
 
 .hp-city-tab {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1.5px solid #dce8e4;
   color: #4a6b62;
   padding: 0.45rem 1.1rem;
@@ -672,7 +672,7 @@
   font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(1.85rem, 3.2vw, 2.5rem);
   font-weight: 700;
-  color: #14231f;
+  color: var(--text-primary);
   line-height: 1.2;
 }
 
@@ -682,7 +682,7 @@
 
 .hp-section__sub {
   font-size: 1rem;
-  color: #627770;
+  color: var(--text-muted);
   margin-top: 0.65rem;
   line-height: 1.55;
 }
@@ -721,7 +721,7 @@
   padding: 0.45rem 1.25rem;
   border-radius: 999px;
   border: 1px solid #dce4e1;
-  background: #ffffff;
+  background: var(--surface-card);
   color: #495e57;
   font-size: 0.875rem;
   font-weight: 600;
@@ -754,7 +754,7 @@
 
 /* Skeletons */
 .hp-skeleton-card {
-  background: #ffffff;
+  background: var(--surface-card);
   border-radius: 0.875rem;
   border: 1px solid #eef2f0;
   overflow: hidden;
@@ -959,13 +959,13 @@
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.65rem;
-  color: #14231f;
+  color: var(--text-primary);
 }
 
 .hp-tool-card__desc {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #556963;
+  color: var(--text-muted);
   margin-bottom: 1.5rem;
   flex: 1;
 }
@@ -993,7 +993,7 @@
 }
 
 .hp-step {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid #e1ece7;
   border-radius: 1.25rem;
   padding: 2.25rem 1.75rem;
@@ -1025,14 +1025,14 @@
 }
 
 .hp-step__title {
-  color: #0c1a16;
+  color: var(--text-primary);
   font-size: 1.15rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .hp-step__desc {
-  color: #556963;
+  color: var(--text-muted);
   font-size: 0.9rem;
   line-height: 1.6;
 }
@@ -1045,7 +1045,7 @@
 }
 
 .hp-agent-card {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--sand-200, #e3eae7);
   border-radius: 1.15rem;
   padding: 1.5rem;
@@ -1075,13 +1075,13 @@
 .hp-agent-card__name {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #14231f;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .hp-agent-card__area {
   font-size: 0.825rem;
-  color: #627770;
+  color: var(--text-muted);
   margin-top: 0.2rem;
 }
 

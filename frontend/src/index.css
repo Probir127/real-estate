@@ -1138,3 +1138,691 @@ html[data-theme='dark'] .z-map-pill--rent.z-map-pill--active span {
     overflow-y: auto;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   COMPREHENSIVE DARK MODE OVERRIDES
+   Fixes all hardcoded hex colors that break readability in dark mode.
+   These rules cascade over all page/component stylesheets.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Base page backgrounds & text ──────────────────────────────── */
+html[data-theme='dark'] .pr-search-page {
+  background-color: var(--surface-page);
+  color: var(--text-primary);
+}
+
+/* ── HomePage: search console bar ─────────────────────────────── */
+html[data-theme='dark'] .hp-console__cell-input,
+html[data-theme='dark'] .hp-console__cell-select {
+  color: var(--text-primary);
+  background: transparent;
+}
+
+html[data-theme='dark'] .hp-console__cell-input::placeholder {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .hp-console__cell-label {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .hp-console__divider {
+  background-color: var(--border-default);
+}
+
+html[data-theme='dark'] .hp-console__cell-icon {
+  color: var(--accent);
+}
+
+/* ── HomePage: section headings & text ────────────────────────── */
+html[data-theme='dark'] .hp-section__title {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .hp-section__sub {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .hp-step__title,
+html[data-theme='dark'] .hp-agent-card__name {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .hp-step__desc,
+html[data-theme='dark'] .hp-agent-card__area,
+html[data-theme='dark'] .hp-tool-card__desc {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .hp-tool-card__title {
+  color: var(--text-primary);
+}
+
+/* ── HomePage: city/filter tabs ───────────────────────────────── */
+html[data-theme='dark'] .hp-city-tab {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .hp-city-tab:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface-muted);
+}
+
+html[data-theme='dark'] .hp-filter-tab {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .hp-filter-tab:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── HomePage: feature cards / news / testimonials ─────────────── */
+html[data-theme='dark'] .hp-feature-card,
+html[data-theme='dark'] .hp-news-card,
+html[data-theme='dark'] .hp-testimonial-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .hp-feature-card h3,
+html[data-theme='dark'] .hp-news-card h3,
+html[data-theme='dark'] .hp-testimonial-card h3 {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .hp-feature-card p,
+html[data-theme='dark'] .hp-news-card p,
+html[data-theme='dark'] .hp-testimonial-card p {
+  color: var(--text-muted);
+}
+
+/* ── PropertiesPage: top bar & search ─────────────────────────── */
+html[data-theme='dark'] .pr-top-bar {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-type-segmented {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-type-tab {
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pr-type-tab:not(.active):hover {
+  background: var(--surface-elevated);
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .pr-search-input {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pr-search-input:focus {
+  background: var(--surface-card);
+  border-color: var(--accent);
+}
+
+html[data-theme='dark'] .pr-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pr-search-icon,
+html[data-theme='dark'] .pr-search-clear {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pr-search-clear:hover {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pr-mobile-filter-btn {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+/* ── PropertiesPage: sidebar filters ─────────────────────────── */
+html[data-theme='dark'] .pr-sidebar-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-sidebar-header {
+  border-color: var(--border-subtle);
+}
+
+html[data-theme='dark'] .pr-sidebar-title,
+html[data-theme='dark'] .pr-filter-title {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pr-type-pill {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pr-type-pill.active {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .pr-select {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pr-select-arrow {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pr-bed-btn {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pr-checkbox-label {
+  color: var(--text-secondary);
+}
+
+/* ── PropertiesPage: area chips ───────────────────────────────── */
+html[data-theme='dark'] .pr-area-chip {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pr-area-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface-muted);
+}
+
+html[data-theme='dark'] .pr-quick-areas-label {
+  color: var(--text-muted);
+}
+
+/* ── PropertiesPage: results header ───────────────────────────── */
+html[data-theme='dark'] .pr-results-h1 {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pr-results-query,
+html[data-theme='dark'] .pr-results-sub,
+html[data-theme='dark'] .pr-sort-label {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pr-alert-button {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pr-alert-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .pr-view-mode-toggle {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-view-btn {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pr-view-btn.active {
+  background: var(--surface-card);
+  color: var(--accent);
+}
+
+/* ── PropertiesPage: active filter tags bar ───────────────────── */
+html[data-theme='dark'] .pr-active-tags-bar {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-active-tag {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+html[data-theme='dark'] .pr-active-tag button {
+  color: var(--accent);
+}
+
+/* ── PropertiesPage: property card (pr-card) ─────────────────── */
+html[data-theme='dark'] .pr-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-card__title {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pr-card__location,
+html[data-theme='dark'] .pr-card__specs,
+html[data-theme='dark'] .pr-card__footer {
+  color: var(--text-muted);
+}
+
+/* ── PropertiesPage: quickview modal ─────────────────────────── */
+html[data-theme='dark'] .pr-modal-content,
+html[data-theme='dark'] .pr-drawer-sheet {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-quickview-title {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pr-quickview-subtitle,
+html[data-theme='dark'] .pr-spec-box,
+html[data-theme='dark'] .pr-amenity-chip {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pr-modal-close,
+html[data-theme='dark'] .pr-drawer-close {
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pr-drawer-header,
+html[data-theme='dark'] .pr-drawer-footer {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+/* ── PropertiesPage: split map border ──────────────────────────── */
+html[data-theme='dark'] .pr-split-map-container {
+  border-color: var(--border-default);
+}
+
+/* ── PropertyCard (pcard) ─────────────────────────────────────── */
+html[data-theme='dark'] .pcard {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pcard__title {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pcard__address,
+html[data-theme='dark'] .pcard__spec span,
+html[data-theme='dark'] .pcard__time {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pcard__spec {
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .pcard__spec b {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pcard__specs {
+  border-color: var(--border-subtle);
+}
+
+html[data-theme='dark'] .pcard__skeleton {
+  background: linear-gradient(105deg, var(--sand-100) 30%, var(--sand-200) 50%, var(--sand-100) 70%);
+}
+
+html[data-theme='dark'] .pcard__badge--type {
+  background: color-mix(in srgb, var(--surface-card) 90%, transparent);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+/* ── PropertyDetailPage ───────────────────────────────────────── */
+html[data-theme='dark'] .pd-page {
+  background-color: var(--surface-page);
+}
+
+html[data-theme='dark'] .pd-card,
+html[data-theme='dark'] .pd-agent-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pd-card__title,
+html[data-theme='dark'] .pd-price,
+html[data-theme='dark'] .pd-spec-box strong,
+html[data-theme='dark'] .pd-fact-value,
+html[data-theme='dark'] .pd-amenities__title,
+html[data-theme='dark'] .pd-agent-card__title,
+html[data-theme='dark'] .pd-agent-meta strong {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .pd-price-period,
+html[data-theme='dark'] .pd-spec-box span,
+html[data-theme='dark'] .pd-address-row,
+html[data-theme='dark'] .pd-description,
+html[data-theme='dark'] .pd-fact-label,
+html[data-theme='dark'] .pd-agent-company {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pd-specs-strip,
+html[data-theme='dark'] .pd-card__title,
+html[data-theme='dark'] .pd-agent-profile {
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pd-fact-item {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pd-gallery__main {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pd-location-switcher {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .pd-location-switcher button {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .pd-location-switcher button:hover,
+html[data-theme='dark'] .pd-location-switcher button.active {
+  background: var(--surface-card);
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .pd-amenity-chip {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+}
+
+html[data-theme='dark'] .pd-inquiry-form .form-control {
+  background: var(--surface-control);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+/* ── LoanPage ─────────────────────────────────────────────────── */
+html[data-theme='dark'] .z-loan-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-lender-btn {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-lender-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-elevated);
+}
+
+html[data-theme='dark'] .z-lender-btn.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+html[data-theme='dark'] .z-lender-btn__name {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-lender-btn__meta {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .z-table-wrap {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-loan-table thead tr {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .z-loan-table td {
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .z-loan-table th {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .z-loan-table tbody tr:hover {
+  background: var(--surface-muted);
+}
+
+html[data-theme='dark'] .z-faq-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-faq-summary {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-faq-icon {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .z-faq-answer {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .z-table-footnote {
+  color: var(--text-muted);
+}
+
+/* ── PricingPage ──────────────────────────────────────────────── */
+html[data-theme='dark'] .z-tier-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-tier-name,
+html[data-theme='dark'] .z-tier-price {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-tier-sub,
+html[data-theme='dark'] .z-tier-period {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .z-pricing-faq-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+/* ── SellPage ─────────────────────────────────────────────────── */
+html[data-theme='dark'] .z-sell-card,
+html[data-theme='dark'] .z-sell-preview-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-sell-card h2,
+html[data-theme='dark'] .z-sell-card h3,
+html[data-theme='dark'] .z-sell-preview-card h2,
+html[data-theme='dark'] .z-sell-preview-card h3 {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-sell-card p,
+html[data-theme='dark'] .z-sell-preview-card p {
+  color: var(--text-muted);
+}
+
+/* ── ValuationPage ────────────────────────────────────────────── */
+html[data-theme='dark'] .z-val-form-card,
+html[data-theme='dark'] .z-val-result-card,
+html[data-theme='dark'] .z-history-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-val-form-card h2,
+html[data-theme='dark'] .z-val-form-card h3,
+html[data-theme='dark'] .z-val-result-card strong,
+html[data-theme='dark'] .z-history-card strong {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-val-form-card p,
+html[data-theme='dark'] .z-val-result-card p {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .z-val-select,
+html[data-theme='dark'] .z-choice-btn {
+  background: var(--surface-muted);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+/* ── SavedPage ────────────────────────────────────────────────── */
+html[data-theme='dark'] .z-saved-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .z-saved-card__title {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .z-saved-card__address,
+html[data-theme='dark'] .z-saved-card__specs {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .z-saved-card__specs {
+  border-color: var(--border-subtle);
+}
+
+html[data-theme='dark'] .z-saved-empty {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+/* ── AgentsPage ───────────────────────────────────────────────── */
+html[data-theme='dark'] .z-agent-stats {
+  background: var(--surface-muted);
+}
+
+html[data-theme='dark'] .z-stat-item.border-x {
+  border-color: var(--border-default);
+}
+
+/* ── DashboardPage ────────────────────────────────────────────── */
+html[data-theme='dark'] .stat-box,
+html[data-theme='dark'] .listing-row,
+html[data-theme='dark'] .inquiry-card {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .listing-row__price {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .listing-row__date,
+html[data-theme='dark'] .inquiry-row__property,
+html[data-theme='dark'] .inquiry-row__message {
+  color: var(--text-muted);
+}
+
+html[data-theme='dark'] .inquiry-row strong {
+  color: var(--text-primary);
+}
+
+/* ── Form Section ─────────────────────────────────────────────── */
+html[data-theme='dark'] .form-section {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+}
+
+/* ── General borders and dividers using hardcoded colors ─────── */
+html[data-theme='dark'] [style*="border-color: #e3eae7"],
+html[data-theme='dark'] [style*="border: 1px solid #e3eae7"] {
+  border-color: var(--border-default) !important;
+}
+
+/* ── Inputs inside hero search (hp-console) ──────────────────── */
+html[data-theme='dark'] .hp-console__bar {
+  background: var(--surface-elevated);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Ensure text on dark cards is always light ───────────────── */
+html[data-theme='dark'] .surface-card,
+html[data-theme='dark'] [class*="card"] {
+  color: var(--text-secondary);
+}
+
+/* ── Ensure section title overrides in dark (fix #14231f) ────── */
+html[data-theme='dark'] section h2,
+html[data-theme='dark'] section h3,
+html[data-theme='dark'] .hp-section__title,
+html[data-theme='dark'] .hp-agent-card__name,
+html[data-theme='dark'] .hp-step__title,
+html[data-theme='dark'] .hp-tool-card__title,
+html[data-theme='dark'] .z-sec-title,
+html[data-theme='dark'] .z-calc-val,
+html[data-theme='dark'] .z-calc-label {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .hp-section__sub,
+html[data-theme='dark'] .hp-agent-card__area,
+html[data-theme='dark'] .hp-step__desc,
+html[data-theme='dark'] .hp-tool-card__desc,
+html[data-theme='dark'] .z-slider-ticks {
+  color: var(--text-muted);
+}
+
+/* ── Misc inline border resets ────────────────────────────────── */
+html[data-theme='dark'] .pr-sidebar-card,
+html[data-theme='dark'] .pr-top-bar,
+html[data-theme='dark'] .hp-step,
+html[data-theme='dark'] .hp-agent-card {
+  border-color: var(--border-default);
+}
+
+/* ── Chatbot user message bubble ─────────────────────────────── */
+html[data-theme='dark'] .z-chat-msg.user .z-chat-msg__content {
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
