@@ -492,6 +492,9 @@
 
 .z-nav-post-cta:hover {
   background-color: var(--accent-hover, #0a4a3f);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(11, 93, 78, 0.3);
 }
 
 .z-plus-icon {
@@ -760,6 +763,8 @@ html[data-theme='dark'] .z-nav-post-cta {
 
 html[data-theme='dark'] .z-nav-post-cta:hover {
   background: var(--accent-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 /* Dropdown */
