@@ -330,10 +330,15 @@ html[data-theme='dark'] .btn-outline-primary:hover {
 }
 
 html[data-theme='dark'] .btn-primary,
-html[data-theme='dark'] .btn-primary:hover,
 html[data-theme='dark'] .z-submit-btn,
 html[data-theme='dark'] .z-tour-time-pill.active,
 html[data-theme='dark'] .pr-action-btn--compare.active {
+  color: var(--text-on-accent);
+}
+
+html[data-theme='dark'] .btn-primary:hover {
+  background-color: var(--brand-600);
+  border-color: var(--brand-600);
   color: var(--text-on-accent);
 }
 
@@ -537,6 +542,13 @@ p {
   border-radius: var(--radius-xs);
 }
 
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: var(--radius-sm);
+  min-height: 48px;
+}
+
 .w-full {
   width: 100%;
 }
@@ -580,6 +592,8 @@ p {
 }
 
 .form-control,
+.form-input,
+.form-select,
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -596,11 +610,30 @@ textarea {
   border: 1px solid var(--z-gray-300);
   border-radius: var(--radius-sm);
   outline: none;
-  transition: all var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
   box-sizing: border-box;
 }
 
+/* Hover — subtle border highlight */
+.form-control:hover,
+.form-input:hover,
+.form-select:hover,
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="tel"]:hover,
+input[type="number"]:hover,
+input[type="url"]:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--z-gray-400);
+  background-color: var(--z-white);
+}
+
+/* Focus — brand blue ring */
 .form-control:focus,
+.form-input:focus,
+.form-select:focus,
 input:focus,
 select:focus,
 textarea:focus {

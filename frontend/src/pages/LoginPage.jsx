@@ -33,6 +33,8 @@ export default function LoginPage() {
   });
 
   const [showPass, setShowPass] = useState(false);
+  const [showPass2, setShowPass2] = useState(false); // register password
+  const [showPass3, setShowPass3] = useState(false); // register confirm password
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -228,26 +230,48 @@ export default function LoginPage() {
 
               <div className="z-form-group">
                 <label className="z-form-label">Password *</label>
-                <input
-                  type="password"
-                  className="z-form-input"
-                  placeholder="At least 8 characters"
-                  value={registerForm.password}
-                  onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
-                  required
-                />
+                <div className="z-input-toggle-wrap">
+                  <input
+                    type={showPass2 ? 'text' : 'password'}
+                    className="z-form-input"
+                    placeholder="At least 8 characters"
+                    value={registerForm.password}
+                    onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="z-toggle-btn"
+                    onClick={() => setShowPass2(v => !v)}
+                    tabIndex={-1}
+                    aria-label="Toggle password visibility"
+                  >
+                    {showPass2 ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
               </div>
 
               <div className="z-form-group">
                 <label className="z-form-label">Confirm Password *</label>
-                <input
-                  type="password"
-                  className="z-form-input"
-                  placeholder="Repeat your password"
-                  value={registerForm.password2}
-                  onChange={(e) => setRegisterForm({ ...registerForm, password2: e.target.value })}
-                  required
-                />
+                <div className="z-input-toggle-wrap">
+                  <input
+                    type={showPass3 ? 'text' : 'password'}
+                    className="z-form-input"
+                    placeholder="Repeat your password"
+                    value={registerForm.password2}
+                    onChange={(e) => setRegisterForm({ ...registerForm, password2: e.target.value })}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="z-toggle-btn"
+                    onClick={() => setShowPass3(v => !v)}
+                    tabIndex={-1}
+                    aria-label="Toggle confirm password visibility"
+                  >
+                    {showPass3 ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
               </div>
 
               <div className="z-checkbox-group">
